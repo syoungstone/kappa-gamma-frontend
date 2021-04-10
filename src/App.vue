@@ -31,6 +31,7 @@
               <em>Brother Portal</em>
             </template>
             <b-dropdown-item to="/login">Log In</b-dropdown-item>
+            <b-dropdown-item to="/register">Register</b-dropdown-item>
             <b-dropdown-item href="#">Profile</b-dropdown-item>
             <b-dropdown-item href="#">Sign Out</b-dropdown-item>
           </b-nav-item-dropdown>

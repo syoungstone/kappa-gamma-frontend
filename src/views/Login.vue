@@ -1,5 +1,6 @@
 <template>
   <div id="everything">
+    <h1>{{ $route.name }}</h1>
     <b-form @submit="onSubmit">
       <b-form-group id="input-group-1" label="Email:" label-for="input-1">
         <b-form-input
