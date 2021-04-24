@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" id="everything">
     <img alt="Vue logo" src="../assets/ThetaTauLogo.png" />
     <HelloWorld msg="Theta Tau at VCU" />
   </div>
@@ -10,7 +10,6 @@
 import HelloWorld from "@/components/HelloWorld.vue";
 
 export default {
-  name: "Home",
   components: {
     HelloWorld,
   },

@@ -1,24 +1,9 @@
 <template>
   <div id="everything">
     <h1>{{ $route.name }}</h1>
-    <p>Only current pledges and brothers may register for an account.</p>
-    <p>Email must match the information we have on file for you.</p>
-    <p>
-      If you would like to use a different email than the one we have on file,
-      please contact your Regent or Pledge Instructor.
-    </p>
 
+    <p>Edit Password</p>
     <b-form @submit="onSubmit">
-      <b-form-group id="input-group-3" label="Email:" label-for="input-3">
-        <b-form-input
-          id="input-3"
-          v-model="form.email"
-          type="email"
-          placeholder="Enter email"
-          required
-        ></b-form-input>
-      </b-form-group>
-
       <b-form-group
         id="input-group-4"
         label="Password:"
@@ -30,7 +15,7 @@
           id="input-4"
           v-model="form.password"
           type="password"
-          placeholder="Enter password"
+          placeholder="New password"
           :state="state1"
           required
         ></b-form-input>
@@ -54,13 +39,23 @@
       </b-form-group>
       <b-button type="submit" variant="primary">Submit</b-button>
       <p v-if="response">{{ response.message }}</p>
-      <p v-if="error">
-        Account creation failed. Check if the email you are using is available.
-      </p>
-      <p v-if="loginError">
-        We're having trouble logging you in. Please try again later.
-      </p>
+      <p v-if="error">Attempt to change password failed.</p>
     </b-form>
+    <div v-if="deletePressed" class="delete">
+      <p>Are you sure?</p>
+      <b-button class="delete-button" @click="deleteAccount" variant="primary"
+        >Yes, Delete My Account</b-button
+      >
+    </div>
+    <b-button
+      v-else
+      class="delete delete-button"
+      @click="deleteButton"
+      variant="primary"
+      >Delete Account</b-button
+    >
+    <p v-if="deleteResponse">{{ response }}</p>
+    <p v-if="deleteError">Attempt to delete account failed.</p>
   </div>
 </template>
 
@@ -96,40 +91,55 @@ export default {
   data() {
     return {
       form: {
-        email: "",
+        email: this.$store.state.user,
         password: "",
+        jwt: this.$store.state.jwt,
       },
+      deletePressed: false,
       password_confirm: "",
       response: "",
       error: "",
-      loginError: "",
+      deleteResponse: "",
+      deleteError: "",
     };
   },
   methods: {
     onSubmit() {
       axios
         .post(
-          process.env.VUE_APP_API + "create_user.php",
+          process.env.VUE_APP_API + "update_user.php",
           JSON.stringify(this.form)
         )
         .then((response) => {
           this.response = response.data;
-          this.$store.commit("setUser", this.form.email);
           this.$store.commit("setJwt", this.response.jwt);
-          this.$store.commit("login");
-          this.$router.push("/dashboard", () => {});
         })
         .catch((error) => (this.error = error));
+    },
+    deleteButton() {
+      this.deletePressed = true;
+    },
+    deleteAccount() {
+      axios
+        .delete(process.env.VUE_APP_API + "delete_user.php", {
+          headers: { Authorization: this.$store.state.jwt },
+        })
+        .then((response) => {
+          this.deleteResponse = response;
+          this.$store.commit("logout");
+          this.$router.push("/", () => {});
+        })
+        .catch((error) => (this.deleteError = error));
     },
   },
 };
 </script>
 
 <style>
-#everything {
-  max-width: 500px;
-  max-height: 500px;
-  padding: 20px;
-  margin: 100px auto;
+.delete {
+  margin-top: 50px;
+}
+.delete-button {
+  background-color: dimgray;
 }
 </style>

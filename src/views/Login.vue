@@ -23,11 +23,18 @@
       </b-form-group>
 
       <b-button type="submit" variant="primary">Submit</b-button>
+
+      <p v-if="response">{{ response.message }}</p>
+      <p v-if="error">
+        Login failed. Please make sure you are using the correct email and
+        password.
+      </p>
     </b-form>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -35,33 +42,23 @@ export default {
         email: "",
         password: "",
       },
+      response: null,
+      error: null,
     };
   },
   methods: {
-    onSubmit(event) {
-      event.preventDefault();
-      alert(JSON.stringify(this.form));
-    },
-    onReset(event) {
-      event.preventDefault();
-      // Reset our form values
-      this.form.email = "";
-      this.form.password = "";
-      // Trick to reset/clear native browser form validation state
-      this.show = false;
-      this.$nextTick(() => {
-        this.show = true;
-      });
+    onSubmit() {
+      axios
+        .post(process.env.VUE_APP_API + "login.php", JSON.stringify(this.form))
+        .then((response) => {
+          this.response = response.data;
+          this.$store.commit("setUser", this.form.email);
+          this.$store.commit("setJwt", this.response.jwt);
+          this.$store.commit("login");
+          this.$router.push("/dashboard", () => {});
+        })
+        .catch((error) => (this.error = error));
     },
   },
 };
 </script>
-
-<style>
-#everything {
-  max-width: 500px;
-  max-height: 500px;
-  padding: 20px;
-  margin: 100px auto;
-}
-</style>
