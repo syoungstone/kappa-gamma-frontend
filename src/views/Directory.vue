@@ -106,7 +106,11 @@
         ></b-pagination>
       </b-col>
     </div>
-    <h3 v-else>Loading...</h3>
+    <div v-else id="loading">
+      <b-spinner style="width: 3rem; height: 3rem" variant="primary"
+        >Loading...</b-spinner
+      >
+    </div>
     <div v-if="error" class="mt-3" id="error">
       <strong>{{ error }}</strong>
     </div>

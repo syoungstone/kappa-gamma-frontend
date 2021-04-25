@@ -19,18 +19,6 @@
       >
         <b-row no-gutters>
           <b-col md="5">
-            <!-- <b-card-img
-              v-if="officer.photo"
-              :src="officer.photo"
-              alt="Portrait"
-              class="rounded-0"
-            ></b-card-img>
-            <b-card-img
-              v-else
-              src="../assets/nophoto.jpg"
-              alt="Portrait"
-              class="rounded-0"
-            ></b-card-img> -->
             <div v-if="officer.photo" class="thumbnail">
               <img :src="officer.photo" alt="Profile photo" />
             </div>
@@ -51,7 +39,11 @@
         </b-row>
       </b-card>
     </div>
-    <h4 v-else>Loading...</h4>
+    <div v-else id="loading">
+      <b-spinner style="width: 3rem; height: 3rem" variant="primary"
+        >Loading...</b-spinner
+      >
+    </div>
     <div v-if="error" class="mt-3">
       <strong>{{ error }}</strong>
     </div>
@@ -80,7 +72,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 h1 {
   text-align: left;
 }

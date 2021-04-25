@@ -6,6 +6,9 @@
 </template>
 
 <style>
+#everything {
+  width: 500px;
+}
 img {
   margin: auto;
   width: 100%;
