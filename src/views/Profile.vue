@@ -4,7 +4,7 @@
       <div v-if="data.photo" class="thumbnail">
         <img :src="data.photo" alt="Profile photo" />
       </div>
-      <div v-else class="thumbnail">
+      <div v-else-if="data.is_pledge != 1" class="thumbnail">
         <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
       </div>
       <h1>

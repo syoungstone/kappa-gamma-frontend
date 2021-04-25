@@ -66,3 +66,12 @@ export default {
   },
 };
 </script>
+
+<style>
+#everything {
+  max-width: 500px;
+  max-height: 500px;
+  padding: 20px;
+  margin: 100px auto;
+}
+</style>

@@ -112,6 +112,7 @@ export default {
     },
     updateState1() {
       this.state1 = this.form.password.length >= 8;
+      this.updateState2();
     },
     updateState2() {
       this.state2 = this.form.password == this.password_confirm;

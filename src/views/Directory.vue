@@ -2,6 +2,22 @@
   <div id="wrapper">
     <h1>Directory</h1>
     <div v-if="loaded" id="contents">
+      <b-modal
+        id="delete-pledge-modal"
+        ref="modal"
+        title="Delete Pledge"
+        @ok="deletePledge()"
+      >
+        <p>
+          Are you sure you want to delete pledge {{ this.toDeleteName }}? This
+          action cannot be undone.
+        </p>
+        <template #modal-footer="{ cancel, ok }">
+          <b-button size="sm" @click="cancel()"> Cancel </b-button>
+          <b-button size="sm" variant="danger" @click="ok()"> Delete </b-button>
+        </template>
+      </b-modal>
+
       <b-col sm="7" md="6" class="my-1">
         <b-input-group size="sm" id="search">
           <b-form-input
@@ -63,9 +79,16 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.isOfficer"
+            v-if="$store.state.isOfficer && row.item.is_pledge == 1"
             size="sm"
-            @click="deleteStudent(row.item.id, row.item.is_pledge)"
+            @click="
+              prepareDeletion(
+                row.item.id,
+                row.item.is_pledge,
+                row.item.name_first,
+                row.item.name_last
+              )
+            "
           >
             Delete
           </b-button>
@@ -86,6 +109,9 @@
     <h3 v-else>Loading...</h3>
     <div v-if="error" class="mt-3" id="error">
       <strong>{{ error }}</strong>
+    </div>
+    <div v-if="response" class="mt-3" id="response">
+      <strong>{{ response }}</strong>
     </div>
   </div>
 </template>
@@ -147,6 +173,8 @@ export default {
       pledges: false,
       alumni: false,
       all: false,
+      toDeleteName: null,
+      toDeleteId: null,
     };
   },
   methods: {
@@ -237,12 +265,33 @@ export default {
         this.$router.push("/editpledge/" + id, () => {});
       }
     },
-    deleteStudent(id, isPledge) {
+    prepareDeletion(id, isPledge, firstName, lastName) {
       if (isPledge == 0) {
         console.log("Let's delete brother " + id);
       } else {
-        console.log("Let's delete pledge " + id);
+        this.toDeleteName = firstName + " " + lastName;
+        this.toDeleteId = id;
+        this.$bvModal.show("delete-pledge-modal");
       }
+    },
+    deletePledge() {
+      // this.$bvModal.hide();
+      axios
+        .delete(
+          process.env.VUE_APP_API + "delete_pledge.php?id=" + this.toDeleteId,
+          {
+            headers: { Authorization: this.$store.state.jwt },
+          }
+        )
+        .then((response) => {
+          this.response = response.data;
+          if (this.pledges) {
+            this.showPledges();
+          } else {
+            this.showAll();
+          }
+        })
+        .catch((error) => (this.error = error));
     },
   },
 };
@@ -259,6 +308,7 @@ export default {
 }
 #buttons,
 #error,
+#response,
 h1,
 h3 {
   text-align: center;

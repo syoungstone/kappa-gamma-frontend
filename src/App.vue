@@ -63,16 +63,17 @@ export default {
 
 <style>
 #app {
-  width: 100%;
-  height: 100%;
+  margin-bottom: 100px;
 }
 #everything {
-  max-width: 500px;
+  max-width: 1000px;
   padding: 0px 20px;
   margin: 50px auto;
   margin-bottom: 100px;
 }
 h1 {
   text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 </style>
