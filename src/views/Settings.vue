@@ -7,7 +7,7 @@
       <b-form-group
         id="input-group-4"
         label-for="input-4"
-        :invalid-feedback="invalidFeedback1"
+        invalid-feedback="Password must be at least 8 characters long."
         :state="state1"
       >
         <b-form-input
@@ -17,13 +17,14 @@
           placeholder="New password"
           :state="state1"
           required
+          @change="updateState1()"
         ></b-form-input>
       </b-form-group>
 
       <b-form-group
         id="input-group-5"
         label-for="input-5"
-        :invalid-feedback="invalidFeedback2"
+        invalid-feedback="Passwords don't match."
         :state="state2"
       >
         <b-form-input
@@ -33,6 +34,7 @@
           placeholder="Confirm password"
           :state="state2"
           required
+          @change="updateState2()"
         ></b-form-input>
       </b-form-group>
       <b-button type="submit" variant="primary">Submit</b-button>
@@ -63,32 +65,6 @@
 <script>
 import axios from "axios";
 export default {
-  computed: {
-    state1() {
-      return this.form.password.length >= 8;
-    },
-    state2() {
-      return (
-        this.form.password.length >= 8 &&
-        this.form.password == this.password_confirm
-      );
-    },
-    invalidFeedback1() {
-      if (this.form.password.length > 0) {
-        return "Password must be at least 8 characters long.";
-      }
-      return "";
-    },
-    invalidFeedback2() {
-      if (
-        this.form.password.length > 0 &&
-        this.form.password != this.password_confirm
-      ) {
-        return "Passwords don't match.";
-      }
-      return "";
-    },
-  },
   data() {
     return {
       form: {
@@ -102,6 +78,8 @@ export default {
       error: "",
       deleteResponse: "",
       deleteError: "",
+      state1: null,
+      state2: null,
     };
   },
   methods: {
@@ -131,6 +109,12 @@ export default {
           this.$router.push("/", () => {});
         })
         .catch((error) => (this.deleteError = error));
+    },
+    updateState1() {
+      this.state1 = this.form.password.length >= 8;
+    },
+    updateState2() {
+      this.state2 = this.form.password == this.password_confirm;
     },
   },
 };

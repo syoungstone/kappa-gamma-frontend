@@ -110,7 +110,7 @@
         id="input-group-1"
         label="Phone Number:"
         label-for="input-1"
-        :invalid-feedback="invalidFeedback1"
+        invalid-feedback="Phone number must be exactly 10 digits."
         :state="state1"
       >
         <b-form-input
@@ -119,6 +119,7 @@
           type="tel"
           :state="state1"
           required
+          @change="updateState1()"
         ></b-form-input>
       </b-form-group>
 
@@ -130,7 +131,7 @@
         id="input-group-3"
         label="Graduation Year:"
         label-for="input-3"
-        :invalid-feedback="invalidFeedback2"
+        invalid-feedback="Not a valid graduation year."
         :state="state2"
       >
         <b-form-input
@@ -139,6 +140,7 @@
           type="number"
           :state="state2"
           required
+          @change="updateState2()"
         ></b-form-input>
       </b-form-group>
 
@@ -154,13 +156,14 @@
         id="input-group-5"
         label="Home State:"
         label-for="input-5"
-        :invalid-feedback="invalidFeedback3"
+        invalid-feedback="State must be represented by two uppercase letters, e.g. 'VA'."
         :state="state3"
       >
         <b-form-input
           id="input-5"
           v-model="data.home_state"
           :state="state3"
+          @change="updateState3()"
         ></b-form-input>
       </b-form-group>
 
@@ -190,35 +193,12 @@
 import axios from "axios";
 export default {
   computed: {
-    state1() {
-      const regex = new RegExp("[0-9]{10}");
-      return (
-        regex.test(this.data.phone_number) &&
-        this.data.phone_number.length == 10
-      );
-    },
-    state2() {
-      return this.data.grad_year >= 1998 && this.data.grad_year < 2100;
-    },
-    state3() {
-      const regex = new RegExp("[A-Z]{2}");
-      return (
-        (regex.test(this.data.home_state) &&
-          this.data.home_state.length == 2) ||
-        this.data.home_state.length == 0
-      );
-    },
-    invalidFeedback1() {
-      return "Phone number must be exactly 10 digits.";
-    },
-    invalidFeedback2() {
-      return "Not a valid graduation year.";
-    },
-    invalidFeedback3() {
-      return "State must be represented by two uppercase letters, e.g. 'VA'.";
-    },
     submitDisabled() {
-      return !this.state1 || !this.state2 || !this.state3;
+      return !(
+        (this.state1 || this.state1 == null) &&
+        (this.state2 || this.state2 == null) &&
+        (this.state3 || this.state3 == null)
+      );
     },
   },
   created() {
@@ -253,6 +233,9 @@ export default {
       response: null,
       error: null,
       loaded: false,
+      state1: null,
+      state2: null,
+      state3: null,
     };
   },
   methods: {
@@ -295,6 +278,22 @@ export default {
       this.$nextTick(() => {
         this.$bvModal.hide("photo-modal");
       });
+    },
+    updateState1() {
+      const regex = new RegExp("[0-9]{10}");
+      this.state1 =
+        regex.test(this.data.phone_number) &&
+        this.data.phone_number.length == 10;
+    },
+    updateState2() {
+      this.state2 = this.data.grad_year >= 1998 && this.data.grad_year < 2100;
+    },
+    updateState3() {
+      const regex = new RegExp("[A-Z]{2}");
+      this.state3 =
+        (regex.test(this.data.home_state) &&
+          this.data.home_state.length == 2) ||
+        this.data.home_state.length == 0;
     },
   },
 };

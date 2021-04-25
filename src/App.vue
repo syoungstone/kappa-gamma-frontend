@@ -27,9 +27,11 @@
             </template>
             <div v-if="$store.state.loggedIn">
               <b-dropdown-item v-if="$store.state.isOfficer" @click="editSelf()"
-                >Profile</b-dropdown-item
+                >Edit Profile</b-dropdown-item
               >
-              <b-dropdown-item v-else to="/profile">Profile</b-dropdown-item>
+              <b-dropdown-item v-else to="/profile"
+                >Edit Profile</b-dropdown-item
+              >
               <b-dropdown-item to="/settings">Settings</b-dropdown-item>
               <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
             </div>
