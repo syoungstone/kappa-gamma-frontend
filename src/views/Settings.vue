@@ -39,22 +39,22 @@
       <p v-if="response">{{ response.message }}</p>
       <p v-if="error">Attempt to change password failed.</p>
     </b-form>
+    <h4>Delete Account</h4>
     <div v-if="deletePressed" class="delete">
       <p>
         Are you sure? You will need to re-register if you want to use the
         brother portal again.
       </p>
-      <b-button class="delete-button" @click="deleteAccount" variant="primary"
+      <b-button class="delete-button" @click="deleteAccount"
         >Yes, Delete My Account</b-button
       >
     </div>
-    <b-button
-      v-else
-      class="delete delete-button"
-      @click="deleteButton"
-      variant="primary"
-      >Delete Account</b-button
-    >
+    <div v-else>
+      <p>Warning: this action is permanent</p>
+      <b-button class="delete delete-button" @click="deleteButton"
+        >Delete</b-button
+      >
+    </div>
     <p v-if="deleteResponse">{{ response }}</p>
     <p v-if="deleteError">Attempt to delete account failed.</p>
   </div>
@@ -137,12 +137,6 @@ export default {
 </script>
 
 <style>
-.delete {
-  margin-top: 50px;
-}
-.delete-button {
-  background-color: dimgray;
-}
 h4 {
   margin-top: 30px;
 }
