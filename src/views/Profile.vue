@@ -1,10 +1,17 @@
 <template>
   <div id="everything">
-    <h1>Your User Profile</h1>
-    <div v-if="error" class="mt-3">
-      <strong>{{ error }}</strong>
-    </div>
     <b-form @submit="onSubmit" v-if="loaded">
+      <div v-if="data.photo" class="thumbnail">
+        <img :src="data.photo" alt="Profile photo" />
+      </div>
+      <div v-else class="thumbnail">
+        <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
+      </div>
+      <h1>
+        {{ data.name_first + " " }}
+        {{ data.name_middle ? data.name_middle + " " : "" }}
+        {{ data.name_last }}
+      </h1>
       <b-form-group
         id="input-group-1"
         label="Phone Number:"
@@ -71,11 +78,17 @@
         <b-form-input id="input-6" v-model="data.home_country"></b-form-input>
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Save</b-button>
-      <p v-if="response">{{ response }}</p>
-      <p v-if="error">An error occurred.</p>
+      <b-button type="submit" variant="primary" :disabled="submitDisabled"
+        >Save</b-button
+      >
     </b-form>
     <h3 v-else>Loading...</h3>
+    <div v-if="error" class="mt-3">
+      <strong>{{ error }}</strong>
+    </div>
+    <div v-if="response" class="mt-3">
+      <strong>{{ response }}</strong>
+    </div>
   </div>
 </template>
 
@@ -110,6 +123,9 @@ export default {
     invalidFeedback3() {
       return "State must be represented by two uppercase letters, e.g. 'VA'.";
     },
+    submitDisabled() {
+      return !this.state1 || !this.state2 || !this.state3;
+    },
   },
   created() {
     axios
@@ -126,6 +142,9 @@ export default {
     return {
       selected: null,
       data: {
+        name_first: "",
+        name_middle: "",
+        name_last: "",
         phone_number: "",
         grad_year: "",
         major: "",
@@ -156,3 +175,23 @@ export default {
   },
 };
 </script>
+
+<style>
+.thumbnail {
+  margin: auto;
+  position: relative;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  border: 3px solid black;
+}
+.thumbnail img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.thumbnail img.portrait {
+  width: 100%;
+  height: auto;
+}
+</style>

@@ -2,11 +2,10 @@
   <div id="everything">
     <h1>{{ $route.name }}</h1>
 
-    <p>Edit Password</p>
+    <h4>Change Password</h4>
     <b-form @submit="onSubmit">
       <b-form-group
         id="input-group-4"
-        label="Password:"
         label-for="input-4"
         :invalid-feedback="invalidFeedback1"
         :state="state1"
@@ -23,7 +22,6 @@
 
       <b-form-group
         id="input-group-5"
-        label="Confirm password:"
         label-for="input-5"
         :invalid-feedback="invalidFeedback2"
         :state="state2"
@@ -32,7 +30,7 @@
           id="input-5"
           v-model="password_confirm"
           type="password"
-          placeholder="Enter password"
+          placeholder="Confirm password"
           :state="state2"
           required
         ></b-form-input>
@@ -42,7 +40,10 @@
       <p v-if="error">Attempt to change password failed.</p>
     </b-form>
     <div v-if="deletePressed" class="delete">
-      <p>Are you sure?</p>
+      <p>
+        Are you sure? You will need to re-register if you want to use the
+        brother portal again.
+      </p>
       <b-button class="delete-button" @click="deleteAccount" variant="primary"
         >Yes, Delete My Account</b-button
       >
@@ -141,5 +142,8 @@ export default {
 }
 .delete-button {
   background-color: dimgray;
+}
+h4 {
+  margin-top: 30px;
 }
 </style>

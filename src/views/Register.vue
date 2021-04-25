@@ -52,7 +52,9 @@
           required
         ></b-form-input>
       </b-form-group>
-      <b-button type="submit" variant="primary">Submit</b-button>
+      <b-button type="submit" variant="primary" :disabled="submitDisabled"
+        >Submit</b-button
+      >
       <p v-if="response">{{ response.message }}</p>
       <p v-if="error">
         Account creation failed. Check if the email you are using is available.
@@ -92,6 +94,9 @@ export default {
       }
       return "";
     },
+    submitDisabled() {
+      return !this.state1 || !this.state2;
+    },
   },
   data() {
     return {
@@ -115,7 +120,11 @@ export default {
         .then((response) => {
           this.response = response.data;
           this.$store.commit("setUser", this.form.email);
+          this.$store.commit("setId", this.response.id);
           this.$store.commit("setJwt", this.response.jwt);
+          this.$store.commit("setName", this.response.name_last);
+          this.$store.commit("setBrother", this.response.is_brother);
+          this.$store.commit("setOfficer", this.response.is_officer);
           this.$store.commit("login");
           this.$router.push("/dashboard", () => {});
         })

@@ -53,7 +53,11 @@ export default {
         .then((response) => {
           this.response = response.data;
           this.$store.commit("setUser", this.form.email);
+          this.$store.commit("setId", this.response.id);
           this.$store.commit("setJwt", this.response.jwt);
+          this.$store.commit("setName", this.response.name_last);
+          this.$store.commit("setBrother", this.response.is_brother);
+          this.$store.commit("setOfficer", this.response.is_officer);
           this.$store.commit("login");
           this.$router.push("/dashboard", () => {});
         })

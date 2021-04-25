@@ -1,46 +1,108 @@
 <template>
   <div class="about" id="everything">
-    <h1>This is an about page</h1>
-    <h2>This is an API test</h2>
-    <p>Enter the id of the student you wish to view</p>
-    <b-form-select v-model="selected" :options="options"></b-form-select>
-    <div v-if="results" class="mt-3">
-      Results: <strong>{{ results }}</strong>
+    <h1>About</h1>
+    <p>Theta Tau is a professional engineering fraternity.</p>
+    <p>
+      The purpose of Tehta Tau is to develop and maintain a high standard of
+      professional interest among its members and to unite them in a strong bond
+      of fraternal fellowhsip.
+    </p>
+    <p>The Kappa Gamma chapter at VCU was certified on September 9, 2000.</p>
+    <h2>Our Officers</h2>
+    <div v-if="loaded">
+      <b-card
+        v-for="officer in officers"
+        :key="officer.importance"
+        no-body
+        class="overflow-hidden officer-card"
+        style="max-width: 540px"
+      >
+        <b-row no-gutters>
+          <b-col md="5">
+            <!-- <b-card-img
+              v-if="officer.photo"
+              :src="officer.photo"
+              alt="Portrait"
+              class="rounded-0"
+            ></b-card-img>
+            <b-card-img
+              v-else
+              src="../assets/nophoto.jpg"
+              alt="Portrait"
+              class="rounded-0"
+            ></b-card-img> -->
+            <div v-if="officer.photo" class="thumbnail">
+              <img :src="officer.photo" alt="Profile photo" />
+            </div>
+            <div v-else class="thumbnail">
+              <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
+            </div>
+          </b-col>
+          <b-col md="7">
+            <b-card-body :title="officer.office" class="card-body">
+              <p>
+                <strong>{{
+                  officer.name_first + " " + officer.name_last
+                }}</strong>
+              </p>
+              <p>{{ officer.major + " " + officer.grad_year }}</p>
+            </b-card-body>
+          </b-col>
+        </b-row>
+      </b-card>
     </div>
+    <h4 v-else>Loading...</h4>
     <div v-if="error" class="mt-3">
-      Results: <strong>{{ error }}</strong>
+      <strong>{{ error }}</strong>
     </div>
-    <b-button @click="onSubmit" variant="primary">Submit</b-button>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 export default {
+  created() {
+    axios
+      .get(process.env.VUE_APP_API + "get_officers.php")
+      .then((response) => {
+        this.officers = JSON.parse(response.data.substring(1)).body;
+        this.loaded = true;
+      })
+      .catch((error) => (this.error = error));
+  },
   data() {
     return {
-      selected: null,
-      results: null,
+      officers: {},
       error: null,
-      options: [
-        { value: 1, text: "Student 1" },
-        { value: 2, text: "Student 2" },
-        { value: 3, text: "Student 3" },
-        { value: 4, text: "Student 4" },
-        { value: 5, text: "Student 5" },
-        { value: 5, text: "Student 6" },
-      ],
+      loaded: false,
     };
-  },
-  methods: {
-    onSubmit() {
-      axios
-        .get(process.env.VUE_APP_API + "read_student.php?id=" + this.selected, {
-          headers: { Authorization: this.$store.state.jwt },
-        })
-        .then((response) => (this.results = response.data))
-        .catch((error) => (this.error = error));
-    },
   },
 };
 </script>
+
+<style scoped>
+h1 {
+  text-align: left;
+}
+.thumbnail {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+}
+.thumbnail img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.thumbnail img.portrait {
+  width: 100%;
+  height: auto;
+}
+.officer-card {
+  margin-top: 20px;
+}
+.card-body {
+  margin-left: 10px;
+}
+</style>

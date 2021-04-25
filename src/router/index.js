@@ -43,6 +43,36 @@ const routes = [
     name: "Profile",
     component: () => import("../views/Profile.vue"),
   },
+  {
+    path: "/directory",
+    name: "Directory",
+    component: () => import("../views/Directory.vue"),
+  },
+  {
+    path: "/pledgedirectory",
+    name: "Pledge Directory",
+    component: () => import("../views/PledgeDirectory.vue"),
+  },
+  {
+    path: "/brother/:id",
+    name: "Brother",
+    component: () => import("../views/Brother.vue"),
+  },
+  {
+    path: "/pledge/:id",
+    name: "Pledge",
+    component: () => import("../views/Pledge.vue"),
+  },
+  {
+    path: "/editbrother/:id",
+    name: "Edit Brother",
+    component: () => import("../views/EditBrother.vue"),
+  },
+  {
+    path: "/editpledge/:id",
+    name: "Edit Pledge",
+    component: () => import("../views/EditPledge.vue"),
+  },
 ];
 
 const router = new VueRouter({
