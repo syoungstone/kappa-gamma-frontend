@@ -1,12 +1,44 @@
 <template>
   <div id="everything">
     <b-form @submit="onSubmit" v-if="loaded">
-      <div v-if="data.photo" class="thumbnail">
+      <div v-if="data.photo" class="thumbnail" v-b-modal.photo-modal>
         <img :src="data.photo" alt="Profile photo" />
+        <div class="overlay">
+          <div class="overlay-text">Change Photo</div>
+        </div>
       </div>
-      <div v-else class="thumbnail">
+      <div v-else class="thumbnail" v-b-modal.photo-modal>
         <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
+        <div class="overlay">
+          <div class="overlay-text">Change Photo</div>
+        </div>
       </div>
+
+      <b-modal
+        id="photo-modal"
+        ref="modal"
+        title="Change Photo"
+        @show="resetModal"
+        @hidden="resetModal"
+        @ok="handleOk"
+      >
+        <form ref="form" @submit.stop.prevent="handleSubmit">
+          <b-form-group
+            label="Please enter photo URL"
+            label-for="url-input"
+            invalid-feedback="Invalid URL"
+            :state="photoState"
+          >
+            <b-form-input
+              id="url-input"
+              v-model="photo"
+              :state="photoState"
+              required
+            ></b-form-input>
+          </b-form-group>
+        </form>
+      </b-modal>
+
       <h1>
         {{ data.name_first + " " }}
         {{ data.name_middle ? data.name_middle + " " : "" }}
@@ -198,6 +230,7 @@ export default {
       .then((response) => {
         this.data = response.data;
         this.loaded = true;
+        this.photo = this.data.photo;
       })
       .catch((error) => (this.error = error));
   },
@@ -215,6 +248,8 @@ export default {
         { value: 1, text: "In Good Standing" },
         { value: 0, text: "Not In Good Standing" },
       ],
+      photo: "",
+      photoState: null,
       response: null,
       error: null,
       loaded: false,
@@ -235,11 +270,40 @@ export default {
         })
         .catch((error) => (this.error = error));
     },
+    checkUrlValidity() {
+      let regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+      this.photoState = regexp.test(this.photo) || this.photo == "";
+      return this.photoState;
+    },
+    resetModal() {
+      this.photoState = null;
+    },
+    handleOk(bvModalEvt) {
+      // Prevent modal from closing
+      bvModalEvt.preventDefault();
+      // Trigger submit handler
+      this.handleSubmit();
+    },
+    handleSubmit() {
+      // Exit when the form isn't valid
+      if (!this.checkUrlValidity()) {
+        return;
+      }
+      // Save photo url
+      this.data.photo = this.photo;
+      // Hide the modal manually
+      this.$nextTick(() => {
+        this.$bvModal.hide("photo-modal");
+      });
+    },
   },
 };
 </script>
 
 <style>
+.thumbnail:hover .overlay {
+  opacity: 0.5;
+}
 .thumbnail {
   margin: auto;
   position: relative;
@@ -256,5 +320,27 @@ export default {
 .thumbnail img.portrait {
   width: 100%;
   height: auto;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  background-color: black;
+}
+.overlay-text {
+  color: white;
+  font-size: 30px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
 }
 </style>
