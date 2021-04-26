@@ -45,11 +45,7 @@
         ></b-pagination>
       </b-col>
     </div>
-    <div v-else id="loading">
-      <b-spinner style="width: 3rem; height: 3rem" variant="primary"
-        >Loading...</b-spinner
-      >
-    </div>
+    <LoadingSpinner v-else />
     <div v-if="error" class="mt-3">
       <strong>{{ error }}</strong>
     </div>
@@ -58,7 +54,11 @@
 
 <script>
 import axios from "axios";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
+  components: {
+    LoadingSpinner,
+  },
   created() {
     axios
       .get(process.env.VUE_APP_API + "read_active_for_pledges.php", {

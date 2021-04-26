@@ -1,11 +1,7 @@
 <template>
   <div id="everything">
     <h1>{{ $route.name }}</h1>
-    <div v-if="loading" id="loading">
-      <b-spinner style="width: 3rem; height: 3rem" variant="primary"
-        >Loading...</b-spinner
-      >
-    </div>
+    <LoadingSpinner v-if="loading" />
     <b-form v-else @submit="onSubmit">
       <b-form-group id="input-group-1" label="Email:" label-for="input-1">
         <b-form-input
@@ -40,7 +36,11 @@
 
 <script>
 import axios from "axios";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
+  components: {
+    LoadingSpinner,
+  },
   data() {
     return {
       form: {

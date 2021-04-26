@@ -15,11 +15,7 @@
             ></vue-single-select>
           </b-form-group>
         </form>
-        <div v-else id="loading">
-          <b-spinner style="width: 3rem; height: 3rem" variant="primary"
-            >Loading...</b-spinner
-          >
-        </div>
+        <LoadingSpinner v-else />
         <div v-if="bigsError" class="mt-3">
           <strong>{{ bigsError }}</strong>
         </div>
@@ -184,11 +180,7 @@
         >Save Changes</b-button
       >
     </b-form>
-    <div v-else id="loading">
-      <b-spinner style="width: 3rem; height: 3rem" variant="primary"
-        >Loading...</b-spinner
-      >
-    </div>
+    <LoadingSpinner v-else />
     <div v-if="error" class="mt-3">
       <strong>{{ error }}</strong>
     </div>
@@ -200,7 +192,11 @@
 
 <script>
 import axios from "axios";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
+  components: {
+    LoadingSpinner,
+  },
   computed: {
     submitDisabled() {
       return !(
@@ -552,10 +548,6 @@ export default {
 </script>
 
 <style>
-#loading {
-  margin: auto;
-  text-align: center;
-}
 h3 {
   border-radius: 10px;
   background-color: coral;

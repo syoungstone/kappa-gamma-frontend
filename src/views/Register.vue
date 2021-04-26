@@ -1,11 +1,7 @@
 <template>
   <div id="everything">
     <h1>{{ $route.name }}</h1>
-    <div v-if="loading" id="loading">
-      <b-spinner style="width: 3rem; height: 3rem" variant="primary"
-        >Loading...</b-spinner
-      >
-    </div>
+    <LoadingSpinner v-if="loading" />
     <b-form v-else @submit="onSubmit">
       <p>Only current pledges and brothers may register for an account.</p>
       <p>Email must match the information we have on file for you.</p>
@@ -74,7 +70,11 @@
 
 <script>
 import axios from "axios";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
+  components: {
+    LoadingSpinner,
+  },
   computed: {
     submitDisabled() {
       return !this.state1 || !this.state2;
