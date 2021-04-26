@@ -1,14 +1,18 @@
 <template>
   <div id="everything">
     <h1>{{ $route.name }}</h1>
-    <p>Only current pledges and brothers may register for an account.</p>
-    <p>Email must match the information we have on file for you.</p>
-    <p>
-      If you would like to use a different email than the one we have on file,
-      please contact your Regent or Pledge Instructor.
-    </p>
-
-    <b-form @submit="onSubmit">
+    <div v-if="loading" id="loading">
+      <b-spinner style="width: 3rem; height: 3rem" variant="primary"
+        >Loading...</b-spinner
+      >
+    </div>
+    <b-form v-else @submit="onSubmit">
+      <p>Only current pledges and brothers may register for an account.</p>
+      <p>Email must match the information we have on file for you.</p>
+      <p>
+        If you would like to use a different email than the one we have on file,
+        please contact your Regent or Pledge Instructor.
+      </p>
       <b-form-group id="input-group-3" label="Email:" label-for="input-3">
         <b-form-input
           id="input-3"
@@ -82,6 +86,7 @@ export default {
         email: "",
         password: "",
       },
+      loading: false,
       password_confirm: "",
       response: "",
       error: "",
@@ -92,6 +97,7 @@ export default {
   },
   methods: {
     onSubmit() {
+      this.loading = true;
       axios
         .post(
           process.env.VUE_APP_API + "create_user.php",
@@ -106,9 +112,13 @@ export default {
           this.$store.commit("setBrother", this.response.is_brother);
           this.$store.commit("setOfficer", this.response.is_officer);
           this.$store.commit("login");
+          this.loading = false;
           this.$router.push("/dashboard", () => {});
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => {
+          this.error = error;
+          this.loading = false;
+        });
     },
     updateState1() {
       this.state1 = this.form.password.length >= 8;

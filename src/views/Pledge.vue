@@ -25,6 +25,8 @@
                 <dd v-if="data.nickname">{{ data.nickname }}</dd>
                 <dt>Pledge Class</dt>
                 <dd>{{ data.pledge_class }}</dd>
+                <dt v-if="data.big_name">Big</dt>
+                <dd v-if="data.big_name">{{ data.big_name }}</dd>
                 <dt v-if="data.lineage">Lineage</dt>
                 <dd v-if="data.lineage">{{ data.lineage }}</dd>
               </dl>

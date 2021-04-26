@@ -1,7 +1,12 @@
 <template>
   <div id="everything">
     <h1>{{ $route.name }}</h1>
-    <b-form @submit="onSubmit">
+    <div v-if="loading" id="loading">
+      <b-spinner style="width: 3rem; height: 3rem" variant="primary"
+        >Loading...</b-spinner
+      >
+    </div>
+    <b-form v-else @submit="onSubmit">
       <b-form-group id="input-group-1" label="Email:" label-for="input-1">
         <b-form-input
           id="input-1"
@@ -42,12 +47,14 @@ export default {
         email: "",
         password: "",
       },
+      loading: false,
       response: null,
       error: null,
     };
   },
   methods: {
     onSubmit() {
+      this.loading = true;
       axios
         .post(process.env.VUE_APP_API + "login.php", JSON.stringify(this.form))
         .then((response) => {
@@ -59,9 +66,13 @@ export default {
           this.$store.commit("setBrother", this.response.is_brother);
           this.$store.commit("setOfficer", this.response.is_officer);
           this.$store.commit("login");
+          this.loading = false;
           this.$router.push("/dashboard", () => {});
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => {
+          this.error = error;
+          this.loading = false;
+        });
     },
   },
 };

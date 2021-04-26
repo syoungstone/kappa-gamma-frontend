@@ -39,6 +39,30 @@
         </form>
       </b-modal>
 
+      <b-modal id="big-modal" ref="modal" title="Assign Big" @ok="changeBig">
+        <form ref="form" v-if="bigsLoaded" @submit.stop.prevent="handleSubmit">
+          <b-form-group id="input-group-x" label-for="input-x">
+            <vue-single-select
+              inputId="input-x"
+              v-model="newBig"
+              :options="bigs"
+              option-key="id"
+              option-label="full_name"
+              :required="true"
+              :getOptionDescription="getCustomDescription"
+            ></vue-single-select>
+          </b-form-group>
+        </form>
+        <div v-else id="loading">
+          <b-spinner style="width: 3rem; height: 3rem" variant="primary"
+            >Loading...</b-spinner
+          >
+        </div>
+        <div v-if="bigsError" class="mt-3">
+          <strong>{{ bigsError }}</strong>
+        </div>
+      </b-modal>
+
       <h1>
         {{ data.name_first + " " }}
         {{ data.name_middle ? data.name_middle + " " : "" }}
@@ -89,6 +113,28 @@
 
       <b-form-group id="input-group-d" label="Nickname:" label-for="input-d">
         <b-form-input id="input-d" v-model="data.nickname"></b-form-input>
+      </b-form-group>
+
+      <b-form-group id="input-group-big" label="Big:" label-for="input-big">
+        <div class="input-group mb-3">
+          <input
+            :disabled="true"
+            v-model="data.big_name"
+            type="text"
+            class="form-control"
+            placeholder="None selected"
+          />
+          <div class="input-group-append">
+            <button
+              class="btn btn-secondary"
+              type="button"
+              v-b-modal.big-modal
+              @click="loadBigs()"
+            >
+              Change
+            </button>
+          </div>
+        </div>
       </b-form-group>
 
       <h3>Personal</h3>
@@ -502,6 +548,8 @@ export default {
         "Zambia",
         "Zimbabwe",
       ],
+      bigs: [],
+      newBig: null,
       pledgeClasses: null,
       statusOptions: [
         { value: "active", text: "Active" },
@@ -518,6 +566,8 @@ export default {
       response: null,
       error: null,
       loaded: false,
+      bigsLoaded: false,
+      bigsError: null,
       state1: null,
       state2: null,
       state3: null,
@@ -580,12 +630,34 @@ export default {
           this.data.home_state.length == 2) ||
         this.data.home_state.length == 0;
     },
+    loadBigs() {
+      axios
+        .get(process.env.VUE_APP_API + "read_brother_names.php", {
+          headers: { Authorization: this.$store.state.jwt },
+        })
+        .then((response) => {
+          this.bigs = JSON.parse(response.data.substring(1)).body;
+          this.bigsLoaded = true;
+        })
+        .catch((error) => (this.bigsError = error));
+    },
+    getCustomDescription(option) {
+      return option.full_name;
+    },
+    changeBig() {
+      this.bigsLoaded = false;
+      if (this.newBig != null) {
+        this.data.big = this.newBig.id;
+        this.data.big_name = this.newBig.full_name;
+      }
+    },
   },
 };
 </script>
 
 <style>
 h3 {
+  border-radius: 10px;
   background-color: coral;
   padding-top: 10px;
   padding-bottom: 10px;
