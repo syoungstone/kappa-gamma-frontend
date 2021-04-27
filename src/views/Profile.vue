@@ -119,7 +119,7 @@ export default {
   },
   created() {
     axios
-      .get(process.env.VUE_APP_API + "read_current_student.php", {
+      .get(this.$store.state.apiURL + "read_current_student.php", {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
@@ -394,7 +394,7 @@ export default {
     onSubmit() {
       axios
         .post(
-          process.env.VUE_APP_API + "update_current_student.php",
+          this.$store.state.apiURL + "update_current_student.php",
           this.data,
           {
             headers: { Authorization: this.$store.state.jwt },

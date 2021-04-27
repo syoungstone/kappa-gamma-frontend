@@ -56,7 +56,7 @@ export default {
     onSubmit() {
       this.loading = true;
       axios
-        .post(process.env.VUE_APP_API + "login.php", JSON.stringify(this.form))
+        .post(this.$store.state.apiURL + "login.php", JSON.stringify(this.form))
         .then((response) => {
           this.response = response.data;
           this.$store.commit("setUser", this.form.email);

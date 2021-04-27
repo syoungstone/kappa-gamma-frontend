@@ -100,7 +100,7 @@ export default {
       this.loading = true;
       axios
         .post(
-          process.env.VUE_APP_API + "create_user.php",
+          this.$store.state.apiURL + "create_user.php",
           JSON.stringify(this.form)
         )
         .then((response) => {

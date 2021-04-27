@@ -61,7 +61,7 @@ export default {
   },
   created() {
     axios
-      .get(process.env.VUE_APP_API + "read_active_for_pledges.php", {
+      .get(this.$store.state.apiURL + "read_active_for_pledges.php", {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
@@ -111,7 +111,7 @@ export default {
       this.all = false;
       this.loaded = false;
       axios
-        .get(process.env.VUE_APP_API + "read_active_for_pledges.php", {
+        .get(this.$store.state.apiURL + "read_active_for_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -144,7 +144,7 @@ export default {
       this.all = false;
       this.loaded = false;
       axios
-        .get(process.env.VUE_APP_API + "read_pledges.php", {
+        .get(this.$store.state.apiURL + "read_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

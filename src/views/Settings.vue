@@ -86,7 +86,7 @@ export default {
     onSubmit() {
       axios
         .post(
-          process.env.VUE_APP_API + "update_user.php",
+          this.$store.state.apiURL + "update_user.php",
           JSON.stringify(this.form)
         )
         .then((response) => {
@@ -100,7 +100,7 @@ export default {
     },
     deleteAccount() {
       axios
-        .delete(process.env.VUE_APP_API + "delete_user.php", {
+        .delete(this.$store.state.apiURL + "delete_user.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

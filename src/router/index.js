@@ -73,6 +73,11 @@ const routes = [
     name: "Edit Pledge",
     component: () => import("../views/EditPledge.vue"),
   },
+  {
+    path: "/pledgeclasses",
+    name: "Pledge Classes",
+    component: () => import("../views/PledgeClasses.vue"),
+  },
 ];
 
 const router = new VueRouter({

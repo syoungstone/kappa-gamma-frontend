@@ -125,7 +125,7 @@ export default {
   },
   created() {
     axios
-      .get(process.env.VUE_APP_API + "read_active.php", {
+      .get(this.$store.state.apiURL + "read_active.php", {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
@@ -189,7 +189,7 @@ export default {
       this.all = false;
       this.loaded = false;
       axios
-        .get(process.env.VUE_APP_API + "read_active.php", {
+        .get(this.$store.state.apiURL + "read_active.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -206,7 +206,7 @@ export default {
       this.all = false;
       this.loaded = false;
       axios
-        .get(process.env.VUE_APP_API + "read_pledges.php", {
+        .get(this.$store.state.apiURL + "read_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -223,7 +223,7 @@ export default {
       this.all = false;
       this.loaded = false;
       axios
-        .get(process.env.VUE_APP_API + "read_alumni.php", {
+        .get(this.$store.state.apiURL + "read_alumni.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -240,7 +240,7 @@ export default {
       this.all = true;
       this.loaded = false;
       axios
-        .get(process.env.VUE_APP_API + "read_students.php", {
+        .get(this.$store.state.apiURL + "read_students.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -282,7 +282,7 @@ export default {
       // this.$bvModal.hide();
       axios
         .delete(
-          process.env.VUE_APP_API + "delete_pledge.php?id=" + this.toDeleteId,
+          this.$store.state.apiURL + "delete_pledge.php?id=" + this.toDeleteId,
           {
             headers: { Authorization: this.$store.state.jwt },
           }

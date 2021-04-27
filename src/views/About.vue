@@ -55,7 +55,7 @@ export default {
   },
   created() {
     axios
-      .get(process.env.VUE_APP_API + "get_officers.php")
+      .get(this.$store.state.apiURL + "read_officers.php")
       .then((response) => {
         this.officers = JSON.parse(response.data.substring(1)).body;
         this.loaded = true;

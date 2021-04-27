@@ -100,7 +100,7 @@ export default {
   created() {
     this.id = this.$route.params.id;
     axios
-      .get(process.env.VUE_APP_API + "read_pledge.php?id=" + this.id, {
+      .get(this.$store.state.apiURL + "read_pledge.php?id=" + this.id, {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {

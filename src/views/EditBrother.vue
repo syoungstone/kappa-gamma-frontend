@@ -274,13 +274,17 @@ export default {
   created() {
     this.id = this.$route.params.id;
     axios
-      .get(process.env.VUE_APP_API + "get_pledge_classes.php")
+      .get(this.$store.state.apiURL + "read_pledge_classes.php", {
+        headers: { Authorization: this.$store.state.jwt },
+      })
       .then((response) => {
-        this.pledgeClasses = JSON.parse(response.data.substring(1)).body;
+        this.pledgeClasses = JSON.parse(response.data.substring(1)).body.map(
+          (a) => a.class_name
+        );
       })
       .catch((error) => (this.error = error));
     axios
-      .get(process.env.VUE_APP_API + "read_brother.php?id=" + this.id, {
+      .get(this.$store.state.apiURL + "read_brother.php?id=" + this.id, {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
@@ -573,7 +577,7 @@ export default {
     onSubmit() {
       axios
         .post(
-          process.env.VUE_APP_API + "update_brother.php?id=" + this.data.id,
+          this.$store.state.apiURL + "update_brother.php?id=" + this.data.id,
           this.data,
           {
             headers: { Authorization: this.$store.state.jwt },
@@ -628,7 +632,7 @@ export default {
     },
     loadBigs() {
       axios
-        .get(process.env.VUE_APP_API + "read_brother_names.php", {
+        .get(this.$store.state.apiURL + "read_brother_names.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
