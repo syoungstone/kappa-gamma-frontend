@@ -39,9 +39,9 @@ const routes = [
     component: () => import("../views/Settings.vue"),
   },
   {
-    path: "/profile",
-    name: "Profile",
-    component: () => import("../views/Profile.vue"),
+    path: "/editprofile",
+    name: "Edit Profile",
+    component: () => import("../views/EditProfile.vue"),
   },
   {
     path: "/directory",
@@ -54,29 +54,24 @@ const routes = [
     component: () => import("../views/PledgeDirectory.vue"),
   },
   {
-    path: "/brother/:id",
-    name: "Brother",
-    component: () => import("../views/Brother.vue"),
+    path: "/student/:id",
+    name: "Student",
+    component: () => import("../views/Student.vue"),
   },
   {
-    path: "/pledge/:id",
-    name: "Pledge",
-    component: () => import("../views/Pledge.vue"),
-  },
-  {
-    path: "/editbrother/:id",
-    name: "Edit Brother",
-    component: () => import("../views/EditBrother.vue"),
-  },
-  {
-    path: "/editpledge/:id",
-    name: "Edit Pledge",
-    component: () => import("../views/EditPledge.vue"),
+    path: "/edit/:id",
+    name: "Edit Student",
+    component: () => import("../views/Edit.vue"),
   },
   {
     path: "/pledgeclasses",
     name: "Pledge Classes",
     component: () => import("../views/PledgeClasses.vue"),
+  },
+  {
+    path: "/pledgeclass/:id",
+    name: "Pledge Class",
+    component: () => import("../views/PledgeClass.vue"),
   },
 ];
 

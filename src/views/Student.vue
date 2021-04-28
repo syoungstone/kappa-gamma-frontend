@@ -4,9 +4,10 @@
       <div v-if="data.photo" class="thumbnail">
         <img :src="data.photo" alt="Profile photo" />
       </div>
-      <div v-else class="thumbnail">
+      <div v-else-if="data.is_pledge == 0" class="thumbnail">
         <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
       </div>
+      <h2>{{ data.is_pledge == 1 ? "Pledge" : "Brother" }}</h2>
       <h1>
         {{ data.name_first + " " }}
         {{ data.name_middle ? data.name_middle + " " : "" }}
@@ -29,21 +30,23 @@
               <dl>
                 <dt v-if="data.nickname">Nickname</dt>
                 <dd v-if="data.nickname">{{ data.nickname }}</dd>
-                <dt>Roll Number</dt>
-                <dd>{{ data.roll_number }}</dd>
+                <dt v-if="data.roll_number">Roll Number</dt>
+                <dd v-if="data.roll_number">{{ data.roll_number }}</dd>
                 <dt>Pledge Class</dt>
                 <dd>{{ data.pledge_class }}</dd>
                 <dt v-if="data.big_name">Big</dt>
                 <dd v-if="data.big_name">{{ data.big_name }}</dd>
                 <dt v-if="data.lineage">Lineage</dt>
                 <dd v-if="data.lineage">{{ data.lineage }}</dd>
-                <dt>Status</dt>
-                <dd>
+                <dt v-if="data.brother_status">Status</dt>
+                <dd v-if="data.brother_status">
                   {{
                     data.brother_status.charAt(0).toUpperCase() +
                     data.brother_status.slice(1)
                   }}
                 </dd>
+                <dt v-if="data.office">Position</dt>
+                <dd v-if="data.office">{{ data.office }}</dd>
               </dl>
             </b-card-body>
           </b-collapse>
@@ -115,7 +118,7 @@ export default {
   created() {
     this.id = this.$route.params.id;
     axios
-      .get(this.$store.state.apiURL + "read_brother.php?id=" + this.id, {
+      .get(this.$store.state.apiURL + "read_student.php?id=" + this.id, {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
@@ -139,6 +142,9 @@ export default {
 </script>
 
 <style>
+h2 {
+  text-align: center;
+}
 .thumbnail {
   margin: auto;
   position: relative;

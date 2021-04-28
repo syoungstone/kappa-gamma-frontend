@@ -65,7 +65,7 @@
           <b-button
             class="select-button"
             size="sm"
-            @click="viewStudent(row.item.id, row.item.is_pledge)"
+            @click="viewStudent(row.item.id)"
           >
             View
           </b-button>
@@ -73,7 +73,7 @@
             class="select-button"
             v-if="$store.state.isOfficer"
             size="sm"
-            @click="editStudent(row.item.id, row.item.is_pledge)"
+            @click="editStudent(row.item.id)"
           >
             Edit
           </b-button>
@@ -255,19 +255,11 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    viewStudent(id, isPledge) {
-      if (isPledge == 0) {
-        this.$router.push("/brother/" + id, () => {});
-      } else {
-        this.$router.push("/pledge/" + id, () => {});
-      }
+    viewStudent(id) {
+      this.$router.push("/student/" + id, () => {});
     },
-    editStudent(id, isPledge) {
-      if (isPledge == 0) {
-        this.$router.push("/editbrother/" + id, () => {});
-      } else {
-        this.$router.push("/editpledge/" + id, () => {});
-      }
+    editStudent(id) {
+      this.$router.push("/edit/" + id, () => {});
     },
     prepareDeletion(id, isPledge, firstName, lastName) {
       if (isPledge == 0) {

@@ -29,12 +29,7 @@
               <em>Brother Portal</em>
             </template>
             <div v-if="$store.state.loggedIn">
-              <b-dropdown-item v-if="$store.state.isOfficer" @click="editSelf()"
-                >Edit Profile</b-dropdown-item
-              >
-              <b-dropdown-item v-else to="/profile"
-                >Edit Profile</b-dropdown-item
-              >
+              <b-dropdown-item to="/editprofile">Edit Profile</b-dropdown-item>
               <b-dropdown-item to="/settings">Settings</b-dropdown-item>
               <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
             </div>
@@ -58,7 +53,7 @@ export default {
       this.$router.push("/", () => {});
     },
     editSelf() {
-      this.$router.push("/editbrother/" + this.$store.state.id, () => {});
+      this.$router.push("/edit/" + this.$store.state.id, () => {});
     },
   },
 };

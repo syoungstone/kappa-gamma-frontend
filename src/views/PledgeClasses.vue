@@ -21,10 +21,7 @@
           title="Pledge Class Already Exists"
           hide-footer
         >
-          <p>
-            A pledge class with name "{{ this.newPledgeClass.class_name }}"
-            already exists. Please select a unique pledge class name.
-          </p>
+          <p>{{ this.modalMessage }}</p>
         </b-modal>
 
         <h4>Create new pledge class</h4>
@@ -74,7 +71,9 @@
           <b-button
             class="select-button"
             size="sm"
-            @click="viewPledgeClass(row.item.class_name)"
+            @click="
+              viewPledgeClass(row.item.semester, row.item.accounting_year)
+            "
           >
             View
           </b-button>
@@ -135,11 +134,23 @@ export default {
       },
       error: null,
       loaded: false,
+      modalMessage: "",
     };
   },
   methods: {
     onSubmit() {
       if (this.pledgeClasses.find(this.classNameExists)) {
+        this.modalMessage =
+          'A pledge class with name "' +
+          this.newPledgeClass.class_name +
+          '" already exists. Please select a unique pledge class name.';
+        this.$bvModal.show("name-exists-modal");
+      } else if (this.pledgeClasses.find(this.classYearSemesterExists)) {
+        this.modalMessage =
+          "A pledge class for " +
+          (this.newPledgeClass.semester == "F" ? "Fall " : "Spring ") +
+          this.newPledgeClass.accounting_year +
+          " already exists. Please select a different semester/year combination.";
         this.$bvModal.show("name-exists-modal");
       } else {
         axios
@@ -185,11 +196,17 @@ export default {
           .catch((error) => (this.error = error));
       }
     },
-    viewPledgeClass(className) {
-      console.log("Viewing " + className + " pledge class");
+    viewPledgeClass(semester, year) {
+      this.$router.push("/pledgeclass/" + semester + year, () => {});
     },
     classNameExists(pledgeClass) {
       return pledgeClass.class_name == this.newPledgeClass.class_name;
+    },
+    classYearSemesterExists(pledgeClass) {
+      return (
+        pledgeClass.semester == this.newPledgeClass.semester &&
+        pledgeClass.accounting_year == this.newPledgeClass.accounting_year
+      );
     },
   },
 };

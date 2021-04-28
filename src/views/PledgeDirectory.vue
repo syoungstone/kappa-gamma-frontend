@@ -27,7 +27,7 @@
           <b-button
             class="select-button"
             size="sm"
-            @click="viewStudent(row.item.id, row.item.is_pledge)"
+            @click="viewStudent(row.item.id)"
           >
             View
           </b-button>
@@ -171,10 +171,8 @@ export default {
         })
         .catch((error) => (this.error = error));
     },
-    viewStudent(id, isPledge) {
-      if (isPledge == 1) {
-        this.$router.push("/pledge/" + id, () => {});
-      }
+    viewStudent(id) {
+      this.$router.push("/student/" + id, () => {});
     },
   },
 };
