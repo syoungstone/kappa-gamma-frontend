@@ -1,12 +1,12 @@
 <template>
-  <EditStudent :id="$store.state.id" />
+  <StudentForm :id="$store.state.id" />
 </template>
 
 <script>
-import EditStudent from "@/components/EditStudent.vue";
+import StudentForm from "@/components/StudentForm.vue";
 export default {
   components: {
-    EditStudent,
+    StudentForm,
   },
 };
 </script>

@@ -15,6 +15,9 @@
           <b-nav-item v-if="$store.state.isBrother" to="/pledgeclasses"
             >Pledge Classes</b-nav-item
           >
+          <b-nav-item v-if="$store.state.isOfficer" to="/create"
+            >Create Student</b-nav-item
+          >
         </b-navbar-nav>
         <b-navbar-nav v-else>
           <b-nav-item to="/">Home</b-nav-item>

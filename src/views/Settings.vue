@@ -17,7 +17,7 @@
           placeholder="New password"
           :state="state1"
           required
-          @change="updateState1()"
+          @input="updateState1()"
         ></b-form-input>
       </b-form-group>
 
@@ -34,7 +34,7 @@
           placeholder="Confirm password"
           :state="state2"
           required
-          @change="updateState2()"
+          @input="updateState2()"
         ></b-form-input>
       </b-form-group>
       <b-button type="submit" variant="primary">Submit</b-button>

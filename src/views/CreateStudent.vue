@@ -1,5 +1,5 @@
 <template>
-  <StudentForm :id="$route.params.id" />
+  <StudentForm v-if="this.$store.state.isOfficer" />
 </template>
 
 <script>

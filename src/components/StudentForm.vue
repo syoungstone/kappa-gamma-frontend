@@ -1,6 +1,25 @@
 <template>
   <div id="everything">
-    <b-form @submit="onSubmit" v-if="loaded">
+    <b-modal v-model="notifyModal" :title="notifyModalTitle" hide-footer>
+      <p>{{ notifyModalMessage }}</p>
+    </b-modal>
+    <div v-if="created" id="created">
+      <h2>{{ response }}</h2>
+      <!-- <h2>New {{ data.is_pledge ? "pledge" : "brother" }} created!</h2> -->
+      <b-button class="selection-button" @click="reset()"
+        >Create Another</b-button
+      >
+    </div>
+    <div v-else-if="newEntry && loaded && data.is_pledge == null" id="buttons">
+      <h2>Would you like to create an entry for a pledge or a brother?</h2>
+      <b-button class="selection-button" @click="data.is_pledge = 1"
+        >Create Pledge</b-button
+      >
+      <b-button class="selection-button" @click="data.is_pledge = 0"
+        >Create Brother</b-button
+      >
+    </div>
+    <b-form @submit="onSubmit" v-else-if="loaded">
       <div
         v-if="data.photo && $store.state.isOfficer"
         class="thumbnail"
@@ -67,7 +86,7 @@
         </div>
       </b-modal>
 
-      <h1>
+      <h1 v-if="!newEntry">
         {{ data.name_first + " " }}
         {{ data.name_middle ? data.name_middle + " " : "" }}
         {{ data.name_last }}
@@ -221,7 +240,7 @@
           type="number"
           :state="state2"
           required
-          @change="updateState2()"
+          @input="updateState2()"
         ></b-form-input>
       </b-form-group>
 
@@ -244,7 +263,7 @@
           id="input-5"
           v-model="data.home_state"
           :state="state3"
-          @change="updateState3()"
+          @input="updateState3()"
         ></b-form-input>
       </b-form-group>
 
@@ -265,7 +284,12 @@
 
       <b-form-group
         id="input-group-e"
-        label="Email: (changing this will change the email needed to log in)"
+        :label="
+          'Email:' +
+          (newEntry
+            ? ''
+            : ' (changing this will change the email needed to log in)')
+        "
         label-for="input-e"
       >
         <b-form-input
@@ -289,21 +313,17 @@
           type="tel"
           :state="state1"
           required
-          @change="updateState1()"
+          @input="updateState1()"
         ></b-form-input>
       </b-form-group>
 
-      <b-button type="submit" variant="primary" :disabled="submitDisabled"
-        >Save Changes</b-button
-      >
+      <b-button type="submit" variant="primary" :disabled="submitDisabled">{{
+        newEntry
+          ? "Create " + (data.is_pledge ? "Pledge" : "Brother")
+          : "Save Changes"
+      }}</b-button>
     </b-form>
     <LoadingSpinner v-else />
-    <div v-if="error" class="mt-3">
-      <strong>{{ error }}</strong>
-    </div>
-    <div v-if="response" class="mt-3">
-      <strong>{{ response }}</strong>
-    </div>
   </div>
 </template>
 
@@ -311,12 +331,9 @@
 import axios from "axios";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
-  name: "EditStudent",
+  name: "StudentForm",
   props: {
-    id: {
-      type: String,
-      required: true,
-    },
+    id: String,
   },
   components: {
     LoadingSpinner,
@@ -334,6 +351,7 @@ export default {
     },
   },
   created() {
+    this.newEntry = this.id == null;
     if (this.$store.state.isOfficer) {
       axios
         .get(this.$store.state.apiURL + "read_pledge_classes.php", {
@@ -345,15 +363,35 @@ export default {
           );
           this.getInfo();
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => this.showError(error));
     } else {
       this.getInfo();
     }
   },
   data() {
     return {
-      selected: null,
-      data: {},
+      defaultData: {
+        is_pledge: null,
+        name_first: null,
+        nume_middle: null,
+        name_last: null,
+        grad_year: null,
+        nickname: null,
+        major: null,
+        hometown: null,
+        home_state: null,
+        home_country: null,
+        email: null,
+        phone_number: null,
+        big: null,
+        big_name: null,
+        pledge_class: null,
+        roll_number: null,
+        brother_status: null,
+        good_standing: null,
+        photo: null,
+      },
+      data: null,
       countryList: [
         "Afghanistan",
         "Åland Islands",
@@ -617,44 +655,83 @@ export default {
         { value: 1, text: "In Good Standing" },
         { value: 0, text: "Not In Good Standing" },
       ],
+      newEntry: false,
+      created: false,
       photo: "",
       photoState: null,
       response: null,
-      error: null,
       loaded: false,
       bigsLoaded: false,
       bigsError: null,
       state1: null,
       state2: null,
       state3: null,
+      notifyModal: false,
+      notifyModalMessage: null,
+      notifyModalTitle: null,
     };
   },
   methods: {
     getInfo() {
+      if (!this.newEntry) {
+        axios
+          .get(this.$store.state.apiURL + "read_student.php?id=" + this.id, {
+            headers: { Authorization: this.$store.state.jwt },
+          })
+          .then((response) => {
+            this.data = response.data;
+            this.loaded = true;
+            this.photo = this.data.photo;
+          })
+          .catch((error) => this.showError(error));
+      } else {
+        this.data = JSON.parse(JSON.stringify(this.defaultData));
+        this.loaded = true;
+      }
+    },
+    onSubmit() {
+      this.loaded = false;
+      if (this.checkData()) {
+        this.sendData();
+      }
+    },
+    checkData() {
+      if (this.data.is_pledge == 0 && this.data.roll_number < 0) {
+        this.showError("Roll number must be greater than 0.");
+        return false;
+      }
+      return true;
+    },
+    sendData() {
+      var apiCall = this.newEntry
+        ? "create_student.php"
+        : "update_student.php?id=" + this.data.id;
       axios
-        .get(this.$store.state.apiURL + "read_student.php?id=" + this.id, {
+        .post(this.$store.state.apiURL + apiCall, this.data, {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          this.data = response.data;
-          this.loaded = true;
-          this.photo = this.data.photo;
-        })
-        .catch((error) => (this.error = error));
-    },
-    onSubmit() {
-      axios
-        .post(
-          this.$store.state.apiURL + "update_student.php?id=" + this.data.id,
-          this.data,
-          {
-            headers: { Authorization: this.$store.state.jwt },
+          if (response.data.success) {
+            this.response = response.data;
+            this.loaded = true;
+            if (this.newEntry) {
+              this.created = true;
+            } else {
+              this.notifyModalTitle = "Success";
+              this.notifyModalMessage = this.response.message;
+              this.notifyModal = true;
+            }
+          } else {
+            this.showError(response.data.message);
           }
-        )
-        .then((response) => {
-          this.response = response.data;
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => this.showError(error));
+    },
+    showError(error) {
+      this.loaded = true;
+      this.notifyModalTitle = "Error";
+      this.notifyModalMessage = error;
+      this.notifyModal = true;
     },
     checkUrlValidity() {
       let regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
@@ -719,6 +796,11 @@ export default {
         this.data.big_name = this.newBig.full_name;
       }
     },
+    reset() {
+      this.data = JSON.parse(JSON.stringify(this.defaultData));
+      this.created = false;
+      this.response = null;
+    },
   },
 };
 </script>
@@ -731,6 +813,7 @@ h3 {
   padding-bottom: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
+  text-align: center;
 }
 .thumbnail:hover .overlay {
   opacity: 0.5;
@@ -772,6 +855,13 @@ h3 {
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+  text-align: center;
+}
+.selection-button {
+  margin: 10px;
+}
+#buttons,
+#created {
   text-align: center;
 }
 </style>

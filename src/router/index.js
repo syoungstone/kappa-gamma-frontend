@@ -64,6 +64,11 @@ const routes = [
     component: () => import("../views/Edit.vue"),
   },
   {
+    path: "/create",
+    name: "Create Student",
+    component: () => import("../views/CreateStudent.vue"),
+  },
+  {
     path: "/pledgeclasses",
     name: "Pledge Classes",
     component: () => import("../views/PledgeClasses.vue"),

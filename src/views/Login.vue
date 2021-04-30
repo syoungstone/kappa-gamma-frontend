@@ -66,7 +66,6 @@ export default {
           this.$store.commit("setBrother", this.response.is_brother);
           this.$store.commit("setOfficer", this.response.is_officer);
           this.$store.commit("login");
-          this.loading = false;
           this.$router.push("/dashboard", () => {});
         })
         .catch((error) => {
