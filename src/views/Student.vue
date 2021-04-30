@@ -8,11 +8,20 @@
         <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
       </div>
       <h2>{{ data.is_pledge == 1 ? "Pledge" : "Brother" }}</h2>
-      <h1>
-        {{ data.name_first + " " }}
-        {{ data.name_middle ? data.name_middle + " " : "" }}
-        {{ data.name_last }}
-      </h1>
+      <div class="row" id="name-row">
+        <h1>
+          {{ data.name_first + " " }}
+          {{ data.name_middle ? data.name_middle + " " : "" }}
+          {{ data.name_last }}
+        </h1>
+        <b-button
+          id="edit-button"
+          variant="primary"
+          v-if="$store.state.isOfficer"
+          @click="editStudent()"
+          >Edit</b-button
+        >
+      </div>
       <div class="accordion" role="tablist">
         <b-card no-body class="mb-1">
           <b-card-header header-tag="header" class="p-1" role="tab">
@@ -138,6 +147,11 @@ export default {
       })
       .catch((error) => (this.error = error));
   },
+  methods: {
+    editStudent() {
+      this.$router.push("/edit/" + this.id, () => {});
+    },
+  },
 };
 </script>
 
@@ -161,5 +175,13 @@ h2 {
 .thumbnail img.portrait {
   width: 100%;
   height: auto;
+}
+#name-row {
+  justify-content: center;
+}
+#edit-button {
+  margin-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 </style>

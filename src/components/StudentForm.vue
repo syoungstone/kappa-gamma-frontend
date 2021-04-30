@@ -712,13 +712,13 @@ export default {
         })
         .then((response) => {
           if (response.data.success) {
-            this.response = response.data;
+            this.response = response.data.message;
             this.loaded = true;
             if (this.newEntry) {
               this.created = true;
             } else {
               this.notifyModalTitle = "Success";
-              this.notifyModalMessage = this.response.message;
+              this.notifyModalMessage = this.response;
               this.notifyModal = true;
             }
           } else {

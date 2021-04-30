@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import store from "../store/index.js";
 
 Vue.use(VueRouter);
 
@@ -78,10 +79,44 @@ const routes = [
     name: "Pledge Class",
     component: () => import("../views/PledgeClass.vue"),
   },
+  {
+    path: "/initiate",
+    name: "Initiate Pledges",
+    component: () => import("../views/Initiate.vue"),
+  },
 ];
 
 const router = new VueRouter({
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  var officerRestricted = [
+    "Edit Student",
+    "Create Student",
+    "Initiate Pledges",
+  ];
+  var brotherRestricted = officerRestricted.concat([
+    "Directory",
+    "Pledge Classes",
+    "Pledge Class",
+  ]);
+  var studentRestricted = brotherRestricted.concat([
+    "Dashboard",
+    "Student",
+    "Settings",
+    "Edit Profile",
+    "Pledge Directory",
+  ]);
+  if (studentRestricted.includes(to.name) && !store.state.loggedIn) {
+    next({ name: "Log In" });
+  } else if (brotherRestricted.includes(to.name) && !store.state.isBrother) {
+    next({ name: "Dashboard" });
+  } else if (officerRestricted.includes(to.name) && !store.state.isOfficer) {
+    next({ name: "Dashboard" });
+  } else {
+    next();
+  }
 });
 
 export default router;
