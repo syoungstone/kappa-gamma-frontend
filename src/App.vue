@@ -15,12 +15,16 @@
           <b-nav-item v-if="$store.state.isBrother" to="/pledgeclasses"
             >Pledge Classes</b-nav-item
           >
-          <b-nav-item v-if="$store.state.isOfficer" to="/create"
-            >Create Student</b-nav-item
+          <b-nav-item v-if="$store.state.isBrother" to="/officers"
+            >Officers</b-nav-item
           >
-          <b-nav-item v-if="$store.state.isOfficer" to="/initiate"
-            >Initiate Pledges</b-nav-item
+          <b-nav-item-dropdown
+            v-if="$store.state.isOfficer"
+            text="Update Chapter Data"
           >
+            <b-dropdown-item to="/create">Create New Student</b-dropdown-item>
+            <b-dropdown-item to="/initiate">Initiate Pledges</b-dropdown-item>
+          </b-nav-item-dropdown>
         </b-navbar-nav>
         <b-navbar-nav v-else>
           <b-nav-item to="/">Home</b-nav-item>
@@ -69,7 +73,7 @@ export default {
 #app {
   margin-bottom: 100px;
 }
-#everything {
+#narrow-wrapper {
   max-width: 1000px;
   padding: 0px 20px;
   margin: 50px auto;

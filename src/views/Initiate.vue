@@ -1,5 +1,5 @@
 <template>
-  <div id="everything">
+  <div id="narrow-wrapper">
     <b-modal v-model="notifyModal" :title="notifyModalTitle" hide-footer>
       <p>{{ notifyModalMessage }}</p>
     </b-modal>

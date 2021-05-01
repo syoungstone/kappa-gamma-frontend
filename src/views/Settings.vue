@@ -1,5 +1,5 @@
 <template>
-  <div id="everything">
+  <div id="narrow-wrapper">
     <h1>{{ $route.name }}</h1>
 
     <h4>Change Password</h4>

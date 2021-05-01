@@ -1,5 +1,5 @@
 <template>
-  <div class="about" id="everything">
+  <div class="about" id="narrow-wrapper">
     <h1>About</h1>
     <p>Theta Tau is a professional engineering fraternity.</p>
     <p>
@@ -55,7 +55,7 @@ export default {
   },
   created() {
     axios
-      .get(this.$store.state.apiURL + "read_officers.php")
+      .get(this.$store.state.apiURL + "read_officers_public.php")
       .then((response) => {
         this.officers = JSON.parse(response.data.substring(1)).body;
         this.loaded = true;

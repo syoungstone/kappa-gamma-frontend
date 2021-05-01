@@ -1,5 +1,5 @@
 <template>
-  <div id="everything">
+  <div id="narrow-wrapper">
     <h1>{{ $route.name }}</h1>
     <LoadingSpinner v-if="loading" />
     <b-form v-else @submit="onSubmit">
@@ -131,7 +131,7 @@ export default {
 </script>
 
 <style>
-#everything {
+#narrow-wrapper {
   max-width: 500px;
   max-height: 500px;
   padding: 20px;

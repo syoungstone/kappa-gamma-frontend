@@ -1,5 +1,5 @@
 <template>
-  <div class="home" id="everything">
+  <div class="home" id="narrow-wrapper">
     <h1>
       Welcome {{ $store.state.isBrother ? "Brother" : "Pledge" }}
       {{ $store.state.lastName }}!

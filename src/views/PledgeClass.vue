@@ -1,5 +1,5 @@
 <template>
-  <div class="about" id="everything">
+  <div class="about" id="narrow-wrapper">
     <div v-if="loaded">
       <h1>{{ this.className }} Pledge Class</h1>
       <h2>
@@ -122,5 +122,11 @@ h1 {
 }
 .card-body {
   margin-left: 10px;
+}
+#narrow-wrapper {
+  max-width: 500px;
+  max-height: 500px;
+  padding: 20px;
+  margin: 100px auto;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="everything">
+  <div id="narrow-wrapper">
     <div v-if="loaded">
       <div v-if="data.photo" class="thumbnail">
         <img :src="data.photo" alt="Profile photo" />

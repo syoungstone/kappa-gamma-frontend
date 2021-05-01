@@ -1,5 +1,5 @@
 <template>
-  <div class="about" id="wrapper">
+  <div class="about" id="wide-wrapper">
     <h1>Pledge Classes</h1>
     <div v-if="loaded">
       <div v-if="$store.state.isOfficer" id="create-new">
@@ -220,7 +220,7 @@ export default {
   max-width: 500px;
   margin: auto;
 }
-#wrapper {
+#wide-wrapper {
   max-width: 1000px;
   padding: 20px;
   margin: 50px auto;

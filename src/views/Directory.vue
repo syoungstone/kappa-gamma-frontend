@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper">
+  <div id="wide-wrapper">
     <h1>Directory</h1>
     <div v-if="loaded" id="contents">
       <b-modal
@@ -297,7 +297,7 @@ export default {
 .select-button {
   margin: 5px;
 }
-#wrapper {
+#wide-wrapper {
   max-width: 1000px;
   padding: 20px;
   margin: 50px auto;

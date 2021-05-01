@@ -1,5 +1,5 @@
 <template>
-  <div id="everything">
+  <div id="narrow-wrapper">
     <b-modal v-model="notifyModal" :title="notifyModalTitle" hide-footer>
       <p>{{ notifyModalMessage }}</p>
     </b-modal>
@@ -76,7 +76,7 @@
               option-key="id"
               option-label="full_name"
               required
-              :getOptionDescription="getCustomDescription"
+              :getOptionDescription="getCustomDescriptionBig"
             ></vue-single-select>
           </b-form-group>
         </form>
@@ -253,18 +253,20 @@
       </b-form-group>
 
       <b-form-group
-        id="input-group-5"
+        v-if="data.home_country == 'United States of America'"
+        id="input-group-y"
         label="Home State:"
-        label-for="input-5"
-        invalid-feedback="State must be represented by two uppercase letters, e.g. 'VA'."
-        :state="state3"
+        label-for="input-y"
       >
-        <b-form-input
-          id="input-5"
-          v-model="data.home_state"
-          :state="state3"
-          @input="updateState3()"
-        ></b-form-input>
+        <vue-single-select
+          inputId="input-y"
+          v-model="newState"
+          :options="stateList"
+          option-key="abbreviation"
+          option-label="name"
+          :required="data.home_country == 'United States of America'"
+          :getOptionDescription="getCustomDescriptionState"
+        ></vue-single-select>
       </b-form-group>
 
       <b-form-group
@@ -342,8 +344,7 @@ export default {
     submitDisabled() {
       return !(
         (this.state1 || this.state1 == null) &&
-        (this.state2 || this.state2 == null) &&
-        (this.state3 || this.state3 == null)
+        (this.state2 || this.state2 == null)
       );
     },
     isBrother() {
@@ -401,7 +402,6 @@ export default {
         "Andorra",
         "Angola",
         "Anguilla",
-        "Antarctica",
         "Antigua and Barbuda",
         "Argentina",
         "Armenia",
@@ -633,7 +633,7 @@ export default {
         "Uzbekistan",
         "Vanuatu",
         "Venezuela",
-        "Viet Nam",
+        "Vietnam",
         "Virgin Islands (U.K.)",
         "Virgin Islands (U.S.)",
         "Wallis and Futuna",
@@ -642,8 +642,70 @@ export default {
         "Zambia",
         "Zimbabwe",
       ],
+      stateList: [
+        { name: "Alabama", abbreviation: "AL" },
+        { name: "Alaska", abbreviation: "AK" },
+        { name: "American Samoa", abbreviation: "AS" },
+        { name: "Arizona", abbreviation: "AZ" },
+        { name: "Arkansas", abbreviation: "AR" },
+        { name: "California", abbreviation: "CA" },
+        { name: "Colorado", abbreviation: "CO" },
+        { name: "Connecticut", abbreviation: "CT" },
+        { name: "Delaware", abbreviation: "DE" },
+        { name: "District of Columbia", abbreviation: "DC" },
+        { name: "Federated States of Micronesia", abbreviation: "FM" },
+        { name: "Florida", abbreviation: "FL" },
+        { name: "Georgia", abbreviation: "GA" },
+        { name: "Guam", abbreviation: "GU" },
+        { name: "Hawaii", abbreviation: "HI" },
+        { name: "Idaho", abbreviation: "ID" },
+        { name: "Illinois", abbreviation: "IL" },
+        { name: "Indiana", abbreviation: "IN" },
+        { name: "Iowa", abbreviation: "IA" },
+        { name: "Kansas", abbreviation: "KS" },
+        { name: "Kentucky", abbreviation: "KY" },
+        { name: "Louisiana", abbreviation: "LA" },
+        { name: "Maine", abbreviation: "ME" },
+        { name: "Marshall Islands", abbreviation: "MH" },
+        { name: "Maryland", abbreviation: "MD" },
+        { name: "Massachusetts", abbreviation: "MA" },
+        { name: "Michigan", abbreviation: "MI" },
+        { name: "Minnesota", abbreviation: "MN" },
+        { name: "Mississippi", abbreviation: "MS" },
+        { name: "Missouri", abbreviation: "MO" },
+        { name: "Montana", abbreviation: "MT" },
+        { name: "Nebraska", abbreviation: "NE" },
+        { name: "Nevada", abbreviation: "NV" },
+        { name: "New Hampshire", abbreviation: "NH" },
+        { name: "New Jersey", abbreviation: "NJ" },
+        { name: "New Mexico", abbreviation: "NM" },
+        { name: "New York", abbreviation: "NY" },
+        { name: "North Carolina", abbreviation: "NC" },
+        { name: "North Dakota", abbreviation: "ND" },
+        { name: "Northern Mariana Islands", abbreviation: "MP" },
+        { name: "Ohio", abbreviation: "OH" },
+        { name: "Oklahoma", abbreviation: "OK" },
+        { name: "Oregon", abbreviation: "OR" },
+        { name: "Palau", abbreviation: "PW" },
+        { name: "Pennsylvania", abbreviation: "PA" },
+        { name: "Puerto Rico", abbreviation: "PR" },
+        { name: "Rhode Island", abbreviation: "RI" },
+        { name: "South Carolina", abbreviation: "SC" },
+        { name: "South Dakota", abbreviation: "SD" },
+        { name: "Tennessee", abbreviation: "TN" },
+        { name: "Texas", abbreviation: "TX" },
+        { name: "Utah", abbreviation: "UT" },
+        { name: "Vermont", abbreviation: "VT" },
+        { name: "Virgin Islands", abbreviation: "VI" },
+        { name: "Virginia", abbreviation: "VA" },
+        { name: "Washington", abbreviation: "WA" },
+        { name: "West Virginia", abbreviation: "WV" },
+        { name: "Wisconsin", abbreviation: "WI" },
+        { name: "Wyoming", abbreviation: "WY" },
+      ],
       bigs: [],
       newBig: null,
+      newState: null,
       pledgeClasses: null,
       statusOptions: [
         { value: "active", text: "Active" },
@@ -665,7 +727,6 @@ export default {
       bigsError: null,
       state1: null,
       state2: null,
-      state3: null,
       notifyModal: false,
       notifyModalMessage: null,
       notifyModalTitle: null,
@@ -680,8 +741,14 @@ export default {
           })
           .then((response) => {
             this.data = response.data;
-            this.loaded = true;
+            this.newState =
+              this.data.home_state == null
+                ? null
+                : this.stateList.find(
+                    (x) => x.abbreviation == this.data.home_state
+                  );
             this.photo = this.data.photo;
+            this.loaded = true;
           })
           .catch((error) => this.showError(error));
       } else {
@@ -703,6 +770,8 @@ export default {
       return true;
     },
     sendData() {
+      this.data.home_state =
+        this.newState == null ? null : this.newState.abbreviation;
       var apiCall = this.newEntry
         ? "create_student.php"
         : "update_student.php?id=" + this.data.id;
@@ -768,13 +837,6 @@ export default {
     updateState2() {
       this.state2 = this.data.grad_year >= 1998 && this.data.grad_year < 2100;
     },
-    updateState3() {
-      const regex = new RegExp("[A-Z]{2}");
-      this.state3 =
-        (regex.test(this.data.home_state) &&
-          this.data.home_state.length == 2) ||
-        this.data.home_state.length == 0;
-    },
     loadBigs() {
       axios
         .get(this.$store.state.apiURL + "read_brother_names.php", {
@@ -782,12 +844,19 @@ export default {
         })
         .then((response) => {
           this.bigs = JSON.parse(response.data.substring(1)).body;
+          this.newBig =
+            this.data.big == null
+              ? null
+              : this.bigs.find((x) => x.id == this.data.big);
           this.bigsLoaded = true;
         })
         .catch((error) => (this.bigsError = error));
     },
-    getCustomDescription(option) {
+    getCustomDescriptionBig(option) {
       return option.full_name;
+    },
+    getCustomDescriptionState(option) {
+      return option.name;
     },
     changeBig() {
       this.bigsLoaded = false;

@@ -75,6 +75,11 @@ const routes = [
     component: () => import("../views/PledgeClasses.vue"),
   },
   {
+    path: "/officers",
+    name: "Officers",
+    component: () => import("../views/Officers.vue"),
+  },
+  {
     path: "/pledgeclass/:id",
     name: "Pledge Class",
     component: () => import("../views/PledgeClass.vue"),
@@ -100,6 +105,7 @@ router.beforeEach((to, from, next) => {
     "Directory",
     "Pledge Classes",
     "Pledge Class",
+    "Officers",
   ]);
   var studentRestricted = brotherRestricted.concat([
     "Dashboard",
