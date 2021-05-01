@@ -24,6 +24,15 @@
           <p>{{ this.modalMessage }}</p>
         </b-modal>
 
+        <b-modal
+          id="empty-class-modal"
+          ref="modal"
+          title="Nothing to Show"
+          hide-footer
+        >
+          <p>{{ this.modalMessage }}</p>
+        </b-modal>
+
         <h4>Create new pledge class</h4>
         <b-form inline @submit="onSubmit" id="create-form">
           <b-form-input
@@ -72,7 +81,11 @@
             class="select-button"
             size="sm"
             @click="
-              viewPledgeClass(row.item.semester, row.item.accounting_year)
+              viewPledgeClass(
+                row.item.semester,
+                row.item.accounting_year,
+                row.item.num_students
+              )
             "
           >
             View
@@ -121,6 +134,10 @@ export default {
         {
           key: "accounting_year",
           label: "Year",
+        },
+        {
+          key: "num_students",
+          label: "Size",
         },
         { key: "actions", label: "Actions" },
       ],
@@ -174,7 +191,7 @@ export default {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          this.pledgeClasses = JSON.parse(response.data.substring(1)).body;
+          this.pledgeClasses = response.data.body;
           this.newPledgeClass.accounting_year = new Date().getFullYear();
           this.loaded = true;
         })
@@ -196,8 +213,13 @@ export default {
           .catch((error) => (this.error = error));
       }
     },
-    viewPledgeClass(semester, year) {
-      this.$router.push("/pledgeclass/" + semester + year, () => {});
+    viewPledgeClass(semester, year, num_students) {
+      if (num_students == 0) {
+        this.modalMessage = "This pledge class has no members.";
+        this.$bvModal.show("empty-class-modal");
+      } else {
+        this.$router.push("/pledgeclass/" + semester + year, () => {});
+      }
     },
     classNameExists(pledgeClass) {
       return pledgeClass.class_name == this.newPledgeClass.class_name;

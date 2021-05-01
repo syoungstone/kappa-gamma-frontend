@@ -8,19 +8,18 @@
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav v-if="$store.state.loggedIn">
           <b-nav-item to="/dashboard">Dashboard</b-nav-item>
-          <b-nav-item v-if="$store.state.isBrother" to="/directory"
-            >Directory</b-nav-item
-          >
+          <b-nav-item-dropdown v-if="$store.state.isBrother" text="Membership">
+            <b-dropdown-item to="/directory">Directory</b-dropdown-item>
+            <b-dropdown-item to="/pledgeclasses"
+              >Pledge Classes</b-dropdown-item
+            >
+            <b-dropdown-item to="/lineages">Lineages</b-dropdown-item>
+            <b-dropdown-item to="/officers">Officers</b-dropdown-item>
+          </b-nav-item-dropdown>
           <b-nav-item v-else to="/pledgedirectory">Directory</b-nav-item>
-          <b-nav-item v-if="$store.state.isBrother" to="/pledgeclasses"
-            >Pledge Classes</b-nav-item
-          >
-          <b-nav-item v-if="$store.state.isBrother" to="/officers"
-            >Officers</b-nav-item
-          >
           <b-nav-item-dropdown
             v-if="$store.state.isOfficer"
-            text="Update Chapter Data"
+            text="Update Rolls"
           >
             <b-dropdown-item to="/create">Create New Student</b-dropdown-item>
             <b-dropdown-item to="/initiate">Initiate Pledges</b-dropdown-item>

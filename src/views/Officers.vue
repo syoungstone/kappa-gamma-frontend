@@ -96,11 +96,10 @@ export default {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
-        this.officers = JSON.parse(response.data.substring(1)).body;
+        this.officers = response.data.body;
         this.officers.forEach(
           (x) => (x.display_publicly = x.display_publicly == 1)
         );
-        console.log(this.officers);
         this.getActives();
       })
       .catch((error) => (this.error = error));
@@ -124,7 +123,7 @@ export default {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          this.actives = JSON.parse(response.data.substring(1)).body;
+          this.actives = response.data.body;
           this.officers.forEach((x) => {
             if (x.id != null) {
               x.brother = this.actives.find((y) => y.id == x.id);

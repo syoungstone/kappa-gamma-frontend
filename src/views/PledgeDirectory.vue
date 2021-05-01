@@ -65,7 +65,7 @@ export default {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
-        this.data = JSON.parse(response.data.substring(1));
+        this.data = response.data;
         this.loaded = true;
         this.totalRows = this.data.body.length;
       })
@@ -115,7 +115,7 @@ export default {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          this.data = JSON.parse(response.data.substring(1));
+          this.data = response.data;
           this.loaded = true;
           this.totalRows = this.data.body.length;
           this.fields = [
@@ -148,7 +148,7 @@ export default {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          this.data = JSON.parse(response.data.substring(1));
+          this.data = response.data;
           this.loaded = true;
           this.totalRows = this.data.body.length;
           this.fields = [

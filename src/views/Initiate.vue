@@ -137,7 +137,7 @@ export default {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          this.pledges = JSON.parse(response.data.substring(1)).body;
+          this.pledges = response.data.body;
           this.loaded = true;
         })
         .catch((error) => this.showError(error));

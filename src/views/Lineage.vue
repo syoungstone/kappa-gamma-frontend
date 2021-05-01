@@ -1,10 +1,7 @@
 <template>
   <div class="about" id="narrow-wrapper">
     <div v-if="loaded">
-      <h1>{{ this.className }} Pledge Class</h1>
-      <h2>
-        {{ (this.semester == "F" ? "Fall " : "Spring ") + " " + this.year }}
-      </h2>
+      <h1>{{ lineageName }} Lineage</h1>
       <b-card
         v-for="student in students"
         :key="student.id"
@@ -28,7 +25,6 @@
               class="card-body"
             >
               <p>{{ student.major + " " + student.grad_year }}</p>
-              <p>{{ hometownString(student) }}</p>
             </b-card-body>
           </b-col>
         </b-row>
@@ -50,24 +46,21 @@ export default {
   },
   created() {
     this.id = this.$route.params.id;
-    this.semester = this.id.substring(0, 1);
-    this.year = parseInt(this.id.substring(1));
     axios
-      .get(this.$store.state.apiURL + "read_pledge_class.php?id=" + this.id, {
+      .get(this.$store.state.apiURL + "read_lineage.php?id=" + this.id, {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
+        console.log(response);
         this.students = response.data.body;
-        this.className = this.students[0].pledge_class;
+        this.lineageName = this.students[0].lineage_name;
         this.loaded = true;
       })
       .catch((error) => (this.error = error));
   },
   data() {
     return {
-      semester: null,
-      year: null,
-      className: null,
+      lineageName: null,
       students: null,
       id: null,
       error: null,
@@ -75,21 +68,6 @@ export default {
     };
   },
   methods: {
-    hometownString(student) {
-      if (student.home_country == "United States of America") {
-        return (
-          student.hometown +
-          (student.home_state ? ", " + student.home_state : "")
-        );
-      } else {
-        return (
-          student.hometown +
-          (student.home_state ? ", " + student.home_state : "") +
-          ", " +
-          student.home_country
-        );
-      }
-    },
     redirect(id) {
       this.$router.push("/student/" + id, () => {});
     },

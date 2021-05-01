@@ -359,9 +359,7 @@ export default {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          this.pledgeClasses = JSON.parse(response.data.substring(1)).body.map(
-            (a) => a.class_name
-          );
+          this.pledgeClasses = response.data.body.map((a) => a.class_name);
           this.getInfo();
         })
         .catch((error) => this.showError(error));
@@ -843,7 +841,7 @@ export default {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          this.bigs = JSON.parse(response.data.substring(1)).body;
+          this.bigs = response.data.body;
           this.newBig =
             this.data.big == null
               ? null

@@ -1,0 +1,258 @@
+<template>
+  <div class="about" id="wide-wrapper">
+    <h1>Lineages</h1>
+    <div v-if="loaded">
+      <div v-if="$store.state.isOfficer" id="create-new">
+        <b-modal
+          id="repeat-founder-modal"
+          ref="modal"
+          title="No Duplicate Lineage Founders"
+          hide-footer
+        >
+          <p>{{ this.modalMessage }}</p>
+        </b-modal>
+
+        <b-modal
+          id="name-exists-modal"
+          ref="modal"
+          title="Lineage Already Exists"
+          hide-footer
+        >
+          <p>{{ this.modalMessage }}</p>
+        </b-modal>
+
+        <b-modal
+          id="delete-lineage-modal"
+          ref="modal"
+          title="Warning: Deleting Lineage"
+          @ok="deleteLineage()"
+        >
+          <p>
+            Are you sure you want to delete the
+            {{ toDelete.lineage_name }} lineage? After a lineage is deleted, it
+            cannot be retrieved. It is strongly suggested not to delete a
+            lineage unless you intend to replace it with another right away.
+          </p>
+          <template #modal-footer="{ cancel, ok }">
+            <b-button size="sm" @click="cancel()"> Cancel </b-button>
+            <b-button size="sm" variant="danger" @click="ok()">
+              Delete Anyway
+            </b-button>
+          </template>
+        </b-modal>
+
+        <h4>Create new lineage</h4>
+        <b-form inline @submit="onSubmit" id="create-form">
+          <b-form-input
+            id="inline-form-input-name"
+            class="mb-2 mr-sm-2 mb-sm-0"
+            placeholder="Lineage Name"
+            v-model="newLineage.lineage_name"
+            required
+          ></b-form-input>
+          <vue-single-select
+            class="founder-select"
+            v-model="newFounder"
+            :options="brothers"
+            option-key="id"
+            optionValue="id"
+            placeholder="Founder Name"
+            required
+            :getOptionDescription="getCustomDescription"
+          ></vue-single-select>
+          <b-button variant="primary" type="submit">Create</b-button>
+        </b-form>
+      </div>
+      <b-table
+        striped
+        hover
+        small
+        :items="lineages"
+        :fields="fields"
+        id="lineage-table"
+      >
+        <template #cell(actions)="row">
+          <b-button
+            class="select-button"
+            size="sm"
+            @click="viewLineage(row.item.lineage_id)"
+          >
+            View
+          </b-button>
+          <b-button
+            class="select-button"
+            v-if="$store.state.isOfficer"
+            size="sm"
+            @click="prepareDeletion(row.item)"
+          >
+            Delete
+          </b-button>
+        </template>
+      </b-table>
+    </div>
+    <LoadingSpinner v-else />
+    <div v-if="error" class="mt-3">
+      <strong>{{ error }}</strong>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+export default {
+  components: {
+    LoadingSpinner,
+  },
+  created() {
+    if (this.$store.state.isOfficer) {
+      this.readBrothers();
+    } else {
+      this.load();
+    }
+  },
+  data() {
+    return {
+      lineages: null,
+      brothers: null,
+      fields: [
+        {
+          key: "lineage_name",
+          label: "Name",
+        },
+        {
+          key: "founder_name",
+          label: "Founder",
+        },
+        { key: "actions", label: "Actions" },
+      ],
+      newFounder: null,
+      newLineage: {
+        lineage_name: null,
+        founder_name: null,
+        founder: null,
+      },
+      toDelete: {
+        lineage_name: null,
+        founder_name: null,
+        founder: null,
+      },
+      error: null,
+      loaded: false,
+      modalMessage: "",
+    };
+  },
+  methods: {
+    onSubmit() {
+      this.newLineage.founder = this.newFounder.id;
+      this.newLineage.founder_name = this.getCustomDescription(this.newFounder);
+      if (this.lineages.find(this.lineageNameExists)) {
+        this.modalMessage =
+          'A lineage with name "' +
+          this.newLineage.lineage_name +
+          '" already exists. Please select a unique lineage name.';
+        this.$bvModal.show("name-exists-modal");
+      } else if (this.lineages.find(this.founderExists)) {
+        this.modalMessage =
+          this.newLineage.founder_name +
+          " is already listed as the founder of another lineage. Please select a unique founder.";
+        this.$bvModal.show("repeat-founder-modal");
+      } else {
+        axios
+          .post(
+            this.$store.state.apiURL + "create_lineage.php",
+            JSON.stringify(this.newLineage),
+            { headers: { Authorization: this.$store.state.jwt } }
+          )
+          .then(() => {
+            this.newLineage.lineage_name = null;
+            this.newLineage.founder_name = null;
+            this.newLineage.founder = null;
+            this.load();
+          })
+          .catch((error) => (this.error = error));
+      }
+    },
+    readBrothers() {
+      axios
+        .get(this.$store.state.apiURL + "read_brothers.php", {
+          headers: { Authorization: this.$store.state.jwt },
+        })
+        .then((response) => {
+          this.brothers = response.data.body;
+          this.load();
+        })
+        .catch((error) => (this.error = error));
+    },
+    load() {
+      axios
+        .get(this.$store.state.apiURL + "read_lineages.php", {
+          headers: { Authorization: this.$store.state.jwt },
+        })
+        .then((response) => {
+          this.lineages = response.data.body;
+          this.loaded = true;
+        })
+        .catch((error) => (this.error = error));
+    },
+    prepareDeletion(lineage) {
+      this.toDelete = lineage;
+      this.$bvModal.show("delete-lineage-modal");
+    },
+    deleteLineage() {
+      axios
+        .delete(
+          this.$store.state.apiURL +
+            "delete_lineage.php?id=" +
+            this.toDelete.lineage_id,
+          {
+            headers: { Authorization: this.$store.state.jwt },
+          }
+        )
+        .then(() => {
+          this.load();
+        })
+        .catch((error) => (this.error = error));
+    },
+    viewLineage(id) {
+      this.$router.push("/lineage/" + id, () => {});
+    },
+    lineageNameExists(lineage) {
+      return lineage.lineage_name == this.newLineage.lineage_name;
+    },
+    founderExists(lineage) {
+      return lineage.founder == this.newLineage.founder;
+    },
+    getCustomDescription(option) {
+      return option.name_first + " " + option.name_last;
+    },
+  },
+};
+</script>
+
+<style>
+.founder-select {
+  margin-top: 8px;
+  margin-right: 10px;
+}
+.select-button {
+  margin: 5px;
+}
+#lineage-table {
+  max-width: 500px;
+  margin: auto;
+}
+#wide-wrapper {
+  max-width: 1000px;
+  padding: 20px;
+  margin: 50px auto;
+  text-align: center;
+}
+#create-new {
+  margin: auto;
+  padding: 20px;
+}
+#create-form {
+  justify-content: center;
+}
+</style>

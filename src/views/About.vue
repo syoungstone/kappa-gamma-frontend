@@ -57,7 +57,7 @@ export default {
     axios
       .get(this.$store.state.apiURL + "read_officers_public.php")
       .then((response) => {
-        this.officers = JSON.parse(response.data.substring(1)).body;
+        this.officers = response.data.body;
         this.loaded = true;
       })
       .catch((error) => (this.error = error));

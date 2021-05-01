@@ -80,6 +80,16 @@ const routes = [
     component: () => import("../views/Officers.vue"),
   },
   {
+    path: "/lineage/:id",
+    name: "Lineage",
+    component: () => import("../views/Lineage.vue"),
+  },
+  {
+    path: "/lineages",
+    name: "Lineages",
+    component: () => import("../views/Lineages.vue"),
+  },
+  {
     path: "/pledgeclass/:id",
     name: "Pledge Class",
     component: () => import("../views/PledgeClass.vue"),
@@ -106,6 +116,8 @@ router.beforeEach((to, from, next) => {
     "Pledge Classes",
     "Pledge Class",
     "Officers",
+    "Lineage",
+    "Lineages",
   ]);
   var studentRestricted = brotherRestricted.concat([
     "Dashboard",
