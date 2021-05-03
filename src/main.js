@@ -12,6 +12,12 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 import VueSingleSelect from "vue-single-select";
 Vue.component("vue-single-select", VueSingleSelect);
 
+import Raphael from "raphael";
+import "treantjs/Treant.css";
+import "treantjs/Treant";
+
+window.Raphael = Raphael;
+
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 

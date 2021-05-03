@@ -2,6 +2,7 @@
 node_modules
 /dist
 
+src/assets/treant-js/examples
 
 # local env files
 .env

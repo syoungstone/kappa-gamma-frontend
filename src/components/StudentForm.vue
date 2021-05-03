@@ -761,11 +761,21 @@ export default {
       }
     },
     checkData() {
-      if (this.data.is_pledge == 0 && this.data.roll_number < 0) {
+      if (this.data.is_pledge == 0 && this.data.roll_number <= 0) {
         this.showError("Roll number must be greater than 0.");
         return false;
+      } else if (
+        this.data.is_pledge == 0 &&
+        this.data.big_roll_number != null &&
+        parseInt(this.data.roll_number) <= parseInt(this.data.big_roll_number)
+      ) {
+        this.showError(
+          "Changes cannot be saved. Big's roll number must be lower than student's roll number."
+        );
+        return false;
+      } else {
+        return true;
       }
-      return true;
     },
     sendData() {
       this.data.home_state =
@@ -851,7 +861,7 @@ export default {
         .catch((error) => (this.bigsError = error));
     },
     getCustomDescriptionBig(option) {
-      return option.full_name;
+      return option.roll_number + " " + option.full_name;
     },
     getCustomDescriptionState(option) {
       return option.name;
@@ -859,8 +869,23 @@ export default {
     changeBig() {
       this.bigsLoaded = false;
       if (this.newBig != null) {
-        this.data.big = this.newBig.id;
-        this.data.big_name = this.newBig.full_name;
+        if (
+          this.data.roll_number == null ||
+          parseInt(this.data.roll_number) >= parseInt(this.newBig.roll_number)
+        ) {
+          this.data.big = this.newBig.id;
+          this.data.big_name = this.newBig.full_name;
+          this.data.big_roll_number = this.newBig.roll_number;
+        } else {
+          this.showError(
+            "Cannot change big to " +
+              this.newBig.full_name +
+              ". Big's roll number must be lower than student's roll number."
+          );
+        }
+      } else {
+        this.data.big = null;
+        this.data.big_name = null;
       }
     },
     reset() {

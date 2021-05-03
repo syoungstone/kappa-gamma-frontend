@@ -4,7 +4,10 @@
       <p>{{ notifyModalMessage }}</p>
     </b-modal>
     <h1>Initiate Pledges</h1>
-    <div v-if="loaded" id="cards">
+    <div v-if="noPledges">
+      <p id="no-pledges">There are currently no pledges to be found.</p>
+    </div>
+    <div v-else-if="loaded" id="cards">
       <b-modal id="photo-modal" title="Select Photo" @ok="handleOk">
         <form ref="form" @submit.stop.prevent="handleSubmit">
           <b-form-group
@@ -86,6 +89,7 @@ export default {
   },
   data() {
     return {
+      noPledges: null,
       pledges: null,
       error: null,
       loaded: false,
@@ -103,13 +107,16 @@ export default {
       this.$bvModal.show("photo-modal");
     },
     initiate(pledge) {
-      if (pledge.roll_number < 0) {
+      if (pledge.roll_number <= 0) {
         this.showError("Roll number must be greater than 0.");
         return false;
+      } else if (pledge.roll_number < parseInt(pledge.big_roll_number)) {
+        this.showError("Roll number must be greater than big's roll number.");
       } else {
         pledge.is_pledge = 0;
         pledge.brother_status = "active";
         pledge.good_standing = 1;
+        pledge.photo = pledge.photo ? pledge.photo : null;
         axios
           .post(
             this.$store.state.apiURL + "update_student.php?id=" + pledge.id,
@@ -140,7 +147,13 @@ export default {
           this.pledges = response.data.body;
           this.loaded = true;
         })
-        .catch((error) => this.showError(error));
+        .catch((error) => {
+          if (error.response && error.response.status == 404) {
+            this.noPledges = true;
+          } else {
+            this.showError(error);
+          }
+        });
     },
     showError(error) {
       this.loaded = true;
@@ -202,5 +215,8 @@ export default {
 }
 .photo-button {
   margin-right: 10px;
+}
+#no-pledges {
+  text-align: center;
 }
 </style>
