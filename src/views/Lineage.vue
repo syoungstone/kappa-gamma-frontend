@@ -28,7 +28,6 @@ export default {
       })
       .then((response) => {
         this.students = response.data.body;
-        console.log(this.students);
         this.lineageName = this.students[0].lineage_name;
         this.loaded = true;
       })

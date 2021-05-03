@@ -129,7 +129,6 @@ export default {
               x.brother = this.actives.find((y) => y.id == x.id);
             }
           });
-          console.log(this.officers);
           this.loaded = true;
         })
         .catch((error) => this.showError(error));
@@ -138,12 +137,10 @@ export default {
       return option.name_first + " " + option.name_last;
     },
     save(office) {
-      console.log(this.officers);
       this.newOfficer = this.officers.find((x) => x.office == office);
       this.newOfficer.id = this.newOfficer.brother
         ? this.newOfficer.brother.id
         : null;
-      console.log(this.newOfficer);
       if (
         this.newOfficer.id == null ||
         !this.officers.find(
