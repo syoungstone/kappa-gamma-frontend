@@ -187,7 +187,7 @@ export default {
       this.pledges = false;
       this.alumni = false;
       this.all = false;
-      this.loaded = false;
+      // this.loaded = false;
       axios
         .get(this.$store.state.apiURL + "read_active.php", {
           headers: { Authorization: this.$store.state.jwt },
@@ -204,7 +204,7 @@ export default {
       this.pledges = true;
       this.alumni = false;
       this.all = false;
-      this.loaded = false;
+      // this.loaded = false;
       axios
         .get(this.$store.state.apiURL + "read_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
@@ -221,7 +221,7 @@ export default {
       this.pledges = false;
       this.alumni = true;
       this.all = false;
-      this.loaded = false;
+      // this.loaded = false;
       axios
         .get(this.$store.state.apiURL + "read_alumni.php", {
           headers: { Authorization: this.$store.state.jwt },
@@ -238,7 +238,7 @@ export default {
       this.pledges = false;
       this.alumni = false;
       this.all = true;
-      this.loaded = false;
+      // this.loaded = false;
       axios
         .get(this.$store.state.apiURL + "read_students.php", {
           headers: { Authorization: this.$store.state.jwt },
