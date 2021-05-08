@@ -1,5 +1,5 @@
 <template>
-  <div id="narrow-wrapper">
+  <div class="narrow-wrapper">
     <h1>{{ $route.name }}</h1>
 
     <h4>Change Password</h4>
@@ -121,7 +121,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 h4 {
   margin-top: 30px;
 }

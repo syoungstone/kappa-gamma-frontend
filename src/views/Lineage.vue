@@ -1,5 +1,5 @@
 <template>
-  <div class="about" id="narrow-wrapper">
+  <div class="narrow-wrapper">
     <div v-if="loaded">
       <h1>{{ lineageName }} Lineage</h1>
       <LineageTree :students="students" />
@@ -45,14 +45,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-h1 {
-  text-align: center;
-}
-#wide-wrapper {
-  max-width: 1000px;
-  padding: 20px;
-  margin: 50px auto;
-}
-</style>

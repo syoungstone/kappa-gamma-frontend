@@ -1,5 +1,5 @@
 <template>
-  <div class="home" id="narrow-wrapper">
+  <div class="narrow-wrapper">
     <b-modal
       id="hello-modal"
       ref="modal"
@@ -43,10 +43,7 @@ export default {
 };
 </script>
 
-<style>
-#narrow-wrapper {
-  width: 500px;
-}
+<style scoped>
 img {
   margin: auto;
   width: 100%;

@@ -1,5 +1,5 @@
 <template>
-  <div id="wide-wrapper">
+  <div class="wide-wrapper">
     <h1>Directory</h1>
     <div v-if="loaded" id="contents">
       <b-modal

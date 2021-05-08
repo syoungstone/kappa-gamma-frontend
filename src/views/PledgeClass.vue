@@ -1,5 +1,5 @@
 <template>
-  <div class="about" id="narrow-wrapper">
+  <div class="narrow-wrapper">
     <div v-if="loaded">
       <h1>{{ this.className }} Pledge Class</h1>
       <h2>
@@ -98,9 +98,6 @@ export default {
 </script>
 
 <style>
-h1 {
-  text-align: left;
-}
 .thumbnail {
   position: relative;
   width: 200px;
@@ -123,10 +120,10 @@ h1 {
 .card-body {
   margin-left: 10px;
 }
-#narrow-wrapper {
-  max-width: 500px;
-  max-height: 500px;
-  padding: 20px;
-  margin: 100px auto;
+</style>
+
+<style scoped>
+h1 {
+  text-align: left;
 }
 </style>

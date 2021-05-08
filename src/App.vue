@@ -95,14 +95,23 @@ export default {
 #app {
   margin-bottom: 100px;
 }
-#narrow-wrapper {
-  max-width: 1000px;
-  padding: 0px 20px;
+.narrow-wrapper {
+  max-width: 500px;
+  padding: 20px;
   margin: 50px auto;
-  margin-bottom: 100px;
+}
+.wide-wrapper {
+  max-width: 1000px;
+  padding: 20px;
+  margin: 50px auto;
+}
+h1,
+h2,
+h3,
+h4 {
+  text-align: center;
 }
 h1 {
-  text-align: center;
   margin-top: 30px;
   margin-bottom: 30px;
 }

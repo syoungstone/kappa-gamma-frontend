@@ -1,5 +1,5 @@
 <template>
-  <div id="narrow-wrapper">
+  <div class="narrow-wrapper">
     <h1>Initiate Pledges</h1>
     <div v-if="noPledges">
       <p id="no-pledges">There are currently no pledges to be found.</p>

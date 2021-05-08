@@ -1,5 +1,5 @@
 <template>
-  <div class="about" id="wide-wrapper">
+  <div class="wide-wrapper">
     <h1>Pledge Classes</h1>
     <div v-if="loaded">
       <div v-if="$store.state.isOfficer" id="create-new">
@@ -214,12 +214,6 @@ export default {
 #class-table {
   max-width: 500px;
   margin: auto;
-}
-#wide-wrapper {
-  max-width: 1000px;
-  padding: 20px;
-  margin: 50px auto;
-  text-align: center;
 }
 #create-new {
   margin: auto;

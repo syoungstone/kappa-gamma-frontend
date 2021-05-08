@@ -1,5 +1,5 @@
 <template>
-  <div id="narrow-wrapper">
+  <div class="narrow-wrapper">
     <div v-if="created" id="created">
       <h2>{{ response }}</h2>
       <!-- <h2>New {{ data.is_pledge ? "pledge" : "brother" }} created!</h2> -->

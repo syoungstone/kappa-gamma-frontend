@@ -1,5 +1,5 @@
 <template>
-  <div id="narrow-wrapper">
+  <div class="narrow-wrapper">
     <h1>{{ $route.name }}</h1>
     <b-form @submit="onSubmit">
       <b-form-group id="input-group-1" label="Email:" label-for="input-1">
@@ -24,7 +24,6 @@
 
       <b-button type="submit" variant="primary">Submit</b-button>
 
-      <p v-if="response">{{ response.message }}</p>
       <p v-if="error">
         Login failed. Please make sure you are using the correct email and
         password.
@@ -69,12 +68,3 @@ export default {
   },
 };
 </script>
-
-<style>
-#narrow-wrapper {
-  max-width: 500px;
-  max-height: 500px;
-  padding: 20px;
-  margin: 100px auto;
-}
-</style>

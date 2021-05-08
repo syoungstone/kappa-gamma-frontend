@@ -1,5 +1,5 @@
 <template>
-  <div id="wide-wrapper">
+  <div class="wide-wrapper">
     <h1>Directory</h1>
     <div v-if="loaded" id="contents">
       <div id="buttons">
@@ -177,13 +177,7 @@ export default {
 .select-button {
   margin: 5px;
 }
-#wide-wrapper {
-  max-width: 800px;
-  padding: 20px;
-  margin: 50px auto;
-}
 #buttons,
-h1,
 h3 {
   text-align: center;
 }

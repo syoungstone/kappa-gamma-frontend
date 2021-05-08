@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="$store.state.isOfficer" id="wide-wrapper">
+    <div v-if="$store.state.isOfficer" class="wide-wrapper">
       <h1>Officers</h1>
       <div v-if="loaded">
         <b-card
@@ -39,7 +39,7 @@
       </div>
       <LoadingSpinner v-else />
     </div>
-    <div v-else id="narrow-wrapper">
+    <div v-else class="narrow-wrapper">
       <h1>Officers</h1>
       <div v-if="loaded">
         <b-card
@@ -175,14 +175,6 @@ export default {
 </script>
 
 <style>
-#wide-wrapper {
-  max-width: 1000px;
-  padding: 20px;
-  margin: 50px auto;
-}
-h1 {
-  text-align: center;
-}
 .thumbnail {
   position: relative;
   width: 200px;

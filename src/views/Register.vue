@@ -1,5 +1,5 @@
 <template>
-  <div id="narrow-wrapper">
+  <div class="narrow-wrapper">
     <h1>{{ $route.name }}</h1>
     <b-form @submit="onSubmit">
       <p>Only current pledges and brothers may register for an account.</p>
@@ -120,12 +120,3 @@ export default {
   },
 };
 </script>
-
-<style>
-#narrow-wrapper {
-  max-width: 500px;
-  max-height: 500px;
-  padding: 20px;
-  margin: 100px auto;
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="about" id="narrow-wrapper">
+  <div class="narrow-wrapper">
     <h1>About</h1>
     <p>Theta Tau is a professional engineering fraternity.</p>
     <p>
@@ -76,9 +76,6 @@ export default {
 </script>
 
 <style>
-h1 {
-  text-align: left;
-}
 .thumbnail {
   position: relative;
   width: 200px;
@@ -99,5 +96,11 @@ h1 {
 }
 .card-body {
   margin-left: 10px;
+}
+</style>
+
+<style scoped>
+h1 {
+  text-align: left;
 }
 </style>
