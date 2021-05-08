@@ -3,36 +3,6 @@
     <h1>Pledge Classes</h1>
     <div v-if="loaded">
       <div v-if="$store.state.isOfficer" id="create-new">
-        <b-modal
-          id="delete-pledge-class-modal"
-          ref="modal"
-          title="Cannot Delete Pledge Class"
-          hide-footer
-        >
-          <p>
-            Pledge class {{ this.toDelete.class_name }} cannot be deleted until
-            all of its members have been assigned to a new pledge class.
-          </p>
-        </b-modal>
-
-        <b-modal
-          id="name-exists-modal"
-          ref="modal"
-          title="Pledge Class Already Exists"
-          hide-footer
-        >
-          <p>{{ this.modalMessage }}</p>
-        </b-modal>
-
-        <b-modal
-          id="empty-class-modal"
-          ref="modal"
-          title="Nothing to Show"
-          hide-footer
-        >
-          <p>{{ this.modalMessage }}</p>
-        </b-modal>
-
         <h4>Create new pledge class</h4>
         <b-form inline @submit="onSubmit" id="create-form">
           <b-form-input
@@ -104,9 +74,6 @@
       </b-table>
     </div>
     <LoadingSpinner v-else />
-    <div v-if="error" class="mt-3">
-      <strong>{{ error }}</strong>
-    </div>
   </div>
 </template>
 
@@ -149,26 +116,26 @@ export default {
       toDelete: {
         class_name: null,
       },
-      error: null,
       loaded: false,
-      modalMessage: "",
     };
   },
   methods: {
     onSubmit() {
       if (this.pledgeClasses.find(this.classNameExists)) {
-        this.modalMessage =
+        let modalTitle = "Pledge Class Already Exists";
+        let modalMessage =
           'A pledge class with name "' +
           this.newPledgeClass.class_name +
           '" already exists. Please select a unique pledge class name.';
-        this.$bvModal.show("name-exists-modal");
+        this.$root.$children[0].showMessage(modalTitle, modalMessage);
       } else if (this.pledgeClasses.find(this.classYearSemesterExists)) {
-        this.modalMessage =
+        let modalTitle = "Pledge Class Already Exists";
+        let modalMessage =
           "A pledge class for " +
           (this.newPledgeClass.semester == "F" ? "Fall " : "Spring ") +
           this.newPledgeClass.accounting_year +
           " already exists. Please select a different semester/year combination.";
-        this.$bvModal.show("name-exists-modal");
+        this.$root.$children[0].showMessage(modalTitle, modalMessage);
       } else {
         axios
           .post(
@@ -182,7 +149,7 @@ export default {
             this.newPledgeClass.semester = null;
             this.load();
           })
-          .catch((error) => (this.error = error));
+          .catch((error) => this.$root.$children[0].showError(error));
       }
     },
     load() {
@@ -195,12 +162,17 @@ export default {
           this.newPledgeClass.accounting_year = new Date().getFullYear();
           this.loaded = true;
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => this.$root.$children[0].showError(error));
     },
     deletePledgeClass(deleteMe, numStudents) {
       this.toDelete.class_name = deleteMe;
       if (numStudents > 0) {
-        this.$bvModal.show("delete-pledge-class-modal");
+        let modalTitle = "Cannot Delete Pledge Class";
+        let modalMessage =
+          "Pledge class " +
+          this.toDelete.class_name +
+          " cannot be deleted until all of its members have been assigned to a new pledge class.";
+        this.$root.$children[0].showMessage(modalTitle, modalMessage);
       } else {
         axios
           .delete(this.$store.state.apiURL + "delete_pledge_class.php", {
@@ -210,13 +182,14 @@ export default {
           .then(() => {
             this.load();
           })
-          .catch((error) => (this.error = error));
+          .catch((error) => this.$root.$children[0].showError(error));
       }
     },
     viewPledgeClass(semester, year, num_students) {
       if (num_students == 0) {
-        this.modalMessage = "This pledge class has no members.";
-        this.$bvModal.show("empty-class-modal");
+        let modalTitle = "Nothing to Show";
+        let modalMessage = "This pledge class has no members.";
+        this.$root.$children[0].showMessage(modalTitle, modalMessage);
       } else {
         this.$router.push("/pledgeclass/" + semester + year, () => {});
       }

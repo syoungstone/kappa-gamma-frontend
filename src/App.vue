@@ -2,9 +2,7 @@
   <div id="app">
     <b-navbar toggleable="lg" type="dark" variant="info">
       <b-navbar-brand to="/">OT Kappa Gamma</b-navbar-brand>
-
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav v-if="$store.state.loggedIn">
           <b-nav-item to="/dashboard">Dashboard</b-nav-item>
@@ -50,12 +48,22 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
+    <b-modal v-model="notifyModal" :title="notifyModalTitle" hide-footer>
+      <p>{{ notifyModalMessage }}</p>
+    </b-modal>
     <router-view />
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      notifyModal: false,
+      notifyModalMessage: null,
+      notifyModalTitle: null,
+    };
+  },
   methods: {
     logout() {
       this.$store.commit("logout");
@@ -63,6 +71,21 @@ export default {
     },
     editSelf() {
       this.$router.push("/edit/" + this.$store.state.id, () => {});
+    },
+    showError(error) {
+      this.notifyModalTitle = "Error";
+      this.notifyModalMessage = error;
+      this.notifyModal = true;
+    },
+    showSuccess(message) {
+      this.notifyModalTitle = "Success";
+      this.notifyModalMessage = message;
+      this.notifyModal = true;
+    },
+    showMessage(title, message) {
+      this.notifyModalTitle = title;
+      this.notifyModalMessage = message;
+      this.notifyModal = true;
     },
   },
 };

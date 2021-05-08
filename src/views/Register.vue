@@ -1,8 +1,7 @@
 <template>
   <div id="narrow-wrapper">
     <h1>{{ $route.name }}</h1>
-    <LoadingSpinner v-if="loading" />
-    <b-form v-else @submit="onSubmit">
+    <b-form @submit="onSubmit">
       <p>Only current pledges and brothers may register for an account.</p>
       <p>Email must match the information we have on file for you.</p>
       <p>
@@ -57,7 +56,6 @@
       <b-button type="submit" variant="primary" :disabled="submitDisabled"
         >Submit</b-button
       >
-      <p v-if="response">{{ response.message }}</p>
       <p v-if="error">
         Account creation failed. Check if the email you are using is available.
       </p>
@@ -70,11 +68,7 @@
 
 <script>
 import axios from "axios";
-import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
-  components: {
-    LoadingSpinner,
-  },
   computed: {
     submitDisabled() {
       return !this.state1 || !this.state2;
@@ -86,7 +80,6 @@ export default {
         email: "",
         password: "",
       },
-      loading: false,
       password_confirm: "",
       response: "",
       error: "",
@@ -97,7 +90,6 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.loading = true;
       axios
         .post(
           this.$store.state.apiURL + "create_user.php",
@@ -116,7 +108,6 @@ export default {
         })
         .catch((error) => {
           this.error = error;
-          this.loading = false;
         });
     },
     updateState1() {

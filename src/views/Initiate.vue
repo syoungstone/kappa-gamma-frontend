@@ -1,8 +1,5 @@
 <template>
   <div id="narrow-wrapper">
-    <b-modal v-model="notifyModal" :title="notifyModalTitle" hide-footer>
-      <p>{{ notifyModalMessage }}</p>
-    </b-modal>
     <h1>Initiate Pledges</h1>
     <div v-if="noPledges">
       <p id="no-pledges">There are currently no pledges to be found.</p>
@@ -96,9 +93,6 @@ export default {
       photoId: null,
       tempPhoto: null,
       photoState: null,
-      notifyModal: false,
-      notifyModalMessage: null,
-      notifyModalTitle: null,
     };
   },
   methods: {
@@ -108,10 +102,14 @@ export default {
     },
     initiate(pledge) {
       if (pledge.roll_number <= 0) {
-        this.showError("Roll number must be greater than 0.");
+        this.$root.$children[0].showError(
+          "Roll number must be greater than 0."
+        );
         return false;
       } else if (pledge.roll_number < parseInt(pledge.big_roll_number)) {
-        this.showError("Roll number must be greater than big's roll number.");
+        this.$root.$children[0].showError(
+          "Roll number must be greater than big's roll number."
+        );
       } else {
         pledge.is_pledge = 0;
         pledge.brother_status = "active";
@@ -127,15 +125,13 @@ export default {
           )
           .then((response) => {
             if (response.data.success) {
-              this.notifyModalTitle = "Success";
-              this.notifyModalMessage = response.data.message;
-              this.notifyModal = true;
+              this.$root.$children[0].showSuccess(response.data.message);
               this.load();
             } else {
-              this.showError(response.data.message);
+              this.$root.$children[0].showError(response.data.message);
             }
           })
-          .catch((error) => this.showError(error));
+          .catch((error) => this.$root.$children[0].showError(error));
       }
     },
     load() {
@@ -151,15 +147,10 @@ export default {
           if (error.response && error.response.status == 404) {
             this.noPledges = true;
           } else {
-            this.showError(error);
+            this.$root.$children[0].showError(error);
           }
+          this.loaded = true;
         });
-    },
-    showError(error) {
-      this.loaded = true;
-      this.notifyModalTitle = "Error";
-      this.notifyModalMessage = error;
-      this.notifyModal = true;
     },
     checkUrlValidity() {
       let regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;

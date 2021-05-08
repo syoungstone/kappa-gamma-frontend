@@ -46,9 +46,6 @@
       </b-col>
     </div>
     <LoadingSpinner v-else />
-    <div v-if="error" class="mt-3">
-      <strong>{{ error }}</strong>
-    </div>
   </div>
 </template>
 
@@ -69,7 +66,7 @@ export default {
         this.loaded = true;
         this.totalRows = this.data.body.length;
       })
-      .catch((error) => (this.error = error));
+      .catch((error) => this.$root.$children[0].showError(error));
   },
   data() {
     return {
@@ -109,7 +106,6 @@ export default {
       this.pledges = false;
       this.alumni = false;
       this.all = false;
-      this.loaded = false;
       axios
         .get(this.$store.state.apiURL + "read_active_for_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
@@ -135,14 +131,13 @@ export default {
             },
           ];
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => this.$root.$children[0].showError(error));
     },
     showPledges() {
       this.active = false;
       this.pledges = true;
       this.alumni = false;
       this.all = false;
-      this.loaded = false;
       axios
         .get(this.$store.state.apiURL + "read_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
@@ -169,7 +164,7 @@ export default {
             { key: "actions", label: "Actions", sortable: false },
           ];
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => this.$root.$children[0].showError(error));
     },
     viewStudent(id) {
       this.$router.push("/student/" + id, () => {});

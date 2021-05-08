@@ -5,9 +5,6 @@
       <LineageTree :students="students" />
     </div>
     <LoadingSpinner v-else />
-    <div v-if="error" class="mt-3">
-      <strong>{{ error }}</strong>
-    </div>
   </div>
 </template>
 
@@ -31,14 +28,13 @@ export default {
         this.lineageName = this.students[0].lineage_name;
         this.loaded = true;
       })
-      .catch((error) => (this.error = error));
+      .catch((error) => this.$root.$children[0].showError(error));
   },
   data() {
     return {
       lineageName: null,
       students: null,
       id: null,
-      error: null,
       loaded: false,
     };
   },

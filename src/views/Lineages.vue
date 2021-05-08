@@ -91,9 +91,6 @@
       </b-table>
     </div>
     <LoadingSpinner v-else />
-    <div v-if="error" class="mt-3">
-      <strong>{{ error }}</strong>
-    </div>
   </div>
 </template>
 
@@ -137,7 +134,6 @@ export default {
         founder_name: null,
         founder: null,
       },
-      error: null,
       loaded: false,
       modalMessage: "",
     };
@@ -170,7 +166,7 @@ export default {
             this.newLineage.founder = null;
             this.load();
           })
-          .catch((error) => (this.error = error));
+          .catch((error) => this.$root.$children[0].showError(error));
       }
     },
     readBrothers() {
@@ -182,7 +178,7 @@ export default {
           this.brothers = response.data.body;
           this.load();
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => this.$root.$children[0].showError(error));
     },
     load() {
       axios
@@ -193,7 +189,7 @@ export default {
           this.lineages = response.data.body;
           this.loaded = true;
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => this.$root.$children[0].showError(error));
     },
     prepareDeletion(lineage) {
       this.toDelete = lineage;
@@ -212,7 +208,7 @@ export default {
         .then(() => {
           this.load();
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => this.$root.$children[0].showError(error));
     },
     viewLineage(id) {
       this.$router.push("/lineage/" + id, () => {});

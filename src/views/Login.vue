@@ -1,8 +1,7 @@
 <template>
   <div id="narrow-wrapper">
     <h1>{{ $route.name }}</h1>
-    <LoadingSpinner v-if="loading" />
-    <b-form v-else @submit="onSubmit">
+    <b-form @submit="onSubmit">
       <b-form-group id="input-group-1" label="Email:" label-for="input-1">
         <b-form-input
           id="input-1"
@@ -36,11 +35,7 @@
 
 <script>
 import axios from "axios";
-import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
-  components: {
-    LoadingSpinner,
-  },
   data() {
     return {
       form: {
@@ -54,7 +49,6 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.loading = true;
       axios
         .post(this.$store.state.apiURL + "login.php", JSON.stringify(this.form))
         .then((response) => {
@@ -70,7 +64,6 @@ export default {
         })
         .catch((error) => {
           this.error = error;
-          this.loading = false;
         });
     },
   },

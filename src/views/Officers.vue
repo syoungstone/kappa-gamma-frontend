@@ -1,8 +1,5 @@
 <template>
   <div>
-    <b-modal v-model="notifyModal" :title="notifyModalTitle" hide-footer>
-      <p>{{ notifyModalMessage }}</p>
-    </b-modal>
     <div v-if="$store.state.isOfficer" id="wide-wrapper">
       <h1>Officers</h1>
       <div v-if="loaded">
@@ -102,18 +99,17 @@ export default {
         );
         this.getActives();
       })
-      .catch((error) => (this.error = error));
+      .catch((error) => {
+        this.loaded = true;
+        this.$root.$children[0].showError(error);
+      });
   },
   data() {
     return {
       officers: null,
       actives: null,
       newOfficer: null,
-      error: null,
       loaded: false,
-      notifyModal: false,
-      notifyModalMessage: null,
-      notifyModalTitle: null,
     };
   },
   methods: {
@@ -131,7 +127,10 @@ export default {
           });
           this.loaded = true;
         })
-        .catch((error) => this.showError(error));
+        .catch((error) => {
+          this.loaded = true;
+          this.$root.$children[0].showError(error);
+        });
     },
     getCustomDescription(option) {
       return option.name_first + " " + option.name_last;
@@ -158,24 +157,18 @@ export default {
           )
           .then((response) => {
             if (response.data.success) {
-              this.notifyModalTitle = "Success";
-              this.notifyModalMessage = response.data.message;
-              this.notifyModal = true;
+              this.$root.$children[0].showSuccess(response.data.message);
             } else {
-              this.showError(response.data.message);
+              this.$root.$children[0].showError(response.data.message);
             }
           })
-          .catch((error) => this.showError(error));
+          .catch((error) => this.$root.$children[0].showError(error));
       } else {
         this.newOfficer = null;
-        this.showError("One brother may not hold multiple positions.");
+        this.$root.$children[0].showError(
+          "One brother may not hold multiple positions."
+        );
       }
-    },
-    showError(error) {
-      this.loaded = true;
-      this.notifyModalTitle = "Error";
-      this.notifyModalMessage = error;
-      this.notifyModal = true;
     },
   },
 };

@@ -1,8 +1,5 @@
 <template>
   <div id="narrow-wrapper">
-    <b-modal v-model="notifyModal" :title="notifyModalTitle" hide-footer>
-      <p>{{ notifyModalMessage }}</p>
-    </b-modal>
     <div v-if="created" id="created">
       <h2>{{ response }}</h2>
       <!-- <h2>New {{ data.is_pledge ? "pledge" : "brother" }} created!</h2> -->
@@ -362,7 +359,7 @@ export default {
           this.pledgeClasses = response.data.body.map((a) => a.class_name);
           this.getInfo();
         })
-        .catch((error) => this.showError(error));
+        .catch((error) => this.$root.$children[0].showError(error));
     } else {
       this.getInfo();
     }
@@ -725,9 +722,6 @@ export default {
       bigsError: null,
       state1: null,
       state2: null,
-      notifyModal: false,
-      notifyModalMessage: null,
-      notifyModalTitle: null,
     };
   },
   methods: {
@@ -748,28 +742,29 @@ export default {
             this.photo = this.data.photo;
             this.loaded = true;
           })
-          .catch((error) => this.showError(error));
+          .catch((error) => this.$root.$children[0].showError(error));
       } else {
         this.data = JSON.parse(JSON.stringify(this.defaultData));
         this.loaded = true;
       }
     },
     onSubmit() {
-      this.loaded = false;
       if (this.checkData()) {
         this.sendData();
       }
     },
     checkData() {
       if (this.data.is_pledge == 0 && this.data.roll_number <= 0) {
-        this.showError("Roll number must be greater than 0.");
+        this.$root.$children[0].showError(
+          "Roll number must be greater than 0."
+        );
         return false;
       } else if (
         this.data.is_pledge == 0 &&
         this.data.big_roll_number != null &&
         parseInt(this.data.roll_number) <= parseInt(this.data.big_roll_number)
       ) {
-        this.showError(
+        this.$root.$children[0].showError(
           "Changes cannot be saved. Big's roll number must be lower than student's roll number."
         );
         return false;
@@ -789,26 +784,19 @@ export default {
         })
         .then((response) => {
           if (response.data.success) {
-            this.response = response.data.message;
-            this.loaded = true;
             if (this.newEntry) {
+              this.response = response.data.message;
               this.created = true;
             } else {
-              this.notifyModalTitle = "Success";
-              this.notifyModalMessage = this.response;
-              this.notifyModal = true;
+              this.$root.$children[0].showSuccess(response.data.message);
             }
           } else {
-            this.showError(response.data.message);
+            this.$root.$children[0].showError(response.data.message);
           }
         })
-        .catch((error) => this.showError(error));
-    },
-    showError(error) {
-      this.loaded = true;
-      this.notifyModalTitle = "Error";
-      this.notifyModalMessage = error;
-      this.notifyModal = true;
+        .catch((error) => {
+          this.$root.$children[0].showError(error);
+        });
     },
     checkUrlValidity() {
       let regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
@@ -877,7 +865,7 @@ export default {
           this.data.big_name = this.newBig.full_name;
           this.data.big_roll_number = this.newBig.roll_number;
         } else {
-          this.showError(
+          this.$root.$children[0].showError(
             "Cannot change big to " +
               this.newBig.full_name +
               ". Big's roll number must be lower than student's roll number."
@@ -891,7 +879,6 @@ export default {
     reset() {
       this.data = JSON.parse(JSON.stringify(this.defaultData));
       this.created = false;
-      this.response = null;
     },
   },
 };

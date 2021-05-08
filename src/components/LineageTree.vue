@@ -50,8 +50,7 @@ export default {
 
       for (i = 0; i < this.students.length; i += 1) {
         node = this.students[i];
-        if (node.big != null) {
-          // if you have dangling branches check that map[node.parentId] exists
+        if (node.big != null && map[node.big] != null) {
           this.students[map[node.big]].children.push(node);
         } else {
           roots.push(node);

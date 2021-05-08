@@ -107,12 +107,6 @@
       </b-col>
     </div>
     <LoadingSpinner v-else />
-    <div v-if="error" class="mt-3" id="error">
-      <strong>{{ error }}</strong>
-    </div>
-    <div v-if="response" class="mt-3" id="response">
-      <strong>{{ response }}</strong>
-    </div>
   </div>
 </template>
 
@@ -133,7 +127,7 @@ export default {
         this.loaded = true;
         this.totalRows = this.data.body.length;
       })
-      .catch((error) => (this.error = error));
+      .catch((error) => this.$root.$children[0].showError(error));
   },
   data() {
     return {
@@ -187,7 +181,6 @@ export default {
       this.pledges = false;
       this.alumni = false;
       this.all = false;
-      // this.loaded = false;
       axios
         .get(this.$store.state.apiURL + "read_active.php", {
           headers: { Authorization: this.$store.state.jwt },
@@ -197,14 +190,13 @@ export default {
           this.loaded = true;
           this.totalRows = this.data.body.length;
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => this.$root.$children[0].showError(error));
     },
     showPledges() {
       this.active = false;
       this.pledges = true;
       this.alumni = false;
       this.all = false;
-      // this.loaded = false;
       axios
         .get(this.$store.state.apiURL + "read_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
@@ -214,14 +206,13 @@ export default {
           this.loaded = true;
           this.totalRows = this.data.body.length;
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => this.$root.$children[0].showError(error));
     },
     showAlumni() {
       this.active = false;
       this.pledges = false;
       this.alumni = true;
       this.all = false;
-      // this.loaded = false;
       axios
         .get(this.$store.state.apiURL + "read_alumni.php", {
           headers: { Authorization: this.$store.state.jwt },
@@ -231,14 +222,13 @@ export default {
           this.loaded = true;
           this.totalRows = this.data.body.length;
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => this.$root.$children[0].showError(error));
     },
     showAll() {
       this.active = false;
       this.pledges = false;
       this.alumni = false;
       this.all = true;
-      // this.loaded = false;
       axios
         .get(this.$store.state.apiURL + "read_students.php", {
           headers: { Authorization: this.$store.state.jwt },
@@ -248,7 +238,7 @@ export default {
           this.loaded = true;
           this.totalRows = this.data.body.length;
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => this.$root.$children[0].showError(error));
     },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
@@ -280,14 +270,16 @@ export default {
           }
         )
         .then((response) => {
-          this.response = response.data;
+          let modalTitle = "Pledge Deleted";
+          let modalMessage = response.data;
+          this.$root.$children[0].showMessage(modalTitle, modalMessage);
           if (this.pledges) {
             this.showPledges();
           } else {
             this.showAll();
           }
         })
-        .catch((error) => (this.error = error));
+        .catch((error) => this.$root.$children[0].showError(error));
     },
   },
 };

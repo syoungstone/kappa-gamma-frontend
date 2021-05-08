@@ -41,7 +41,7 @@
     </div>
     <LoadingSpinner v-else />
     <div v-if="error" class="mt-3">
-      <strong>{{ error }}</strong>
+      <strong>Officers could not be loaded.</strong>
     </div>
   </div>
 </template>
@@ -60,7 +60,10 @@ export default {
         this.officers = response.data.body;
         this.loaded = true;
       })
-      .catch((error) => (this.error = error));
+      .catch((error) => {
+        this.error = error;
+        this.loaded = true;
+      });
   },
   data() {
     return {
