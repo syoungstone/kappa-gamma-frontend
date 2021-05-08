@@ -185,7 +185,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+h4 {
+  text-align: left;
+}
 .thumbnail {
   height: 100%;
 }

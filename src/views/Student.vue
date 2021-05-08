@@ -155,10 +155,7 @@ export default {
 };
 </script>
 
-<style>
-h2 {
-  text-align: center;
-}
+<style scoped>
 .thumbnail {
   margin: auto;
   position: relative;

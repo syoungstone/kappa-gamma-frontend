@@ -38,8 +38,8 @@
         ></b-form-input>
       </b-form-group>
       <b-button type="submit" variant="primary">Submit</b-button>
-      <p v-if="response">{{ response.message }}</p>
       <p v-if="error">Attempt to change password failed.</p>
+      <p v-if="error">{{ error }}</p>
     </b-form>
     <h4>Delete Account</h4>
     <div v-if="deletePressed" class="delete">
@@ -57,8 +57,8 @@
         >Delete</b-button
       >
     </div>
-    <p v-if="deleteResponse">{{ response }}</p>
     <p v-if="deleteError">Attempt to delete account failed.</p>
+    <p v-if="deleteError">{{ deleteError }}</p>
   </div>
 </template>
 
@@ -74,9 +74,7 @@ export default {
       },
       deletePressed: false,
       password_confirm: "",
-      response: "",
       error: "",
-      deleteResponse: "",
       deleteError: "",
       state1: null,
       state2: null,
@@ -90,8 +88,8 @@ export default {
           JSON.stringify(this.form)
         )
         .then((response) => {
-          this.response = response.data;
-          this.$store.commit("setJwt", this.response.jwt);
+          this.$root.$children[0].showSuccess(response.data.message);
+          this.$store.commit("setJwt", response.data.jwt);
         })
         .catch((error) => (this.error = error));
     },
@@ -104,7 +102,7 @@ export default {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          this.deleteResponse = response;
+          this.$root.$children[0].showSuccess(response.data.message);
           this.$store.commit("logout");
           this.$router.push("/", () => {});
         })
@@ -124,5 +122,6 @@ export default {
 <style scoped>
 h4 {
   margin-top: 30px;
+  text-align: left;
 }
 </style>

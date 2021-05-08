@@ -115,7 +115,4 @@ h1 {
   margin-top: 30px;
   margin-bottom: 30px;
 }
-footer {
-  height: 100px;
-}
 </style>

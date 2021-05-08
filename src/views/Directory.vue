@@ -285,14 +285,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .select-button {
   margin: 5px;
-}
-#wide-wrapper {
-  max-width: 1000px;
-  padding: 20px;
-  margin: 50px auto;
 }
 #buttons,
 #error,

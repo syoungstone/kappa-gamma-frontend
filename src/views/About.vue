@@ -3,13 +3,13 @@
     <h1>About</h1>
     <p>Theta Tau is a professional engineering fraternity.</p>
     <p>
-      The purpose of Tehta Tau is to develop and maintain a high standard of
+      The purpose of Theta Tau is to develop and maintain a high standard of
       professional interest among its members and to unite them in a strong bond
-      of fraternal fellowhsip.
+      of fraternal fellowship.
     </p>
     <p>The Kappa Gamma chapter at VCU was certified on September 9, 2000.</p>
-    <h2>Our Officers</h2>
     <div v-if="loaded">
+      <h2>Our Officers</h2>
       <b-card
         v-for="officer in officers"
         :key="officer.importance"
@@ -39,20 +39,12 @@
         </b-row>
       </b-card>
     </div>
-    <LoadingSpinner v-else />
-    <div v-if="error" class="mt-3">
-      <strong>Officers could not be loaded.</strong>
-    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
-  components: {
-    LoadingSpinner,
-  },
   created() {
     axios
       .get(this.$store.state.apiURL + "read_officers_public.php")
@@ -75,7 +67,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+h1,
+h2,
+h4 {
+  text-align: left;
+}
 .thumbnail {
   position: relative;
   width: 200px;
@@ -96,11 +93,5 @@ export default {
 }
 .card-body {
   margin-left: 10px;
-}
-</style>
-
-<style scoped>
-h1 {
-  text-align: left;
 }
 </style>

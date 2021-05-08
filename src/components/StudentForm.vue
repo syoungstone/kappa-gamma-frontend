@@ -884,7 +884,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 h3 {
   border-radius: 10px;
   background-color: coral;
@@ -892,7 +892,6 @@ h3 {
   padding-bottom: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
-  text-align: center;
 }
 .thumbnail:hover .overlay {
   opacity: 0.5;

@@ -226,7 +226,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .founder-select {
   margin-top: 8px;
   margin-right: 10px;
@@ -244,11 +244,5 @@ export default {
 }
 #create-form {
   justify-content: center;
-}
-</style>
-
-<style scoped>
-.wide-wrapper {
-  text-align: center;
 }
 </style>

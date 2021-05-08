@@ -11,15 +11,15 @@
         Hi everyone in CMSC 508! Register a password for one of the following
         email accounts to try out this website:
       </p>
-      <h4>Officers</h4>
+      <p><strong>Officers</strong></p>
       <p>spectacledhimbo@webmail.net</p>
       <p>definitelynotspiderman@webmail.net</p>
       <p>xXxVampireCopxXx@webmail.net</p>
-      <h4>Brothers</h4>
+      <p><strong>Brothers</strong></p>
       <p>sexbobbomb@webmail.net</p>
       <p>syoungstone@gmail.com</p>
       <p>americasass@webmail.net</p>
-      <h4>Pledges</h4>
+      <p><strong>Pledges</strong></p>
       <p>definitelynotspiderman2@webmail.net</p>
       <p>tweetytweet@webmail.net</p>
       <p>honkhonk@honk.honk</p>

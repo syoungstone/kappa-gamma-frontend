@@ -173,7 +173,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .select-button {
   margin: 5px;
 }

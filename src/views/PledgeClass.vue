@@ -97,7 +97,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+h4 {
+  text-align: left;
+}
 .thumbnail {
   position: relative;
   width: 200px;
@@ -119,11 +122,5 @@ export default {
 }
 .card-body {
   margin-left: 10px;
-}
-</style>
-
-<style scoped>
-h1 {
-  text-align: left;
 }
 </style>

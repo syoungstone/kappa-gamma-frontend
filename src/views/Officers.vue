@@ -174,7 +174,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .thumbnail {
   position: relative;
   width: 200px;

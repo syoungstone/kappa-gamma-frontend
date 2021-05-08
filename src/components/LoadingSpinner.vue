@@ -1,10 +1,6 @@
 <template>
-  <div>
-    <b-spinner
-      id="loading"
-      style="width: 3rem; height: 3rem"
-      variant="primary"
-    ></b-spinner>
+  <div id="spinner-wrapper">
+    <b-spinner style="width: 3rem; height: 3rem" variant="primary"></b-spinner>
   </div>
 </template>
 
@@ -15,7 +11,7 @@ export default {
 </script>
 
 <style scoped>
-#loading {
-  margin: auto;
+#spinner-wrapper {
+  text-align: center;
 }
 </style>
