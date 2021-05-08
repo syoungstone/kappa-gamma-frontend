@@ -73,21 +73,6 @@ h2,
 h4 {
   text-align: left;
 }
-.thumbnail {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  overflow: hidden;
-}
-.thumbnail img {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
-.thumbnail img.portrait {
-  width: 100%;
-  height: auto;
-}
 .officer-card {
   margin-top: 20px;
 }

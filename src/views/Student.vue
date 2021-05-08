@@ -158,20 +158,7 @@ export default {
 <style scoped>
 .thumbnail {
   margin: auto;
-  position: relative;
-  width: 200px;
-  height: 200px;
-  overflow: hidden;
   border: 3px solid black;
-}
-.thumbnail img {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
-.thumbnail img.portrait {
-  width: 100%;
-  height: auto;
 }
 #name-row {
   justify-content: center;

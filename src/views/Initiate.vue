@@ -192,14 +192,12 @@ h4 {
 .thumbnail {
   height: 100%;
 }
-.thumbnail img {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
 .pledge-card {
   margin-top: 20px;
   justify-content: center;
+}
+.card-body {
+  margin-left: 10px;
 }
 #cards {
   justify-content: center;
