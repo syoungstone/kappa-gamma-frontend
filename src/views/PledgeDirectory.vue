@@ -1,5 +1,5 @@
 <template>
-  <div class="wide-wrapper">
+  <div class="narrow-wrapper">
     <h1>Directory</h1>
     <div v-if="loaded" id="contents">
       <div id="buttons">
