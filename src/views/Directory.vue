@@ -291,9 +291,7 @@ export default {
 }
 #buttons,
 #error,
-#response,
-h1,
-h3 {
+#response {
   text-align: center;
 }
 #search,
