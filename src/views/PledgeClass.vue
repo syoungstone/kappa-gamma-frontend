@@ -102,7 +102,6 @@ h4 {
   text-align: left;
 }
 .student-card {
-  margin-top: 20px;
   cursor: pointer;
 }
 .card-body {

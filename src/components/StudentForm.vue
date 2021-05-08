@@ -887,7 +887,7 @@ export default {
 <style scoped>
 h3 {
   border-radius: 10px;
-  background-color: coral;
+  background-color: var(--ot-gold);
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 10px;

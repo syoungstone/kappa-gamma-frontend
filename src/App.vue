@@ -1,7 +1,15 @@
 <template>
   <div id="app">
-    <b-navbar toggleable="lg" type="dark" variant="info">
-      <b-navbar-brand to="/">OT Kappa Gamma</b-navbar-brand>
+    <b-navbar id="navbar" toggleable="lg" type="dark">
+      <b-navbar-brand to="/">
+        <img
+          id="nav-logo"
+          src="./assets/ThetaTauLogo.png"
+          class="d-inline-block align-top"
+          alt="OT Shield"
+        />
+        ΘΤ @ VCU</b-navbar-brand
+      >
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav v-if="$store.state.loggedIn">
@@ -92,6 +100,17 @@ export default {
 </script>
 
 <style>
+:root {
+  --ot-dark-red: #8b0000;
+  --ot-gold: #ffcc33;
+  --ot-off-white: #edeab5;
+}
+#navbar {
+  background-color: var(--ot-dark-red);
+}
+#nav-logo {
+  max-height: 30px;
+}
 #app {
   margin-bottom: 100px;
 }
@@ -129,5 +148,9 @@ h1 {
 .thumbnail img.portrait {
   width: 100%;
   height: auto;
+}
+.card {
+  margin-top: 20px;
+  background-color: var(--ot-off-white) !important;
 }
 </style>

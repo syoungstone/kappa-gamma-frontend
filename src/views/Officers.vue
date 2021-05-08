@@ -6,7 +6,7 @@
         <b-card
           v-for="officer in officers"
           :key="officer.office"
-          class="officer-card"
+          class="edit-student-card"
         >
           <b-form>
             <div class="row">
@@ -46,8 +46,9 @@
           v-for="officer in officers"
           :key="officer.importance"
           no-body
-          class="overflow-hidden officer-card"
+          class="overflow-hidden student-card"
           style="max-width: 540px"
+          @click="redirect(officer.id)"
         >
           <b-row no-gutters>
             <b-col md="5">
@@ -135,6 +136,16 @@ export default {
     getCustomDescription(option) {
       return option.name_first + " " + option.name_last;
     },
+    redirect(id) {
+      if (id != null) {
+        this.$router.push("/student/" + id, () => {});
+      } else {
+        let modalTitle = "Position Vacant";
+        let modalMessage =
+          "There is no student information to display for this position.";
+        this.$root.$children[0].showMessage(modalTitle, modalMessage);
+      }
+    },
     save(office) {
       this.newOfficer = this.officers.find((x) => x.office == office);
       this.newOfficer.id = this.newOfficer.brother
@@ -178,9 +189,8 @@ export default {
 h4 {
   text-align: left;
 }
-.officer-card {
-  margin-top: 20px;
-  background-color: rgb(211, 234, 241);
+.student-card {
+  cursor: pointer;
 }
 .card-body {
   margin-left: 10px;

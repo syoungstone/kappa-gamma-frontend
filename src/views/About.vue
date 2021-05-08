@@ -14,7 +14,7 @@
         v-for="officer in officers"
         :key="officer.importance"
         no-body
-        class="overflow-hidden officer-card"
+        class="overflow-hidden student-card"
         style="max-width: 540px"
       >
         <b-row no-gutters>
@@ -72,9 +72,6 @@ h1,
 h2,
 h4 {
   text-align: left;
-}
-.officer-card {
-  margin-top: 20px;
 }
 .card-body {
   margin-left: 10px;
