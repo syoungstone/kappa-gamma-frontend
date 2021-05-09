@@ -42,7 +42,7 @@
         </b-modal>
 
         <h4>Create new lineage</h4>
-        <b-form inline @submit="onSubmit" id="create-form">
+        <b-form inline @submit.prevent="onSubmit" id="create-form">
           <b-form-input
             id="inline-form-input-name"
             class="mb-2 mr-sm-2 mb-sm-0"
@@ -205,10 +205,13 @@ export default {
             headers: { Authorization: this.$store.state.jwt },
           }
         )
-        .then(() => {
+        .then((response) => {
+          this.$root.$children[0].showSuccess(response.data.message);
           this.load();
         })
-        .catch((error) => this.$root.$children[0].showError(error));
+        .catch((error) => {
+          this.$root.$children[0].showError(error);
+        });
     },
     viewLineage(id) {
       this.$router.push("/lineage/" + id, () => {});

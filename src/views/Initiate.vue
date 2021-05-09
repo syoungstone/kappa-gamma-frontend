@@ -43,7 +43,7 @@
               :title="pledge.name_first + ' ' + pledge.name_last"
               class="card-body"
             >
-              <b-form @submit="initiate(pledge)" id="create-form">
+              <b-form @submit.prevent="initiate(pledge)" id="create-form">
                 <b-form-group
                   class
                   id="input-group-0"

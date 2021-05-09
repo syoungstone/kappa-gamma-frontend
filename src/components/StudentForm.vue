@@ -16,7 +16,7 @@
         >Create Brother</b-button
       >
     </div>
-    <b-form @submit="onSubmit" v-else-if="loaded">
+    <b-form @submit.prevent="onSubmit" v-else-if="loaded">
       <div
         v-if="data.photo && $store.state.isOfficer"
         class="thumbnail"

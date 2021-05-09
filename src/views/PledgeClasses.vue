@@ -4,7 +4,7 @@
     <div v-if="loaded">
       <div v-if="$store.state.isOfficer" id="create-new">
         <h4>Create new pledge class</h4>
-        <b-form inline @submit="onSubmit" id="create-form">
+        <b-form inline @submit.prevent="onSubmit" id="create-form">
           <b-form-input
             id="inline-form-input-name"
             class="mb-2 mr-sm-2 mb-sm-0"

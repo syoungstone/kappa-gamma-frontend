@@ -1,7 +1,7 @@
 <template>
   <div class="narrow-wrapper">
     <h1>{{ $route.name }}</h1>
-    <b-form @submit="onSubmit">
+    <b-form @submit.prevent="onSubmit">
       <b-form-group id="input-group-1" label="Email:" label-for="input-1">
         <b-form-input
           id="input-1"

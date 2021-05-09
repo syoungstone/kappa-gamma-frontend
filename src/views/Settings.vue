@@ -3,7 +3,7 @@
     <h1>{{ $route.name }}</h1>
 
     <h4>Change Password</h4>
-    <b-form @submit="onSubmit">
+    <b-form @submit.prevent="onSubmit">
       <b-form-group
         id="input-group-4"
         label-for="input-4"

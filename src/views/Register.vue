@@ -1,7 +1,7 @@
 <template>
   <div class="narrow-wrapper">
     <h1>{{ $route.name }}</h1>
-    <b-form @submit="onSubmit">
+    <b-form @submit.prevent="onSubmit">
       <p>Only current pledges and brothers may register for an account.</p>
       <p>Email must match the information we have on file for you.</p>
       <p>
