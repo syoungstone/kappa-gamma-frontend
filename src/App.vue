@@ -73,14 +73,6 @@ export default {
     };
   },
   beforeUpdate() {
-    console.log(
-      "Current: " +
-        Date.now() +
-        ", Expiration: " +
-        (this.$store.state.jwtExpiration
-          ? this.$store.state.jwtExpiration * 1000
-          : "N/A")
-    );
     if (
       this.$store.state.loggedIn &&
       this.$store.state.jwtExpiration * 1000 <= Date.now()

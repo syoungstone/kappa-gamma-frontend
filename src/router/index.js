@@ -142,12 +142,10 @@ router.beforeEach((to, from, next) => {
   if (!store.state.loggedIn) {
     let jwt = localStorage.getItem("kappa-gamma-jwt");
     if (jwt) {
-      console.log("jwt retrieved from localStorage");
       store.commit("setUser", jwt);
     }
   }
   if (studentRestricted.includes(to.name) && !store.state.loggedIn) {
-    console.log("Not logged in! Redirected!");
     next({ path: "/login" + to.path });
   } else if (brotherRestricted.includes(to.name) && !store.state.isBrother) {
     next({ name: "Dashboard" });

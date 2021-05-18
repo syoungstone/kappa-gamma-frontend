@@ -18,11 +18,9 @@ export default new Vuex.Store({
   },
   mutations: {
     setUser(state, jwt) {
-      console.log(jwt);
       let base64Url = jwt.split(".")[1];
       let base64 = base64Url.replace("-", "+").replace("_", "/");
       let parsed = JSON.parse(atob(base64));
-      console.log(parsed);
       if (parsed.exp * 1000 > Date.now()) {
         state.loggedIn = true;
         state.user = parsed.data.email;
@@ -33,9 +31,6 @@ export default new Vuex.Store({
         state.isBrother = parsed.data.is_brother;
         state.isOfficer = parsed.data.is_officer;
         localStorage.setItem("kappa-gamma-jwt", jwt);
-        console.log("jwt and payload saved");
-      } else {
-        console.log("jwt expired");
       }
     },
     logout(state) {
@@ -48,7 +43,6 @@ export default new Vuex.Store({
       state.isBrother = null;
       state.isOfficer = null;
       localStorage.removeItem("kappa-gamma-jwt");
-      console.log("jwt deleted from localStorage");
     },
   },
   actions: {},
