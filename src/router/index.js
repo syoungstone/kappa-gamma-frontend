@@ -25,6 +25,11 @@ const routes = [
     component: () => import("../views/Login.vue"),
   },
   {
+    path: "/login/:redirect",
+    name: "Log In",
+    component: () => import("../views/Login.vue"),
+  },
+  {
     path: "/register",
     name: "Register",
     component: () => import("../views/Register.vue"),
@@ -134,7 +139,8 @@ router.beforeEach((to, from, next) => {
     "Pledge Directory",
   ]);
   if (studentRestricted.includes(to.name) && !store.state.loggedIn) {
-    next({ name: "Log In" });
+    console.log("Not logged in! Redirected!");
+    next({ path: "/login" + to.path });
   } else if (brotherRestricted.includes(to.name) && !store.state.isBrother) {
     next({ name: "Dashboard" });
   } else if (officerRestricted.includes(to.name) && !store.state.isOfficer) {

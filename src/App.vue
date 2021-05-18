@@ -72,7 +72,37 @@ export default {
       notifyModalTitle: null,
     };
   },
+  beforeCreate() {
+    let jwt = localStorage.getItem("kappa-gamma-jwt");
+    if (jwt) {
+      console.log("jwt retrieved from localStorage");
+      this.$store.commit("setUser", jwt);
+    }
+  },
+  beforeUpdate() {
+    console.log(
+      "Current: " +
+        Date.now() +
+        ", Expiration: " +
+        (this.$store.state.jwtExpiration
+          ? this.$store.state.jwtExpiration * 1000
+          : "N/A")
+    );
+    if (
+      this.$store.state.loggedIn &&
+      this.$store.state.jwtExpiration * 1000 <= Date.now()
+    ) {
+      this.timeout();
+    }
+  },
   methods: {
+    timeout() {
+      this.logout();
+      this.showMessage(
+        "Session Expired",
+        "Your session has expired. Please log back in."
+      );
+    },
     logout() {
       this.$store.commit("logout");
       this.$router.push("/", () => {});

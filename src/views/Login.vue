@@ -42,7 +42,6 @@ export default {
         password: "",
       },
       loading: false,
-      response: null,
       error: null,
     };
   },
@@ -51,15 +50,10 @@ export default {
       axios
         .post(this.$store.state.apiURL + "login.php", JSON.stringify(this.form))
         .then((response) => {
-          this.response = response.data;
-          this.$store.commit("setUser", this.form.email);
-          this.$store.commit("setId", this.response.id);
-          this.$store.commit("setJwt", this.response.jwt);
-          this.$store.commit("setName", this.response.name_last);
-          this.$store.commit("setBrother", this.response.is_brother);
-          this.$store.commit("setOfficer", this.response.is_officer);
-          this.$store.commit("login");
-          this.$router.push("/dashboard", () => {});
+          this.$store.commit("setUser", response.data.jwt);
+          let redirect = this.$route.params.redirect;
+          let path = "/" + (redirect ? redirect : "dashboard");
+          this.$router.push(path, () => {});
         })
         .catch((error) => {
           this.error = error;

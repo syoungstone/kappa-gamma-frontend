@@ -8,39 +8,47 @@ export default new Vuex.Store({
     apiURL:
       "https://ec2-174-129-78-30.compute-1.amazonaws.com/kappa-gamma-backend/api/",
     loggedIn: false,
-    user: "",
-    id: "",
-    jwt: "",
-    lastName: "",
-    isBrother: false,
-    isOfficer: false,
+    user: null,
+    id: null,
+    jwt: null,
+    jwtExpiration: null,
+    lastName: null,
+    isBrother: null,
+    isOfficer: null,
   },
   mutations: {
-    setJwt(state, jwt) {
-      state.jwt = jwt;
-    },
-    setUser(state, user) {
-      state.user = user;
-    },
-    setId(state, id) {
-      state.id = id;
-    },
-    setName(state, lastName) {
-      state.lastName = lastName;
-    },
-    setBrother(state, isBrother) {
-      state.isBrother = isBrother;
-    },
-    setOfficer(state, isOfficer) {
-      state.isOfficer = isOfficer;
-    },
-    login(state) {
-      state.loggedIn = true;
+    setUser(state, jwt) {
+      console.log(jwt);
+      let base64Url = jwt.split(".")[1];
+      let base64 = base64Url.replace("-", "+").replace("_", "/");
+      let parsed = JSON.parse(atob(base64));
+      console.log(parsed);
+      if (parsed.exp * 1000 > Date.now()) {
+        state.loggedIn = true;
+        state.user = parsed.data.email;
+        state.id = parsed.data.id;
+        state.jwt = jwt;
+        state.jwtExpiration = parsed.exp;
+        state.lastName = parsed.data.name_last;
+        state.isBrother = parsed.data.is_brother;
+        state.isOfficer = parsed.data.is_officer;
+        localStorage.setItem("kappa-gamma-jwt", jwt);
+        console.log("jwt and payload saved");
+      } else {
+        console.log("jwt expired");
+      }
     },
     logout(state) {
       state.loggedIn = false;
-      state.user = "";
-      state.jwt = "";
+      state.user = null;
+      state.id = null;
+      state.jwt = null;
+      state.jwtExpiration = null;
+      state.lastName = null;
+      state.isBrother = null;
+      state.isOfficer = null;
+      localStorage.removeItem("kappa-gamma-jwt");
+      console.log("jwt deleted from localStorage");
     },
   },
   actions: {},
