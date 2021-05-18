@@ -1,47 +1,9 @@
 <template>
   <div class="narrow-wrapper">
-    <b-modal
-      id="hello-modal"
-      ref="modal"
-      title="Hello!"
-      v-model="seeModal"
-      hide-footer
-    >
-      <p>
-        Hi everyone in CMSC 508! Register a password for one of the following
-        email accounts to try out this website:
-      </p>
-      <p><strong>Officers</strong></p>
-      <p>spectacledhimbo@webmail.net</p>
-      <p>definitelynotspiderman@webmail.net</p>
-      <p>xXxVampireCopxXx@webmail.net</p>
-      <p><strong>Brothers</strong></p>
-      <p>sexbobbomb@webmail.net</p>
-      <p>syoungstone@gmail.com</p>
-      <p>americasass@webmail.net</p>
-      <p><strong>Pledges</strong></p>
-      <p>definitelynotspiderman2@webmail.net</p>
-      <p>tweetytweet@webmail.net</p>
-      <p>honkhonk@honk.honk</p>
-    </b-modal>
-
     <h1>Theta Tau at VCU</h1>
     <img alt="OT logo" src="../assets/ThetaTauLogo.png" />
   </div>
 </template>
-
-<script>
-export default {
-  created() {
-    this.seeModal = true;
-  },
-  data() {
-    return {
-      seeModal: false,
-    };
-  },
-};
-</script>
 
 <style scoped>
 img {

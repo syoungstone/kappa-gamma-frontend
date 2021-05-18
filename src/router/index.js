@@ -80,6 +80,11 @@ const routes = [
     component: () => import("../views/Officers.vue"),
   },
   {
+    path: "/update-officers",
+    name: "Update Officers",
+    component: () => import("../views/UpdateOfficers.vue"),
+  },
+  {
     path: "/lineage/:id",
     name: "Lineage",
     component: () => import("../views/Lineage.vue"),
@@ -111,6 +116,7 @@ router.beforeEach((to, from, next) => {
     "Edit Student",
     "Create Student",
     "Initiate Pledges",
+    "Update Officers",
   ];
   var brotherRestricted = officerRestricted.concat([
     "Directory",

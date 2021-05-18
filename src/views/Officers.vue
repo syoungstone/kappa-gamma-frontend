@@ -1,83 +1,51 @@
 <template>
-  <div>
-    <div v-if="$store.state.isOfficer" class="wide-wrapper">
+  <div class="narrow-wrapper">
+    <div class="row" id="name-row">
       <h1>Officers</h1>
-      <div v-if="loaded">
-        <b-card
-          v-for="officer in officers"
-          :key="officer.office"
-          class="edit-student-card"
-        >
-          <b-form>
-            <div class="row">
-              <p class="officer-label">
-                <strong>{{ officer.office }}</strong>
-              </p>
-              <vue-single-select
-                class="officer-select"
-                v-model="officer.brother"
-                :options="actives"
-                option-key="id"
-                optionValue="id"
-                required
-                :getOptionDescription="getCustomDescription"
-              ></vue-single-select>
-              <b-form-checkbox
-                v-model="officer.display_publicly"
-                class="mb-2 mr-sm-2 mb-sm-0 officer-checkbox"
-                >Show on About page</b-form-checkbox
-              >
-              <b-button
-                variant="primary"
-                @click="save(officer.office)"
-                class="officer-button"
-                >Save Changes</b-button
-              >
+      <b-button
+        id="edit-button"
+        variant="primary"
+        v-if="$store.state.isOfficer"
+        @click="editOfficers()"
+        >Edit</b-button
+      >
+    </div>
+    <div v-if="loaded">
+      <b-card
+        v-for="officer in officers"
+        :key="officer.importance"
+        no-body
+        class="overflow-hidden student-card"
+        style="max-width: 540px"
+        @click="redirect(officer.id)"
+      >
+        <b-row no-gutters>
+          <b-col md="5">
+            <div v-if="officer.photo" class="thumbnail">
+              <img :src="officer.photo" alt="Profile photo" />
             </div>
-          </b-form>
-        </b-card>
-      </div>
-      <LoadingSpinner v-else />
+            <div v-else class="thumbnail">
+              <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
+            </div>
+          </b-col>
+          <b-col md="7">
+            <b-card-body :title="officer.office" class="card-body">
+              <p>
+                <strong>{{
+                  officer.id
+                    ? officer.name_first + " " + officer.name_last
+                    : "VACANT"
+                }}</strong>
+              </p>
+              <p v-if="officer.id">
+                {{ officer.major + " " + officer.grad_year }}
+              </p>
+            </b-card-body>
+          </b-col>
+        </b-row>
+      </b-card>
     </div>
-    <div v-else class="narrow-wrapper">
-      <h1>Officers</h1>
-      <div v-if="loaded">
-        <b-card
-          v-for="officer in officers"
-          :key="officer.importance"
-          no-body
-          class="overflow-hidden student-card"
-          style="max-width: 540px"
-          @click="redirect(officer.id)"
-        >
-          <b-row no-gutters>
-            <b-col md="5">
-              <div v-if="officer.photo" class="thumbnail">
-                <img :src="officer.photo" alt="Profile photo" />
-              </div>
-              <div v-else class="thumbnail">
-                <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
-              </div>
-            </b-col>
-            <b-col md="7">
-              <b-card-body :title="officer.office" class="card-body">
-                <p>
-                  <strong>{{
-                    officer.id
-                      ? officer.name_first + " " + officer.name_last
-                      : "VACANT"
-                  }}</strong>
-                </p>
-                <p v-if="officer.id">
-                  {{ officer.major + " " + officer.grad_year }}
-                </p>
-              </b-card-body>
-            </b-col>
-          </b-row>
-        </b-card>
-      </div>
-      <LoadingSpinner v-else />
-    </div>
+    <LoadingSpinner v-else />
   </div>
 </template>
 
@@ -98,7 +66,7 @@ export default {
         this.officers.forEach(
           (x) => (x.display_publicly = x.display_publicly == 1)
         );
-        this.getActives();
+        this.loaded = true;
       })
       .catch((error) => {
         this.loaded = true;
@@ -108,34 +76,10 @@ export default {
   data() {
     return {
       officers: null,
-      actives: null,
-      newOfficer: null,
       loaded: false,
     };
   },
   methods: {
-    getActives() {
-      axios
-        .get(this.$store.state.apiURL + "read_active.php", {
-          headers: { Authorization: this.$store.state.jwt },
-        })
-        .then((response) => {
-          this.actives = response.data.body;
-          this.officers.forEach((x) => {
-            if (x.id != null) {
-              x.brother = this.actives.find((y) => y.id == x.id);
-            }
-          });
-          this.loaded = true;
-        })
-        .catch((error) => {
-          this.loaded = true;
-          this.$root.$children[0].showError(error);
-        });
-    },
-    getCustomDescription(option) {
-      return option.name_first + " " + option.name_last;
-    },
     redirect(id) {
       if (id != null) {
         this.$router.push("/student/" + id, () => {});
@@ -146,40 +90,8 @@ export default {
         this.$root.$children[0].showMessage(modalTitle, modalMessage);
       }
     },
-    save(office) {
-      this.newOfficer = this.officers.find((x) => x.office == office);
-      this.newOfficer.id = this.newOfficer.brother
-        ? this.newOfficer.brother.id
-        : null;
-      if (
-        this.newOfficer.id == null ||
-        !this.officers.find(
-          (x) =>
-            x.id == this.newOfficer.id && x.office != this.newOfficer.office
-        )
-      ) {
-        axios
-          .post(
-            this.$store.state.apiURL + "update_officer.php",
-            this.newOfficer,
-            {
-              headers: { Authorization: this.$store.state.jwt },
-            }
-          )
-          .then((response) => {
-            if (response.data.success) {
-              this.$root.$children[0].showSuccess(response.data.message);
-            } else {
-              this.$root.$children[0].showError(response.data.message);
-            }
-          })
-          .catch((error) => this.$root.$children[0].showError(error));
-      } else {
-        this.newOfficer = null;
-        this.$root.$children[0].showError(
-          "One brother may not hold multiple positions."
-        );
-      }
+    editOfficers() {
+      this.$router.push("/update-officers/", () => {});
     },
   },
 };
@@ -215,5 +127,13 @@ h4 {
 }
 .officer-button {
   margin-left: 50px;
+}
+#edit-button {
+  margin-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#name-row {
+  justify-content: center;
 }
 </style>
