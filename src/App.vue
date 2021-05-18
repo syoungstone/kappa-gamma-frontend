@@ -72,13 +72,6 @@ export default {
       notifyModalTitle: null,
     };
   },
-  beforeCreate() {
-    let jwt = localStorage.getItem("kappa-gamma-jwt");
-    if (jwt) {
-      console.log("jwt retrieved from localStorage");
-      this.$store.commit("setUser", jwt);
-    }
-  },
   beforeUpdate() {
     console.log(
       "Current: " +

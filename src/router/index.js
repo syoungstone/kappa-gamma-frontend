@@ -116,28 +116,36 @@ const router = new VueRouter({
   routes,
 });
 
+const officerRestricted = [
+  "Edit Student",
+  "Create Student",
+  "Initiate Pledges",
+  "Update Officers",
+];
+const brotherRestricted = officerRestricted.concat([
+  "Directory",
+  "Pledge Classes",
+  "Pledge Class",
+  "Officers",
+  "Lineage",
+  "Lineages",
+]);
+const studentRestricted = brotherRestricted.concat([
+  "Dashboard",
+  "Student",
+  "Settings",
+  "Edit Profile",
+  "Pledge Directory",
+]);
+
 router.beforeEach((to, from, next) => {
-  var officerRestricted = [
-    "Edit Student",
-    "Create Student",
-    "Initiate Pledges",
-    "Update Officers",
-  ];
-  var brotherRestricted = officerRestricted.concat([
-    "Directory",
-    "Pledge Classes",
-    "Pledge Class",
-    "Officers",
-    "Lineage",
-    "Lineages",
-  ]);
-  var studentRestricted = brotherRestricted.concat([
-    "Dashboard",
-    "Student",
-    "Settings",
-    "Edit Profile",
-    "Pledge Directory",
-  ]);
+  if (!store.state.loggedIn) {
+    let jwt = localStorage.getItem("kappa-gamma-jwt");
+    if (jwt) {
+      console.log("jwt retrieved from localStorage");
+      store.commit("setUser", jwt);
+    }
+  }
   if (studentRestricted.includes(to.name) && !store.state.loggedIn) {
     console.log("Not logged in! Redirected!");
     next({ path: "/login" + to.path });
