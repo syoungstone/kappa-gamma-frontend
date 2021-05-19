@@ -124,8 +124,9 @@ export default {
       })
       .then((response) => {
         this.data = response.data;
-        this.loaded = true;
         this.totalRows = this.data.body.length;
+        this.getFirstEmail();
+        this.loaded = true;
       })
       .catch((error) => this.$root.$children[0].showError(error));
   },
@@ -187,8 +188,9 @@ export default {
         })
         .then((response) => {
           this.data = response.data;
-          this.loaded = true;
           this.totalRows = this.data.body.length;
+          this.getFirstEmail();
+          this.loaded = true;
         })
         .catch((error) => this.$root.$children[0].showError(error));
     },
@@ -203,8 +205,9 @@ export default {
         })
         .then((response) => {
           this.data = response.data;
-          this.loaded = true;
           this.totalRows = this.data.body.length;
+          this.getFirstEmail();
+          this.loaded = true;
         })
         .catch((error) => this.$root.$children[0].showError(error));
     },
@@ -219,8 +222,9 @@ export default {
         })
         .then((response) => {
           this.data = response.data;
-          this.loaded = true;
           this.totalRows = this.data.body.length;
+          this.getFirstEmail();
+          this.loaded = true;
         })
         .catch((error) => this.$root.$children[0].showError(error));
     },
@@ -235,10 +239,17 @@ export default {
         })
         .then((response) => {
           this.data = response.data;
-          this.loaded = true;
           this.totalRows = this.data.body.length;
+          this.getFirstEmail();
+          this.loaded = true;
         })
         .catch((error) => this.$root.$children[0].showError(error));
+    },
+    getFirstEmail() {
+      let i;
+      for (i = 0; i < this.totalRows; i++) {
+        this.data.body[i].email = this.data.body[i].emails.split(",")[0];
+      }
     },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering

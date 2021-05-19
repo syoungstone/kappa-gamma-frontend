@@ -26,7 +26,7 @@ const routes = [
   },
   {
     path: "/login/:redirect",
-    name: "Log In",
+    name: "Log In Redirect",
     component: () => import("../views/Login.vue"),
   },
   {

@@ -164,7 +164,7 @@
       >
         <div class="input-group mb-3">
           <input
-            :disabled="true"
+            disabled
             v-model="data.big_name"
             type="text"
             class="form-control"
@@ -281,22 +281,30 @@
 
       <h3>Contact</h3>
 
-      <b-form-group
-        id="input-group-e"
-        :label="
-          'Email:' +
-          (newEntry
-            ? ''
-            : ' (changing this will change the email needed to log in)')
-        "
-        label-for="input-e"
-      >
-        <b-form-input
-          id="input-e"
-          v-model="data.email"
-          type="email"
-          required
-        ></b-form-input>
+      <b-form-group id="input-group-e" label="Emails:">
+        <div
+          class="input-group mb-3"
+          v-for="(email, index) in data.emails"
+          :key="index"
+        >
+          <input
+            v-model="data.emails[index]"
+            type="email"
+            class="form-control"
+            required
+          />
+          <div class="input-group-append">
+            <button
+              class="btn btn-danger"
+              type="button"
+              v-if="data.emails.length > 1"
+              @click="deleteEmail(index)"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+        <b-button @click="addEmail()">Add Email</b-button>
       </b-form-group>
 
       <b-form-group
@@ -377,7 +385,7 @@ export default {
         hometown: null,
         home_state: null,
         home_country: null,
-        email: null,
+        emails: [""],
         phone_number: null,
         big: null,
         big_name: null,
@@ -875,6 +883,12 @@ export default {
         this.data.big = null;
         this.data.big_name = null;
       }
+    },
+    addEmail() {
+      this.data.emails.push("");
+    },
+    deleteEmail(index) {
+      this.data.emails.splice(index, 1);
     },
     reset() {
       this.data = JSON.parse(JSON.stringify(this.defaultData));

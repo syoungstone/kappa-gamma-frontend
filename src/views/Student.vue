@@ -91,7 +91,7 @@
             <b-card-body>
               <dl>
                 <dt>Email</dt>
-                <dd>{{ data.email }}</dd>
+                <dd v-for="email in data.emails" :key="email">{{ email }}</dd>
                 <dt>Phone</dt>
                 <dd>{{ data.phone_number }}</dd>
               </dl>
