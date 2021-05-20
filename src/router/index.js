@@ -35,6 +35,11 @@ const routes = [
     component: () => import("../views/Register.vue"),
   },
   {
+    path: "/verify/:id/:verify_hash",
+    name: "Verify",
+    component: () => import("../views/Verify.vue"),
+  },
+  {
     path: "/dashboard",
     name: "Dashboard",
     component: () => import("../views/Dashboard.vue"),

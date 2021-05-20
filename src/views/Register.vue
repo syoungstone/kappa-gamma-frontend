@@ -56,12 +56,6 @@
       <b-button type="submit" variant="primary" :disabled="submitDisabled"
         >Submit</b-button
       >
-      <p v-if="error">
-        Account creation failed. Check if the email you are using is available.
-      </p>
-      <p v-if="loginError">
-        We're having trouble logging you in. Please try again later.
-      </p>
     </b-form>
   </div>
 </template>
@@ -81,8 +75,7 @@ export default {
         password: "",
       },
       password_confirm: "",
-      error: "",
-      loginError: "",
+      error: null,
       state1: null,
       state2: null,
     };
@@ -95,10 +88,12 @@ export default {
           JSON.stringify(this.form)
         )
         .then((response) => {
-          this.$store.commit("setUser", response.data.jwt);
-          this.$router.push("/dashboard", () => {});
+          this.$root.$children[0].showSuccess(response.data.message);
         })
         .catch((error) => {
+          this.$root.$children[0].showError(
+            "Account creation failed. Check if the email you are using is available."
+          );
           this.error = error;
         });
     },
