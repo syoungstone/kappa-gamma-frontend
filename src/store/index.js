@@ -8,10 +8,11 @@ export default new Vuex.Store({
     apiURL:
       "https://ec2-174-129-78-30.compute-1.amazonaws.com/kappa-gamma-backend/api/",
     loggedIn: false,
-    user: null,
+    email: null,
     id: null,
     jwt: null,
     jwtExpiration: null,
+    firstName: null,
     lastName: null,
     isBrother: null,
     isOfficer: null,
@@ -23,10 +24,11 @@ export default new Vuex.Store({
       let parsed = JSON.parse(atob(base64));
       if (parsed.exp * 1000 > Date.now()) {
         state.loggedIn = true;
-        state.user = parsed.data.email;
+        state.email = parsed.data.email;
         state.id = parsed.data.id;
         state.jwt = jwt;
         state.jwtExpiration = parsed.exp;
+        state.firstName = parsed.data.name_first;
         state.lastName = parsed.data.name_last;
         state.isBrother = parsed.data.is_brother;
         state.isOfficer = parsed.data.is_officer;
@@ -35,10 +37,11 @@ export default new Vuex.Store({
     },
     logout(state) {
       state.loggedIn = false;
-      state.user = null;
+      state.email = null;
       state.id = null;
       state.jwt = null;
       state.jwtExpiration = null;
+      state.firstName = null;
       state.lastName = null;
       state.isBrother = null;
       state.isOfficer = null;
