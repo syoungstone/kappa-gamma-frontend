@@ -23,11 +23,9 @@
       </b-form-group>
 
       <b-button type="submit" variant="primary">Submit</b-button>
-
-      <p v-if="error">
-        Login failed. Please make sure you are using the correct email and
-        password.
-      </p>
+      <b-link id="forgot-link" @click="forgotPassword()"
+        >Forgot Password</b-link
+      >
     </b-form>
   </div>
 </template>
@@ -57,8 +55,20 @@ export default {
         })
         .catch((error) => {
           this.error = error;
+          this.$root.$children[0].showError(
+            "Login failed. Please make sure you are using the correct email and password."
+          );
         });
+    },
+    forgotPassword() {
+      this.$router.push("/forgotpassword", () => {});
     },
   },
 };
 </script>
+
+<style scoped>
+#forgot-link {
+  margin-left: 15px;
+}
+</style>

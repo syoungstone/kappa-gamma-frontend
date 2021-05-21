@@ -35,6 +35,16 @@ const routes = [
     component: () => import("../views/Register.vue"),
   },
   {
+    path: "/forgotpassword",
+    name: "Forgot Password",
+    component: () => import("../views/ForgotPassword.vue"),
+  },
+  {
+    path: "/resetpassword/:id/:verify_hash",
+    name: "Reset Password",
+    component: () => import("../views/ResetPassword.vue"),
+  },
+  {
     path: "/verify/:id/:verify_hash",
     name: "Verify",
     component: () => import("../views/Verify.vue"),

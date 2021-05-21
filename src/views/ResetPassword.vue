@@ -1,8 +1,6 @@
 <template>
   <div class="narrow-wrapper">
     <h1>{{ $route.name }}</h1>
-
-    <h4>Change Password</h4>
     <b-form @submit.prevent="onSubmit">
       <b-form-group
         id="input-group-4"
@@ -40,27 +38,7 @@
       <b-button type="submit" variant="primary" :disabled="submitDisabled"
         >Submit</b-button
       >
-      <p v-if="error">Attempt to change password failed.</p>
-      <p v-if="error">{{ error }}</p>
     </b-form>
-    <h4>Delete Account</h4>
-    <div v-if="deletePressed" class="delete">
-      <p>
-        Are you sure? You will need to re-register if you want to use the
-        brother portal again.
-      </p>
-      <b-button class="delete-button" @click="deleteAccount"
-        >Yes, Delete My Account</b-button
-      >
-    </div>
-    <div v-else>
-      <p>Warning: this action is permanent</p>
-      <b-button class="delete delete-button" @click="deleteButton"
-        >Delete</b-button
-      >
-    </div>
-    <p v-if="deleteError">Attempt to delete account failed.</p>
-    <p v-if="deleteError">{{ deleteError }}</p>
   </div>
 </template>
 
@@ -75,45 +53,35 @@ export default {
   data() {
     return {
       form: {
-        email: this.$store.state.user,
-        password: "",
-        jwt: this.$store.state.jwt,
+        id: null,
+        verify_hash: null,
+        password: null,
       },
-      deletePressed: false,
       password_confirm: "",
       error: "",
-      deleteError: "",
       state1: null,
       state2: null,
     };
   },
   methods: {
     onSubmit() {
+      this.form.id = this.$route.params.id;
+      this.form.verify_hash = this.$route.params.verify_hash;
       axios
         .post(
-          this.$store.state.apiURL + "update_user.php",
+          this.$store.state.apiURL + "reset_password.php",
           JSON.stringify(this.form)
         )
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
-          this.$store.commit("setJwt", response.data.jwt);
+          this.$router.push("/login", () => {});
         })
-        .catch((error) => (this.error = error));
-    },
-    deleteButton() {
-      this.deletePressed = true;
-    },
-    deleteAccount() {
-      axios
-        .delete(this.$store.state.apiURL + "delete_user.php", {
-          headers: { Authorization: this.$store.state.jwt },
-        })
-        .then((response) => {
-          this.$root.$children[0].showSuccess(response.data.message);
-          this.$store.commit("logout");
-          this.$router.push("/", () => {});
-        })
-        .catch((error) => (this.deleteError = error));
+        .catch((error) => {
+          this.error = error;
+          this.$root.$children[0].showError(
+            "We were unable to reset your password. Please check the URL in your password reset email and try again."
+          );
+        });
     },
     updateState1() {
       this.state1 = this.form.password.length >= 8;
