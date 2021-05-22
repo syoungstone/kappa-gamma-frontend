@@ -27,7 +27,11 @@
               :title="student.name_first + ' ' + student.name_last"
               class="card-body"
             >
-              <p>{{ student.major + " " + student.grad_year }}</p>
+              <div>
+                <div v-for="major in student.majors" :key="major">
+                  {{ major + " " + student.grad_year }}
+                </div>
+              </div>
               <p>{{ hometownString(student) }}</p>
             </b-card-body>
           </b-col>
@@ -59,6 +63,7 @@ export default {
       .then((response) => {
         this.students = response.data.body;
         this.className = this.students[0].pledge_class;
+        this.parseMajors();
         this.loaded = true;
       })
       .catch((error) => (this.error = error));
@@ -92,6 +97,12 @@ export default {
     },
     redirect(id) {
       this.$router.push("/student/" + id, () => {});
+    },
+    parseMajors() {
+      let i;
+      for (i = 0; i < this.students.length; i++) {
+        this.students[i].majors = this.students[i].majors.split(",");
+      }
     },
   },
 };

@@ -17,7 +17,7 @@
         <b-button
           id="edit-button"
           variant="primary"
-          v-if="$store.state.position"
+          v-if="$store.state.position != null"
           @click="editStudent()"
           >Edit</b-button
         >
@@ -70,8 +70,12 @@
           <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
             <b-card-body>
               <dl>
-                <dt>Major</dt>
-                <dd>{{ data.major }}</dd>
+                <dt>Major(s)</dt>
+                <dd>
+                  <div v-for="major in data.majors" :key="major">
+                    {{ major }}
+                  </div>
+                </dd>
                 <dt>Graduation Year</dt>
                 <dd>{{ data.grad_year }}</dd>
                 <dt>Hometown</dt>
@@ -90,8 +94,12 @@
           <b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
             <b-card-body>
               <dl>
-                <dt>Email</dt>
-                <dd v-for="email in data.emails" :key="email">{{ email }}</dd>
+                <dt>Email(s)</dt>
+                <dd>
+                  <div v-for="email in data.emails" :key="email">
+                    {{ email }}
+                  </div>
+                </dd>
                 <dt>Phone</dt>
                 <dd>{{ data.phone_number }}</dd>
               </dl>

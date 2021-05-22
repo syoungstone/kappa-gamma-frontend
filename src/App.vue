@@ -27,7 +27,10 @@
               <b-dropdown-item to="/officers">Officers</b-dropdown-item>
             </b-nav-item-dropdown>
             <b-nav-item v-else to="/pledgedirectory">Directory</b-nav-item>
-            <b-nav-item-dropdown v-if="$store.state.position" text="Actions">
+            <b-nav-item-dropdown
+              v-if="$store.state.position != null"
+              text="Actions"
+            >
               <b-dropdown-item to="/update-officers"
                 >Update Officers</b-dropdown-item
               >

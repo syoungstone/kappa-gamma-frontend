@@ -5,7 +5,7 @@
       <b-button
         id="edit-button"
         variant="primary"
-        v-if="$store.state.position"
+        v-if="$store.state.position != null"
         @click="editOfficers()"
         >Edit</b-button
       >
@@ -37,9 +37,11 @@
                     : "VACANT"
                 }}</strong>
               </p>
-              <p v-if="officer.id">
-                {{ officer.major + " " + officer.grad_year }}
-              </p>
+              <div>
+                <div v-for="major in officer.majors" :key="major">
+                  {{ major + " " + officer.grad_year }}
+                </div>
+              </div>
             </b-card-body>
           </b-col>
         </b-row>
@@ -63,9 +65,7 @@ export default {
       })
       .then((response) => {
         this.officers = response.data.body;
-        this.officers.forEach(
-          (x) => (x.display_publicly = x.display_publicly == 1)
-        );
+        this.parseMajors();
         this.loaded = true;
       })
       .catch((error) => {
@@ -92,6 +92,14 @@ export default {
     },
     editOfficers() {
       this.$router.push("/update-officers/", () => {});
+    },
+    parseMajors() {
+      let i;
+      for (i = 0; i < this.officers.length; i++) {
+        if (this.officers[i].majors != null) {
+          this.officers[i].majors = this.officers[i].majors.split(",");
+        }
+      }
     },
   },
 };

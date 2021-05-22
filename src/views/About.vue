@@ -33,7 +33,11 @@
                   officer.name_first + " " + officer.name_last
                 }}</strong>
               </p>
-              <p>{{ officer.major + " " + officer.grad_year }}</p>
+              <div>
+                <div v-for="major in officer.majors" :key="major">
+                  {{ major + " " + officer.grad_year }}
+                </div>
+              </div>
             </b-card-body>
           </b-col>
         </b-row>
@@ -50,6 +54,7 @@ export default {
       .get(this.$store.state.apiURL + "read_officers_public.php")
       .then((response) => {
         this.officers = response.data.body;
+        this.parseMajors();
         this.loaded = true;
       })
       .catch((error) => {
@@ -59,10 +64,18 @@ export default {
   },
   data() {
     return {
-      officers: {},
+      officers: null,
       error: null,
       loaded: false,
     };
+  },
+  methods: {
+    parseMajors() {
+      let i;
+      for (i = 0; i < this.officers.length; i++) {
+        this.officers[i].majors = this.officers[i].majors.split(",");
+      }
+    },
   },
 };
 </script>

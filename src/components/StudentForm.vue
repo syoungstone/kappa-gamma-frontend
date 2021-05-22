@@ -18,7 +18,7 @@
     </div>
     <b-form @submit.prevent="onSubmit" v-else-if="loaded">
       <div
-        v-if="data.photo && $store.state.position"
+        v-if="data.photo && $store.state.position != null"
         class="thumbnail"
         v-b-modal.photo-modal
       >
@@ -28,7 +28,7 @@
         </div>
       </div>
       <div
-        v-else-if="isBrother && $store.state.position"
+        v-else-if="isBrother && $store.state.position != null"
         class="thumbnail"
         v-b-modal.photo-modal
       >
@@ -89,10 +89,10 @@
         {{ data.name_last }}
       </h1>
 
-      <h3 v-if="$store.state.position">Membership</h3>
+      <h3 v-if="$store.state.position != null">Membership</h3>
 
       <b-form-group
-        v-if="isBrother && $store.state.position"
+        v-if="isBrother && $store.state.position != null"
         id="select-group-0"
         label="Status:"
         label-for="select-0"
@@ -101,12 +101,12 @@
           id="select-0"
           v-model="data.brother_status"
           :options="statusOptions"
-          :required="isBrother && $store.state.position"
+          :required="isBrother && $store.state.position != null"
         ></b-form-select>
       </b-form-group>
 
       <b-form-group
-        v-if="isBrother && $store.state.position"
+        v-if="isBrother && $store.state.position != null"
         id="select-group-1"
         label="Standing:"
         label-for="select-1"
@@ -115,12 +115,12 @@
           id="select-1"
           v-model="data.good_standing"
           :options="standingOptions"
-          :required="isBrother && $store.state.position"
+          :required="isBrother && $store.state.position != null"
         ></b-form-select>
       </b-form-group>
 
       <b-form-group
-        v-if="isBrother && $store.state.position"
+        v-if="isBrother && $store.state.position != null"
         id="input-group-0"
         label="Roll Number:"
         label-for="input-0"
@@ -129,12 +129,12 @@
           id="input-0"
           v-model="data.roll_number"
           type="number"
-          :required="isBrother && $store.state.position"
+          :required="isBrother && $store.state.position != null"
         ></b-form-input>
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.position"
+        v-if="$store.state.position != null"
         id="input-group-pledge-class"
         label="Pledge Class:"
         label-for="input-pledge-class"
@@ -143,12 +143,12 @@
           inputId="input-pledge-class"
           v-model="data.pledge_class"
           :options="pledgeClasses"
-          :required="$store.state.position"
+          :required="$store.state.position != null"
         ></vue-single-select>
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.position"
+        v-if="$store.state.position != null"
         id="input-group-d"
         label="Nickname:"
         label-for="input-d"
@@ -157,7 +157,7 @@
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.position"
+        v-if="$store.state.position != null"
         id="input-group-big"
         label="Big:"
         label-for="input-big"
@@ -186,7 +186,7 @@
       <h3>Personal</h3>
 
       <b-form-group
-        v-if="$store.state.position"
+        v-if="$store.state.position != null"
         id="input-group-a"
         label="First Name:"
         label-for="input-a"
@@ -194,12 +194,12 @@
         <b-form-input
           id="input-a"
           v-model="data.name_first"
-          :required="$store.state.position"
+          :required="$store.state.position != null"
         ></b-form-input>
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.position"
+        v-if="$store.state.position != null"
         id="input-group-b"
         label="Middle Name:"
         label-for="input-b"
@@ -208,7 +208,7 @@
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.position"
+        v-if="$store.state.position != null"
         id="input-group-c"
         label="Last Name:"
         label-for="input-c"
@@ -216,25 +216,21 @@
         <b-form-input
           id="input-c"
           v-model="data.name_last"
-          :required="$store.state.position"
+          :required="$store.state.position != null"
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-2" label="Major:" label-for="input-2">
-        <b-input-group id="input-2">
-          <b-form-select
-            id="is-engineering-select"
-            :options="majorOptions"
-            v-model="isEngineeringMajor"
-          ></b-form-select>
-          <b-form-select
-            v-if="isEngineeringMajor"
-            :options="engineeringMajorsList"
-            v-model="data.major"
-            required
-          ></b-form-select>
-          <b-form-input v-else v-model="data.major" required></b-form-input>
-        </b-input-group>
+      <b-form-group id="input-group-2" label="Major(s):">
+        <MajorSelect
+          v-for="(major, index) in data.majors"
+          :key="index"
+          :major="data.majors[index]"
+          :index="index"
+          :showDelete="data.majors.length > 1"
+          @delete-major="deleteMajor"
+          @update-major="updateMajor"
+        />
+        <b-button @click="addMajor()">Add Major</b-button>
       </b-form-group>
 
       <b-form-group
@@ -350,6 +346,7 @@
 <script>
 import axios from "axios";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import MajorSelect from "@/components/MajorSelect.vue";
 export default {
   name: "StudentForm",
   props: {
@@ -357,6 +354,7 @@ export default {
   },
   components: {
     LoadingSpinner,
+    MajorSelect,
   },
   computed: {
     submitDisabled() {
@@ -371,7 +369,7 @@ export default {
   },
   created() {
     this.newEntry = this.id == null;
-    if (this.$store.state.position) {
+    if (this.$store.state.position != null) {
       axios
         .get(this.$store.state.apiURL + "read_pledge_classes.php", {
           headers: { Authorization: this.$store.state.jwt },
@@ -394,11 +392,11 @@ export default {
         name_last: null,
         grad_year: null,
         nickname: null,
-        major: null,
+        majors: [null],
         hometown: null,
         home_state: null,
         home_country: null,
-        emails: [""],
+        emails: [null],
         phone_number: null,
         big: null,
         big_name: null,
@@ -409,19 +407,6 @@ export default {
         photo: null,
       },
       data: null,
-      isEngineeringMajor: true,
-      majorOptions: [
-        { value: true, text: "Engineering" },
-        { value: false, text: "Other" },
-      ],
-      engineeringMajorsList: [
-        "Biomedical Engineering",
-        "Chemical and Life Science Engineering",
-        "Computer Engineering",
-        "Computer Science",
-        "Electrical Engineering",
-        "Mechanical Engineering",
-      ],
       countryList: [
         "Afghanistan",
         "Åland Islands",
@@ -774,9 +759,6 @@ export default {
                     (x) => x.abbreviation == this.data.home_state
                   );
             this.photo = this.data.photo;
-            this.isEngineeringMajor = this.engineeringMajorsList.includes(
-              this.data.major
-            );
             this.loaded = true;
           })
           .catch((error) => this.$root.$children[0].showError(error));
@@ -913,8 +895,23 @@ export default {
         this.data.big_name = null;
       }
     },
+    addMajor() {
+      this.data.majors.push(null);
+    },
+    updateMajor(index, majorReturned) {
+      console.log("new major: " + majorReturned);
+      console.log("index: " + index);
+      console.log("Before update, value is:" + this.data.majors[index]);
+      this.data.majors[index] = majorReturned;
+      console.log("After update, value is:" + this.data.majors[index]);
+      console.log("data.majors is now:");
+      console.log(this.data.majors);
+    },
+    deleteMajor(index) {
+      this.data.majors.splice(index, 1);
+    },
     addEmail() {
-      this.data.emails.push("");
+      this.data.emails.push(null);
     },
     deleteEmail(index) {
       this.data.emails.splice(index, 1);
@@ -971,9 +968,5 @@ h3 {
 #buttons,
 #created {
   text-align: center;
-}
-#is-engineering-select {
-  max-width: 30%;
-  background-color: var(--ot-off-white);
 }
 </style>
