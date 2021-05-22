@@ -221,7 +221,20 @@
       </b-form-group>
 
       <b-form-group id="input-group-2" label="Major:" label-for="input-2">
-        <b-form-input id="input-2" v-model="data.major" required></b-form-input>
+        <b-input-group id="input-2">
+          <b-form-select
+            id="is-engineering-select"
+            :options="majorOptions"
+            v-model="isEngineeringMajor"
+          ></b-form-select>
+          <b-form-select
+            v-if="isEngineeringMajor"
+            :options="engineeringMajorsList"
+            v-model="data.major"
+            required
+          ></b-form-select>
+          <b-form-input v-else v-model="data.major" required></b-form-input>
+        </b-input-group>
       </b-form-group>
 
       <b-form-group
@@ -281,7 +294,7 @@
 
       <h3>Contact</h3>
 
-      <b-form-group id="input-group-e" label="Emails:">
+      <b-form-group id="input-group-e" label="Email(s):">
         <div
           class="input-group mb-3"
           v-for="(email, index) in data.emails"
@@ -396,6 +409,19 @@ export default {
         photo: null,
       },
       data: null,
+      isEngineeringMajor: true,
+      majorOptions: [
+        { value: true, text: "Engineering" },
+        { value: false, text: "Other" },
+      ],
+      engineeringMajorsList: [
+        "Biomedical Engineering",
+        "Chemical and Life Science Engineering",
+        "Computer Engineering",
+        "Computer Science",
+        "Electrical Engineering",
+        "Mechanical Engineering",
+      ],
       countryList: [
         "Afghanistan",
         "Åland Islands",
@@ -748,6 +774,9 @@ export default {
                     (x) => x.abbreviation == this.data.home_state
                   );
             this.photo = this.data.photo;
+            this.isEngineeringMajor = this.engineeringMajorsList.includes(
+              this.data.major
+            );
             this.loaded = true;
           })
           .catch((error) => this.$root.$children[0].showError(error));
@@ -942,5 +971,9 @@ h3 {
 #buttons,
 #created {
   text-align: center;
+}
+#is-engineering-select {
+  max-width: 30%;
+  background-color: var(--ot-off-white);
 }
 </style>
