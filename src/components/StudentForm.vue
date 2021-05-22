@@ -18,7 +18,7 @@
     </div>
     <b-form @submit.prevent="onSubmit" v-else-if="loaded">
       <div
-        v-if="data.photo && $store.state.isOfficer"
+        v-if="data.photo && $store.state.position"
         class="thumbnail"
         v-b-modal.photo-modal
       >
@@ -28,7 +28,7 @@
         </div>
       </div>
       <div
-        v-else-if="isBrother && $store.state.isOfficer"
+        v-else-if="isBrother && $store.state.position"
         class="thumbnail"
         v-b-modal.photo-modal
       >
@@ -89,10 +89,10 @@
         {{ data.name_last }}
       </h1>
 
-      <h3 v-if="$store.state.isOfficer">Membership</h3>
+      <h3 v-if="$store.state.position">Membership</h3>
 
       <b-form-group
-        v-if="isBrother && $store.state.isOfficer"
+        v-if="isBrother && $store.state.position"
         id="select-group-0"
         label="Status:"
         label-for="select-0"
@@ -101,12 +101,12 @@
           id="select-0"
           v-model="data.brother_status"
           :options="statusOptions"
-          :required="isBrother && $store.state.isOfficer"
+          :required="isBrother && $store.state.position"
         ></b-form-select>
       </b-form-group>
 
       <b-form-group
-        v-if="isBrother && $store.state.isOfficer"
+        v-if="isBrother && $store.state.position"
         id="select-group-1"
         label="Standing:"
         label-for="select-1"
@@ -115,12 +115,12 @@
           id="select-1"
           v-model="data.good_standing"
           :options="standingOptions"
-          :required="isBrother && $store.state.isOfficer"
+          :required="isBrother && $store.state.position"
         ></b-form-select>
       </b-form-group>
 
       <b-form-group
-        v-if="isBrother && $store.state.isOfficer"
+        v-if="isBrother && $store.state.position"
         id="input-group-0"
         label="Roll Number:"
         label-for="input-0"
@@ -129,12 +129,12 @@
           id="input-0"
           v-model="data.roll_number"
           type="number"
-          :required="isBrother && $store.state.isOfficer"
+          :required="isBrother && $store.state.position"
         ></b-form-input>
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.isOfficer"
+        v-if="$store.state.position"
         id="input-group-pledge-class"
         label="Pledge Class:"
         label-for="input-pledge-class"
@@ -143,12 +143,12 @@
           inputId="input-pledge-class"
           v-model="data.pledge_class"
           :options="pledgeClasses"
-          :required="$store.state.isOfficer"
+          :required="$store.state.position"
         ></vue-single-select>
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.isOfficer"
+        v-if="$store.state.position"
         id="input-group-d"
         label="Nickname:"
         label-for="input-d"
@@ -157,7 +157,7 @@
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.isOfficer"
+        v-if="$store.state.position"
         id="input-group-big"
         label="Big:"
         label-for="input-big"
@@ -186,7 +186,7 @@
       <h3>Personal</h3>
 
       <b-form-group
-        v-if="$store.state.isOfficer"
+        v-if="$store.state.position"
         id="input-group-a"
         label="First Name:"
         label-for="input-a"
@@ -194,12 +194,12 @@
         <b-form-input
           id="input-a"
           v-model="data.name_first"
-          :required="$store.state.isOfficer"
+          :required="$store.state.position"
         ></b-form-input>
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.isOfficer"
+        v-if="$store.state.position"
         id="input-group-b"
         label="Middle Name:"
         label-for="input-b"
@@ -208,7 +208,7 @@
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.isOfficer"
+        v-if="$store.state.position"
         id="input-group-c"
         label="Last Name:"
         label-for="input-c"
@@ -216,7 +216,7 @@
         <b-form-input
           id="input-c"
           v-model="data.name_last"
-          :required="$store.state.isOfficer"
+          :required="$store.state.position"
         ></b-form-input>
       </b-form-group>
 
@@ -358,7 +358,7 @@ export default {
   },
   created() {
     this.newEntry = this.id == null;
-    if (this.$store.state.isOfficer) {
+    if (this.$store.state.position) {
       axios
         .get(this.$store.state.apiURL + "read_pledge_classes.php", {
           headers: { Authorization: this.$store.state.jwt },

@@ -5,7 +5,7 @@
       <b-button
         id="edit-button"
         variant="primary"
-        v-if="$store.state.isOfficer"
+        v-if="$store.state.position"
         @click="editOfficers()"
         >Edit</b-button
       >

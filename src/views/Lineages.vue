@@ -2,7 +2,7 @@
   <div class="wide-wrapper">
     <h1>Lineages</h1>
     <div v-if="loaded">
-      <div v-if="$store.state.isOfficer" id="create-new">
+      <div v-if="$store.state.position" id="create-new">
         <b-modal
           id="repeat-founder-modal"
           ref="modal"
@@ -81,7 +81,7 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.isOfficer"
+            v-if="$store.state.position"
             size="sm"
             @click="prepareDeletion(row.item)"
           >
@@ -102,7 +102,7 @@ export default {
     LoadingSpinner,
   },
   created() {
-    if (this.$store.state.isOfficer) {
+    if (this.$store.state.position) {
       this.readBrothers();
     } else {
       this.load();

@@ -71,7 +71,7 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.isOfficer"
+            v-if="$store.state.position"
             size="sm"
             @click="editStudent(row.item.id)"
           >
@@ -79,7 +79,7 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.isOfficer && row.item.is_pledge == 1"
+            v-if="$store.state.position && row.item.is_pledge == 1"
             size="sm"
             @click="
               prepareDeletion(

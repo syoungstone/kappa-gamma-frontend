@@ -164,7 +164,7 @@ router.beforeEach((to, from, next) => {
     next({ path: "/login" + to.path });
   } else if (brotherRestricted.includes(to.name) && !store.state.isBrother) {
     next({ name: "Dashboard" });
-  } else if (officerRestricted.includes(to.name) && !store.state.isOfficer) {
+  } else if (officerRestricted.includes(to.name) && !store.state.position) {
     next({ name: "Dashboard" });
   } else {
     next();

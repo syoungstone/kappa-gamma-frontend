@@ -1,5 +1,5 @@
 <template>
-  <StudentForm v-if="this.$store.state.isOfficer" />
+  <StudentForm v-if="this.$store.state.position" />
 </template>
 
 <script>
