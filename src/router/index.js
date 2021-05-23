@@ -166,7 +166,7 @@ router.beforeEach((to, from, next) => {
     next({ name: "Dashboard" });
   } else if (
     officerRestricted.includes(to.name) &&
-    store.state.position != null
+    store.state.position == null
   ) {
     next({ name: "Dashboard" });
   } else {
