@@ -5,8 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    apiURL:
-      "https://ec2-174-129-78-30.compute-1.amazonaws.com/kappa-gamma-backend/api/",
+    apiURL: "http://api.vcuthetatau.org/",
     loggedIn: false,
     email: null,
     id: null,
