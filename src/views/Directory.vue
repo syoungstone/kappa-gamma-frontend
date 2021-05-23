@@ -26,35 +26,85 @@
             type="search"
             placeholder="Type to Search"
           ></b-form-input>
-
-          <b-input-group-append>
-            <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
-          </b-input-group-append>
+          <b-button
+            class="select-button"
+            size="sm"
+            @click="showFilters = !showFilters"
+            >{{ showFilters ? "Hide Filters" : "Show Filters" }}</b-button
+          >
         </b-input-group>
       </b-col>
-      <div id="buttons">
-        <b-button class="select-button" :pressed="active" @click="showActive()"
-          >Active Brothers</b-button
+
+      <div v-if="showFilters" class="row justify-content-center filters">
+        <b-form-group
+          class="filter"
+          id="input-group-1"
+          label="Pledge/Brother:"
+          label-for="input-1"
         >
-        <b-button
-          class="select-button"
-          :pressed="pledges"
-          @click="showPledges()"
-          >Pledges</b-button
+          <b-form-select
+            id="input-1"
+            v-model="isPledge"
+            :options="isPledgeOptions"
+          ></b-form-select>
+        </b-form-group>
+        <b-form-group
+          class="filter"
+          id="input-group-2"
+          label="Status:"
+          label-for="input-2"
         >
-        <b-button class="select-button" :pressed="alumni" @click="showAlumni()"
-          >Alumni</b-button
+          <b-form-select
+            id="input-2"
+            v-model="brotherStatus"
+            :options="brotherStatusOptions"
+          ></b-form-select>
+        </b-form-group>
+        <b-form-group
+          class="filter"
+          id="input-group-3"
+          label="Pledge Class:"
+          label-for="input-3"
         >
-        <b-button class="select-button" :pressed="all" @click="showAll()"
-          >Show All</b-button
+          <b-form-select
+            id="input-3"
+            v-model="pledgeClass"
+            :options="pledgeClassOptions"
+          ></b-form-select>
+        </b-form-group>
+        <b-form-group
+          class="filter"
+          id="input-group-4"
+          label="Major:"
+          label-for="input-4"
         >
+          <b-form-select
+            id="input-4"
+            v-model="major"
+            :options="majorOptions"
+          ></b-form-select>
+        </b-form-group>
+        <b-form-group
+          class="filter"
+          id="input-group-5"
+          label="Grad Year:"
+          label-for="input-5"
+        >
+          <b-form-select
+            id="input-5"
+            v-model="gradYear"
+            :options="gradYearOptions"
+          ></b-form-select>
+        </b-form-group>
       </div>
+
       <b-table
         striped
         hover
-        :items="data.body"
+        :items="narrowedData"
         :fields="fields"
         :filter="filter"
+        :filter-included-fields="filter_included_fields"
         stacked="md"
         show-empty
         @filtered="onFiltered"
@@ -118,21 +168,16 @@ export default {
     LoadingSpinner,
   },
   created() {
-    axios
-      .get(this.$store.state.apiURL + "read_active.php", {
-        headers: { Authorization: this.$store.state.jwt },
-      })
-      .then((response) => {
-        this.data = response.data;
-        this.totalRows = this.data.body.length;
-        this.getFirstEmail();
-        this.loaded = true;
-      })
-      .catch((error) => this.$root.$children[0].showError(error));
+    this.getStudents();
+  },
+  computed: {
+    narrowedData: function () {
+      return this.data.filter(this.filterData);
+    },
   },
   data() {
     return {
-      selected: null,
+      showFilters: false,
       fields: [
         {
           key: "roll_number",
@@ -161,98 +206,109 @@ export default {
         { key: "actions", label: "Actions", sortable: false },
       ],
       data: [],
+      isPledgeOptions: [
+        { value: null, text: "All" },
+        { value: 1, text: "Pledge" },
+        { value: 0, text: "Brother" },
+      ],
+      isPledge: null,
+      brotherStatusOptions: [
+        { value: null, text: "All" },
+        { value: "active", text: "Active" },
+        { value: "inactive", text: "Inactive" },
+        { value: "early alum", text: "Early Alum" },
+        { value: "alumni", text: "Alumni" },
+      ],
+      brotherStatus: null,
+      pledgeClassOptions: [{ value: null, text: "All" }],
+      pledgeClass: null,
+      majorOptions: [
+        { value: null, text: "All" },
+        { value: "Biomedical Engineering", text: "BME" },
+        { value: "Chemical and Life Science Engineering", text: "CLSE" },
+        { value: "Computer Engineering", text: "CE" },
+        { value: "Computer Science", text: "CS" },
+        { value: "Electrical Engineering", text: "EE" },
+        { value: "Mechanical Engineering", text: "MNE" },
+      ],
+      major: null,
+      gradYearOptions: [{ value: null, text: "All" }],
+      gradYear: null,
       totalRows: 1,
       currentPage: 1,
       perPage: 5,
       filter: null,
+      filter_included_fields: ["name_first", "name_middle", "name_last"],
       response: null,
       error: null,
       loaded: false,
-      active: true,
-      pledges: false,
-      alumni: false,
-      all: false,
       toDeleteName: null,
       toDeleteId: null,
     };
   },
   methods: {
-    showActive() {
-      this.active = true;
-      this.pledges = false;
-      this.alumni = false;
-      this.all = false;
-      axios
-        .get(this.$store.state.apiURL + "read_active.php", {
-          headers: { Authorization: this.$store.state.jwt },
-        })
-        .then((response) => {
-          this.data = response.data;
-          this.totalRows = this.data.body.length;
-          this.getFirstEmail();
-          this.loaded = true;
-        })
-        .catch((error) => this.$root.$children[0].showError(error));
-    },
-    showPledges() {
-      this.active = false;
-      this.pledges = true;
-      this.alumni = false;
-      this.all = false;
-      axios
-        .get(this.$store.state.apiURL + "read_pledges.php", {
-          headers: { Authorization: this.$store.state.jwt },
-        })
-        .then((response) => {
-          this.data = response.data;
-          this.totalRows = this.data.body.length;
-          this.getFirstEmail();
-          this.loaded = true;
-        })
-        .catch((error) => this.$root.$children[0].showError(error));
-    },
-    showAlumni() {
-      this.active = false;
-      this.pledges = false;
-      this.alumni = true;
-      this.all = false;
-      axios
-        .get(this.$store.state.apiURL + "read_alumni.php", {
-          headers: { Authorization: this.$store.state.jwt },
-        })
-        .then((response) => {
-          this.data = response.data;
-          this.totalRows = this.data.body.length;
-          this.getFirstEmail();
-          this.loaded = true;
-        })
-        .catch((error) => this.$root.$children[0].showError(error));
-    },
-    showAll() {
-      this.active = false;
-      this.pledges = false;
-      this.alumni = false;
-      this.all = true;
+    getStudents() {
       axios
         .get(this.$store.state.apiURL + "read_students.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          this.data = response.data;
-          this.totalRows = this.data.body.length;
+          this.data = response.data.body;
+          this.totalRows = this.data.length;
           this.getFirstEmail();
-          this.loaded = true;
+          this.appendGradYears();
+          this.getPledgeClasses();
         })
         .catch((error) => this.$root.$children[0].showError(error));
     },
     getFirstEmail() {
       let i;
       for (i = 0; i < this.totalRows; i++) {
-        this.data.body[i].email = this.data.body[i].emails.split(",")[0];
+        this.data[i].email = this.data[i].emails.split(",")[0];
       }
+    },
+    appendGradYears() {
+      let i;
+      for (i = new Date().getFullYear() + 5; i >= 1998; i--) {
+        this.gradYearOptions.push(i);
+      }
+    },
+    getPledgeClasses() {
+      axios
+        .get(this.$store.state.apiURL + "read_pledge_classes.php", {
+          headers: { Authorization: this.$store.state.jwt },
+        })
+        .then((response) => {
+          let i;
+          for (i = 0; i < response.data.body.length; i++) {
+            this.pledgeClassOptions.push(response.data.body[i].class_name);
+          }
+          this.loaded = true;
+        })
+        .catch((error) => this.$root.$children[0].showError(error));
+    },
+    filterData(student) {
+      let accept = true;
+      if (this.gradYear != null) {
+        accept = accept && student.grad_year == this.gradYear;
+      }
+      if (this.pledgeClass != null) {
+        accept = accept && student.pledge_class == this.pledgeClass;
+      }
+      if (this.isPledge != null) {
+        accept = accept && student.is_pledge == this.isPledge;
+      }
+      if (this.brotherStatus != null) {
+        accept = accept && student.brother_status == this.brotherStatus;
+      }
+      if (this.major != null) {
+        accept = accept && student.majors.includes(this.major);
+      }
+      return accept;
     },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
+      console.log(this.filter);
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
@@ -284,11 +340,7 @@ export default {
           let modalTitle = "Pledge Deleted";
           let modalMessage = response.data;
           this.$root.$children[0].showMessage(modalTitle, modalMessage);
-          if (this.pledges) {
-            this.showPledges();
-          } else {
-            this.showAll();
-          }
+          this.getStudents();
         })
         .catch((error) => this.$root.$children[0].showError(error));
     },
@@ -298,7 +350,7 @@ export default {
 
 <style scoped>
 .select-button {
-  margin: 5px;
+  margin: 0px 5px;
 }
 #buttons,
 #error,
@@ -312,5 +364,16 @@ export default {
 #contents > * {
   margin: auto;
   margin-top: 20px;
+}
+.filters {
+  background-color: var(--ot-off-white);
+  border-radius: 10px;
+  padding: 15px;
+}
+.filter {
+  font-weight: bold;
+  font-size: 15px;
+  margin: 0px 10px;
+  min-width: 150px;
 }
 </style>
