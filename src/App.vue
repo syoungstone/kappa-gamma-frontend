@@ -201,7 +201,6 @@ export default {
       axios
         .post(this.$store.state.apiURL + "report_bug.php", this.bugReport)
         .then((response) => {
-          console.log(response);
           this.reportBugModal = false;
           this.showSuccess(response.data.message);
         })
