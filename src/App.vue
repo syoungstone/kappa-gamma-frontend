@@ -226,10 +226,10 @@ body,
 #app {
   display: flex;
   flex-direction: column;
-  margin-bottom: 100px;
 }
 .content {
   flex: 1 0 auto;
+  margin-bottom: 100px;
 }
 #navbar {
   background-color: var(--ot-dark-red);
