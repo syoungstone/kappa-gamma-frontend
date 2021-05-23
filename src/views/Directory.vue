@@ -264,8 +264,10 @@ export default {
     getFirstEmail() {
       let i;
       for (i = 0; i < this.totalRows; i++) {
-        if (this.data[i].email != null) {
+        if (this.data[i].emails != null) {
           this.data[i].email = this.data[i].emails.split(",")[0];
+        } else {
+          this.data[i].email = "N/A";
         }
       }
     },
