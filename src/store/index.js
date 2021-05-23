@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    apiURL: "http://api.vcuthetatau.org/",
+    apiURL: "http://localhost/",
     loggedIn: false,
     email: null,
     id: null,
