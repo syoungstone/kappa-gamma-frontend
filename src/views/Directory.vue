@@ -264,7 +264,9 @@ export default {
     getFirstEmail() {
       let i;
       for (i = 0; i < this.totalRows; i++) {
-        this.data[i].email = this.data[i].emails.split(",")[0];
+        if (this.data[i].email) {
+          this.data[i].email = this.data[i].emails.split(",")[0];
+        }
       }
     },
     appendGradYears() {
