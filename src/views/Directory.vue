@@ -264,7 +264,7 @@ export default {
     getFirstEmail() {
       let i;
       for (i = 0; i < this.totalRows; i++) {
-        if (this.data[i].email) {
+        if (this.data[i].email != null) {
           this.data[i].email = this.data[i].emails.split(",")[0];
         }
       }
