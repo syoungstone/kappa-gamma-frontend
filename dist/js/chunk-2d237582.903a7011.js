@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d237582"],{fb5e:function(t,e,n){"use strict";n.r(e);var o=function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("StudentForm",{attrs:{id:t.$store.state.id}})},r=[],s=n("9f51"),u={components:{StudentForm:s["a"]}},a=u,c=n("2877"),l=Object(c["a"])(a,o,r,!1,null,null,null);e["default"]=l.exports}}]);
-//# sourceMappingURL=chunk-2d237582.903a7011.js.map
