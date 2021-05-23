@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0ab0f6"],{1452:function(t,e,n){"use strict";n.r(e);var s=function(){var t=this,e=t.$createElement,n=t._self._c||e;return this.$store.state.isOfficer?n("StudentForm"):t._e()},o=[],r=n("9f51"),u={components:{StudentForm:r["a"]}},c=u,a=n("2877"),i=Object(a["a"])(c,s,o,!1,null,null,null);e["default"]=i.exports}}]);
+//# sourceMappingURL=chunk-2d0ab0f6.5c4c9add.js.map
