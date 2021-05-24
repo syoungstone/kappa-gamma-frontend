@@ -3,14 +3,16 @@
     <h1>Directory</h1>
     <div v-if="loaded" id="contents">
       <b-modal
-        id="delete-pledge-modal"
+        id="delete-student-modal"
         ref="modal"
-        title="Delete Pledge"
-        @ok="deletePledge()"
+        title="Delete Student"
+        @ok="deleteStudent()"
       >
         <p>
-          Are you sure you want to delete pledge {{ this.toDeleteName }}? This
-          action cannot be undone.
+          Are you sure you want to delete {{ this.toDeleteName }}? This action
+          cannot be undone. <br /><br />
+          Please note that a brother may only be deleted if all financial and
+          leadership information associated with them has been deleted first.
         </p>
         <template #modal-footer="{ cancel, ok }">
           <b-button size="sm" @click="cancel()"> Cancel </b-button>
@@ -129,12 +131,11 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.position != null && row.item.is_pledge == 1"
+            v-if="$store.state.position != null"
             size="sm"
             @click="
               prepareDeletion(
                 row.item.id,
-                row.item.is_pledge,
                 row.item.name_first,
                 row.item.name_last
               )
@@ -322,26 +323,22 @@ export default {
     editStudent(id) {
       this.$router.push("/edit/" + id, () => {});
     },
-    prepareDeletion(id, isPledge, firstName, lastName) {
-      if (isPledge == 0) {
-        console.log("Let's delete brother " + id);
-      } else {
-        this.toDeleteName = firstName + " " + lastName;
-        this.toDeleteId = id;
-        this.$bvModal.show("delete-pledge-modal");
-      }
+    prepareDeletion(id, firstName, lastName) {
+      this.toDeleteName = firstName + " " + lastName;
+      this.toDeleteId = id;
+      this.$bvModal.show("delete-student-modal");
     },
-    deletePledge() {
+    deleteStudent() {
       // this.$bvModal.hide();
       axios
         .delete(
-          this.$store.state.apiURL + "delete_pledge.php?id=" + this.toDeleteId,
+          this.$store.state.apiURL + "delete_student.php?id=" + this.toDeleteId,
           {
             headers: { Authorization: this.$store.state.jwt },
           }
         )
         .then((response) => {
-          let modalTitle = "Pledge Deleted";
+          let modalTitle = "Student Deleted";
           let modalMessage = response.data;
           this.$root.$children[0].showMessage(modalTitle, modalMessage);
           this.getStudents();

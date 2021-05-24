@@ -4,24 +4,6 @@
     <div v-if="loaded">
       <div v-if="$store.state.position != null" id="create-new">
         <b-modal
-          id="repeat-founder-modal"
-          ref="modal"
-          title="No Duplicate Lineage Founders"
-          hide-footer
-        >
-          <p>{{ this.modalMessage }}</p>
-        </b-modal>
-
-        <b-modal
-          id="name-exists-modal"
-          ref="modal"
-          title="Lineage Already Exists"
-          hide-footer
-        >
-          <p>{{ this.modalMessage }}</p>
-        </b-modal>
-
-        <b-modal
           id="delete-lineage-modal"
           ref="modal"
           title="Warning: Deleting Lineage"
@@ -135,7 +117,6 @@ export default {
         founder: null,
       },
       loaded: false,
-      modalMessage: "",
     };
   },
   methods: {
@@ -143,16 +124,18 @@ export default {
       this.newLineage.founder = this.newFounder.id;
       this.newLineage.founder_name = this.getCustomDescription(this.newFounder);
       if (this.lineages.find(this.lineageNameExists)) {
-        this.modalMessage =
+        let modalTitle = "Lineage Already Exists";
+        let modalMessage =
           'A lineage with name "' +
           this.newLineage.lineage_name +
           '" already exists. Please select a unique lineage name.';
-        this.$bvModal.show("name-exists-modal");
+        this.$root.$children[0].showMessage(modalTitle, modalMessage);
       } else if (this.lineages.find(this.founderExists)) {
-        this.modalMessage =
+        let modalTitle = "No Duplicate Lineage Founders";
+        let modalMessage =
           this.newLineage.founder_name +
           " is already listed as the founder of another lineage. Please select a unique founder.";
-        this.$bvModal.show("repeat-founder-modal");
+        this.$root.$children[0].showMessage(modalTitle, modalMessage);
       } else {
         axios
           .post(
