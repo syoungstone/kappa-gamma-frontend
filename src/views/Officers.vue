@@ -21,12 +21,7 @@
       >
         <b-row no-gutters>
           <b-col md="5">
-            <div v-if="officer.photo" class="thumbnail">
-              <img :src="officer.photo" alt="Profile photo" />
-            </div>
-            <div v-else class="thumbnail">
-              <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
-            </div>
+            <ProfilePhoto :photo="officer.photo" />
           </b-col>
           <b-col md="7">
             <b-card-body :title="officer.office" class="card-body">
@@ -53,9 +48,11 @@
 
 <script>
 import axios from "axios";
+import ProfilePhoto from "@/components/ProfilePhoto.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   components: {
+    ProfilePhoto,
     LoadingSpinner,
   },
   created() {
@@ -114,27 +111,6 @@ h4 {
 }
 .card-body {
   margin-left: 10px;
-}
-.officer-label,
-.officer-select {
-  width: 250px;
-}
-.officer-label {
-  text-align: right;
-  margin-right: 20px;
-  margin-bottom: 0;
-  margin-top: 6px;
-  align-content: center;
-}
-.officer-checkbox {
-  margin-left: 50px;
-}
-.officer-checkbox {
-  display: flex;
-  align-items: center;
-}
-.officer-button {
-  margin-left: 50px;
 }
 #edit-button {
   margin-left: 20px;

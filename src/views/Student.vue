@@ -1,12 +1,11 @@
 <template>
   <div class="narrow-wrapper">
     <div v-if="loaded">
-      <div v-if="data.photo" class="thumbnail">
-        <img :src="data.photo" alt="Profile photo" />
-      </div>
-      <div v-else-if="data.is_pledge == 0" class="thumbnail">
-        <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
-      </div>
+      <ProfilePhoto
+        class="profile-photo"
+        v-if="data.is_pledge == 0"
+        :photo="data.photo"
+      />
       <h2>{{ data.is_pledge == 1 ? "Pledge" : "Brother" }}</h2>
       <div class="row" id="name-row">
         <h1>
@@ -117,9 +116,11 @@
 
 <script>
 import axios from "axios";
+import ProfilePhoto from "@/components/ProfilePhoto.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   components: {
+    ProfilePhoto,
     LoadingSpinner,
   },
   name: "Brother",
@@ -164,7 +165,7 @@ export default {
 </script>
 
 <style scoped>
-.thumbnail {
+.profile-photo {
   margin: auto;
   border: 3px solid black;
 }

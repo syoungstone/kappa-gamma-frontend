@@ -5,23 +5,7 @@
       <p id="no-pledges">There are currently no pledges to be found.</p>
     </div>
     <div v-else-if="loaded" id="cards">
-      <b-modal id="photo-modal" title="Select Photo" @ok="handleOk">
-        <form ref="form" @submit.stop.prevent="handleSubmit">
-          <b-form-group
-            label="Please enter photo URL"
-            label-for="url-input"
-            invalid-feedback="Invalid URL"
-            :state="photoState"
-          >
-            <b-form-input
-              id="url-input"
-              v-model="tempPhoto"
-              :state="photoState"
-              required
-            ></b-form-input>
-          </b-form-group>
-        </form>
-      </b-modal>
+      <PhotoModal :show="showPhotoModal" @update-photo="updatePhoto" />
       <b-card
         v-for="pledge in pledges"
         :key="pledge.id"
@@ -31,12 +15,7 @@
       >
         <b-row no-gutters>
           <b-col md="5">
-            <div v-if="pledge.photo" class="thumbnail">
-              <img :src="pledge.photo" alt="Profile photo" />
-            </div>
-            <div v-else class="thumbnail">
-              <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
-            </div>
+            <ProfilePhoto class="profile-photo" :photo="pledge.photo" />
           </b-col>
           <b-col md="7">
             <b-card-body
@@ -76,9 +55,13 @@
 
 <script>
 import axios from "axios";
+import ProfilePhoto from "@/components/ProfilePhoto.vue";
+import PhotoModal from "@/components/PhotoModal.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   components: {
+    ProfilePhoto,
+    PhotoModal,
     LoadingSpinner,
   },
   created() {
@@ -90,15 +73,14 @@ export default {
       pledges: null,
       error: null,
       loaded: false,
+      showPhotoModal: false,
       photoId: null,
-      tempPhoto: null,
-      photoState: null,
     };
   },
   methods: {
     selectPhoto(id) {
       this.photoId = id;
-      this.$bvModal.show("photo-modal");
+      this.showPhotoModal = true;
     },
     initiate(pledge) {
       if (pledge.roll_number <= 0) {
@@ -152,34 +134,11 @@ export default {
           this.loaded = true;
         });
     },
-    checkUrlValidity() {
-      let regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
-      this.photoState = regexp.test(this.tempPhoto) || this.tempPhoto == "";
-      return this.photoState;
-    },
-    resetModal() {
-      this.photoState = null;
-    },
-    handleOk(bvModalEvt) {
-      // Prevent modal from closing
-      bvModalEvt.preventDefault();
-      // Trigger submit handler
-      this.handleSubmit();
-    },
-    handleSubmit() {
-      // Exit when the form isn't valid
-      if (!this.checkUrlValidity()) {
-        return;
-      }
-      // Save photo url
+    updatePhoto(photo) {
       var index = this.pledges.findIndex((x) => x.id == this.photoId);
-      this.pledges[index].photo = this.tempPhoto;
+      this.pledges[index].photo = photo;
       this.photoId = null;
-      this.tempPhoto = null;
-      // Hide the modal manually
-      this.$nextTick(() => {
-        this.$bvModal.hide("photo-modal");
-      });
+      this.showPhotoModal = false;
     },
   },
 };
@@ -189,8 +148,8 @@ export default {
 h4 {
   text-align: left;
 }
-.thumbnail {
-  height: 100%;
+.profile-photo {
+  height: 210px;
 }
 .pledge-card {
   margin-top: 20px;

@@ -19,12 +19,7 @@
       >
         <b-row no-gutters>
           <b-col md="5">
-            <div v-if="officer.photo" class="thumbnail">
-              <img :src="officer.photo" alt="Profile photo" />
-            </div>
-            <div v-else class="thumbnail">
-              <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
-            </div>
+            <ProfilePhoto :photo="officer.photo" />
           </b-col>
           <b-col md="7">
             <b-card-body :title="officer.office" class="card-body">
@@ -48,7 +43,11 @@
 
 <script>
 import axios from "axios";
+import ProfilePhoto from "@/components/ProfilePhoto.vue";
 export default {
+  components: {
+    ProfilePhoto,
+  },
   created() {
     axios
       .get(this.$store.state.apiURL + "read_officers_public.php")

@@ -15,12 +15,7 @@
       >
         <b-row no-gutters>
           <b-col md="5">
-            <div v-if="student.photo" class="thumbnail">
-              <img :src="student.photo" alt="Profile photo" />
-            </div>
-            <div v-else class="thumbnail">
-              <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
-            </div>
+            <ProfilePhoto :photo="student.photo" />
           </b-col>
           <b-col md="7">
             <b-card-body
@@ -47,9 +42,11 @@
 
 <script>
 import axios from "axios";
+import ProfilePhoto from "@/components/ProfilePhoto.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   components: {
+    ProfilePhoto,
     LoadingSpinner,
   },
   created() {

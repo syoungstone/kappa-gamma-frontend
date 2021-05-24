@@ -2,7 +2,6 @@
   <div class="narrow-wrapper">
     <div v-if="created" id="created">
       <h2>{{ response }}</h2>
-      <!-- <h2>New {{ data.is_pledge ? "pledge" : "brother" }} created!</h2> -->
       <b-button class="selection-button" @click="reset()"
         >Create Another</b-button
       >
@@ -17,51 +16,16 @@
       >
     </div>
     <b-form @submit.prevent="onSubmit" v-else-if="loaded">
-      <div
-        v-if="data.photo && $store.state.position != null"
-        class="thumbnail"
-        v-b-modal.photo-modal
-      >
-        <img :src="data.photo" alt="Profile photo" />
-        <div class="overlay">
-          <div class="overlay-text">Change Photo</div>
-        </div>
-      </div>
-      <div
-        v-else-if="isBrother && $store.state.position != null"
-        class="thumbnail"
-        v-b-modal.photo-modal
-      >
-        <img src="../assets/nophoto.jpg" alt="Photo placeholder" />
-        <div class="overlay">
-          <div class="overlay-text">Change Photo</div>
-        </div>
-      </div>
+      <a id="show" @click="show()">
+        <ProfilePhoto
+          class="profile-photo"
+          v-if="isBrother && $store.state.position != null"
+          :photo="data.photo"
+          :editable="true"
+        />
+      </a>
 
-      <b-modal
-        id="photo-modal"
-        ref="modal"
-        title="Change Photo"
-        @show="resetModal"
-        @hidden="resetModal"
-        @ok="handleOk"
-      >
-        <form ref="form" @submit.stop.prevent="handleSubmit">
-          <b-form-group
-            label="Please enter photo URL"
-            label-for="url-input"
-            invalid-feedback="Invalid URL"
-            :state="photoState"
-          >
-            <b-form-input
-              id="url-input"
-              v-model="photo"
-              :state="photoState"
-              required
-            ></b-form-input>
-          </b-form-group>
-        </form>
-      </b-modal>
+      <PhotoModal :show="showPhotoModal" @update-photo="updatePhoto" />
 
       <b-modal id="big-modal" ref="modal" title="Assign Big" @ok="changeBig">
         <form ref="form" v-if="bigsLoaded" @submit.stop.prevent="handleSubmit">
@@ -345,16 +309,20 @@
 
 <script>
 import axios from "axios";
-import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import ProfilePhoto from "@/components/ProfilePhoto.vue";
+import PhotoModal from "@/components/PhotoModal.vue";
 import MajorSelect from "@/components/MajorSelect.vue";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   name: "StudentForm",
   props: {
     id: String,
   },
   components: {
-    LoadingSpinner,
+    ProfilePhoto,
+    PhotoModal,
     MajorSelect,
+    LoadingSpinner,
   },
   computed: {
     submitDisabled() {
@@ -733,8 +701,8 @@ export default {
       ],
       newEntry: false,
       created: false,
-      photo: "",
-      photoState: null,
+      showPhotoModal: false,
+      photo: null,
       response: null,
       loaded: false,
       bigsLoaded: false,
@@ -758,7 +726,6 @@ export default {
                 : this.stateList.find(
                     (x) => x.abbreviation == this.data.home_state
                   );
-            this.photo = this.data.photo;
             this.loaded = true;
           })
           .catch((error) => this.$root.$children[0].showError(error));
@@ -766,6 +733,13 @@ export default {
         this.data = JSON.parse(JSON.stringify(this.defaultData));
         this.loaded = true;
       }
+    },
+    show() {
+      this.showPhotoModal = true;
+    },
+    updatePhoto(photo) {
+      this.data.photo = photo;
+      this.showPhotoModal = false;
     },
     onSubmit() {
       if (this.checkData()) {
@@ -816,32 +790,6 @@ export default {
         .catch((error) => {
           this.$root.$children[0].showError(error);
         });
-    },
-    checkUrlValidity() {
-      let regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
-      this.photoState = regexp.test(this.photo) || this.photo == "";
-      return this.photoState;
-    },
-    resetModal() {
-      this.photoState = null;
-    },
-    handleOk(bvModalEvt) {
-      // Prevent modal from closing
-      bvModalEvt.preventDefault();
-      // Trigger submit handler
-      this.handleSubmit();
-    },
-    handleSubmit() {
-      // Exit when the form isn't valid
-      if (!this.checkUrlValidity()) {
-        return;
-      }
-      // Save photo url
-      this.data.photo = this.photo;
-      // Hide the modal manually
-      this.$nextTick(() => {
-        this.$bvModal.hide("photo-modal");
-      });
     },
     updateState1() {
       const regex = new RegExp("[0-9]{10}");
@@ -899,13 +847,7 @@ export default {
       this.data.majors.push(null);
     },
     updateMajor(index, majorReturned) {
-      console.log("new major: " + majorReturned);
-      console.log("index: " + index);
-      console.log("Before update, value is:" + this.data.majors[index]);
       this.data.majors[index] = majorReturned;
-      console.log("After update, value is:" + this.data.majors[index]);
-      console.log("data.majors is now:");
-      console.log(this.data.majors);
     },
     deleteMajor(index) {
       this.data.majors.splice(index, 1);
@@ -933,34 +875,12 @@ h3 {
   margin-top: 30px;
   margin-bottom: 20px;
 }
-.thumbnail:hover .overlay {
-  opacity: 0.5;
-}
-.thumbnail {
+.profile-photo {
   margin: auto;
   border: 3px solid black;
 }
-.overlay {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-  background-color: black;
-}
-.overlay-text {
-  color: white;
-  font-size: 30px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  text-align: center;
+#show {
+  cursor: pointer;
 }
 .selection-button {
   margin: 10px;
