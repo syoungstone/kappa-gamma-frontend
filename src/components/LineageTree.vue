@@ -45,7 +45,7 @@ export default {
         this.students[i].text = {
           name: this.students[i].name_first + " " + this.students[i].name_last,
         };
-        this.students[i].link = { href: "/#/student/" + this.students[i].id };
+        this.students[i].link = { href: "/student/" + this.students[i].id };
       }
 
       for (i = 0; i < this.students.length; i += 1) {

@@ -124,10 +124,15 @@ const routes = [
     name: "Initiate Pledges",
     component: () => import("../views/Initiate.vue"),
   },
+  {
+    path: "/:catchAll(.*)",
+    name: "Not Found",
+    component: () => import("../views/NotFound.vue"),
+  },
 ];
 
 const router = new VueRouter({
-  // mode: "history",
+  mode: "history",
   routes,
 });
 
