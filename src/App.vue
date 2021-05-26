@@ -15,6 +15,7 @@
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav v-if="$store.state.loggedIn">
             <b-nav-item to="/dashboard">Dashboard</b-nav-item>
+            <b-nav-item to="/events">Events</b-nav-item>
             <b-nav-item-dropdown
               v-if="$store.state.isBrother"
               text="Membership"
@@ -31,7 +32,8 @@
               v-if="$store.state.position != null"
               text="Actions"
             >
-              <b-dropdown-item to="/update-officers"
+              <b-dropdown-item to="/createevent">Create Event</b-dropdown-item>
+              <b-dropdown-item to="/updateofficers"
                 >Update Officers</b-dropdown-item
               >
               <b-dropdown-item to="/create">Create New Student</b-dropdown-item>
@@ -41,6 +43,7 @@
           <b-navbar-nav v-else>
             <b-nav-item to="/">Home</b-nav-item>
             <b-nav-item to="/about">About</b-nav-item>
+            <b-nav-item to="/events">Events</b-nav-item>
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
@@ -172,7 +175,7 @@ export default {
       this.$router.push("/", () => {});
     },
     editSelf() {
-      this.$router.push("/edit/" + this.$store.state.id, () => {});
+      this.$router.push("/editstudent/" + this.$store.state.id, () => {});
     },
     showError(error) {
       this.notifyModalTitle = "Error";

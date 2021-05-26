@@ -768,7 +768,7 @@ export default {
     sendData() {
       this.data.home_state =
         this.newState == null ? null : this.newState.abbreviation;
-      var apiCall = this.newEntry
+      let apiCall = this.newEntry
         ? "create_student.php"
         : "update_student.php?id=" + this.data.id;
       axios

@@ -20,6 +20,11 @@ const routes = [
     component: () => import("../views/About.vue"),
   },
   {
+    path: "/events",
+    name: "Events",
+    component: () => import("../views/Events.vue"),
+  },
+  {
     path: "/login",
     name: "Log In",
     component: () => import("../views/Login.vue"),
@@ -80,14 +85,29 @@ const routes = [
     component: () => import("../views/Student.vue"),
   },
   {
-    path: "/edit/:id",
+    path: "/editstudent/:id",
     name: "Edit Student",
-    component: () => import("../views/Edit.vue"),
+    component: () => import("../views/EditStudent.vue"),
   },
   {
     path: "/create",
     name: "Create Student",
     component: () => import("../views/CreateStudent.vue"),
+  },
+  {
+    path: "/createevent",
+    name: "Create Event",
+    component: () => import("../views/CreateEvent.vue"),
+  },
+  {
+    path: "/event/:id",
+    name: "Event",
+    component: () => import("../views/Event.vue"),
+  },
+  {
+    path: "/editevent/:id",
+    name: "Edit Event",
+    component: () => import("../views/EditEvent.vue"),
   },
   {
     path: "/pledgeclasses",
@@ -100,7 +120,7 @@ const routes = [
     component: () => import("../views/Officers.vue"),
   },
   {
-    path: "/update-officers",
+    path: "/updateofficers",
     name: "Update Officers",
     component: () => import("../views/UpdateOfficers.vue"),
   },
@@ -143,6 +163,8 @@ const officerRestricted = [
   "Update Officers",
 ];
 const brotherRestricted = officerRestricted.concat([
+  "Create Event",
+  "Edit Event",
   "Directory",
   "Pledge Classes",
   "Pledge Class",

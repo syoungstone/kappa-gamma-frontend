@@ -88,7 +88,7 @@ export default {
       }
     },
     editOfficers() {
-      this.$router.push("/update-officers/", () => {});
+      this.$router.push("/updateofficers/", () => {});
     },
     parseMajors() {
       let i;

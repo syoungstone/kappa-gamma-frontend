@@ -321,7 +321,7 @@ export default {
       this.$router.push("/student/" + id, () => {});
     },
     editStudent(id) {
-      this.$router.push("/edit/" + id, () => {});
+      this.$router.push("/editstudent/" + id, () => {});
     },
     prepareDeletion(id, firstName, lastName) {
       this.toDeleteName = firstName + " " + lastName;

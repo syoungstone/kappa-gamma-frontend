@@ -1,0 +1,49 @@
+<template>
+  <div class="narrow-wrapper">
+    <EventForm
+      v-if="loaded"
+      :eventData="event"
+      @goback="hasHistory() ? $router.go(-1) : $router.push('/')"
+    />
+    <LoadingSpinner v-else />
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+import EventForm from "@/components/EventForm.vue";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+export default {
+  components: {
+    EventForm,
+    LoadingSpinner,
+  },
+  data() {
+    return {
+      loaded: false,
+      event: null,
+    };
+  },
+  created() {
+    axios
+      .get(
+        this.$store.state.apiURL + "read_event.php?id=" + this.$route.params.id,
+        {
+          headers: { Authorization: this.$store.state.jwt },
+        }
+      )
+      .then((response) => {
+        this.event = response.data;
+        this.loaded = true;
+      })
+      .catch((error) => {
+        this.$root.$children[0].showError(error);
+      });
+  },
+  methods: {
+    hasHistory() {
+      return window.history.length > 2;
+    },
+  },
+};
+</script>

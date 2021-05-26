@@ -15,6 +15,7 @@ export default new Vuex.Store({
     lastName: null,
     isBrother: null,
     position: null,
+    committees: null,
   },
   mutations: {
     setUser(state, jwt) {
@@ -31,6 +32,7 @@ export default new Vuex.Store({
         state.lastName = parsed.data.name_last;
         state.isBrother = parsed.data.is_brother;
         state.position = parsed.data.position;
+        state.committees = parsed.data.committees;
         localStorage.setItem("kappa-gamma-jwt", jwt);
       }
     },

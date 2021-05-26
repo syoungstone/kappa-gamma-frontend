@@ -158,7 +158,7 @@ export default {
   },
   methods: {
     editStudent() {
-      this.$router.push("/edit/" + this.id, () => {});
+      this.$router.push("/editstudent/" + this.id, () => {});
     },
   },
 };
