@@ -7,6 +7,12 @@
         internal events.
       </h5>
     </div>
+    <div id="header" v-else-if="$store.state.isBrother">
+      <h1>Calendar</h1>
+      <b-button id="nav-button" @click="createEvent()" variant="primary"
+        >Create Event</b-button
+      >
+    </div>
     <CalendarComponent />
   </div>
 </template>
@@ -17,11 +23,31 @@ export default {
   components: {
     CalendarComponent,
   },
+  methods: {
+    createEvent() {
+      this.$router.push("/createevent", () => {});
+    },
+  },
 };
 </script>
 
 <style scoped>
+#header {
+  display: flex;
+  margin-right: 3em;
+  margin-left: 3em;
+}
+#nav-button {
+  margin-left: auto;
+  align-self: flex-end;
+  height: 60%;
+}
 h5 {
   text-align: center;
+}
+h1 {
+  text-align: left;
+  padding: 0px;
+  margin: 0px;
 }
 </style>

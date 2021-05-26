@@ -171,6 +171,7 @@ export default {
 .demo-app-main {
   flex-grow: 1;
   padding: 3em;
+  padding-top: 1em;
 }
 .calendar /deep/ .fc-event {
   cursor: pointer;
