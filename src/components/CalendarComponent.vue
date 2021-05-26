@@ -92,9 +92,18 @@ export default {
         this.calendarOptions.headerToolbar.right =
           "dayGridMonth,timeGridWeek,timeGridDay";
       }
+      this.setAspectRatio();
+    },
+    setAspectRatio() {
+      let api = this.$refs.fullCalendar.getApi();
+      if (api.view.type != "dayGridMonth") {
+        api.setOption("aspectRatio", window.innerWidth / window.innerHeight);
+      } else {
+        api.setOption("aspectRatio", 1.35);
+      }
     },
     getEvents() {
-      // let calendarApi = selectInfo.view.calendar;
+      this.setAspectRatio();
       axios
         .get(
           this.$store.state.apiURL +
