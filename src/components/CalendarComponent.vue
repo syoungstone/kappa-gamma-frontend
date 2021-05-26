@@ -1,9 +1,16 @@
 <template>
   <div class="demo-app">
     <div class="demo-app-main">
-      <FullCalendar :options="calendarOptions">
-        <template v-slot:eventContent="arg">
+      <h5 v-if="error">{{ error }}</h5>
+      <FullCalendar
+        v-else
+        :options="calendarOptions"
+        ref="fullCalendar"
+        class="calendar"
+      >
+        <template v-slot:eventContent="arg" class="event">
           <b>{{ arg.timeText }}</b>
+          {{ arg.event.allDay ? "" : " " }}
           <i>{{ arg.event.title }}</i>
         </template>
       </FullCalendar>
@@ -12,19 +19,17 @@
 </template>
 
 <script>
+import axios from "axios";
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-
 export default {
   components: {
-    FullCalendar, // make the <FullCalendar> tag available
+    FullCalendar,
   },
-
   data: function () {
     return {
-      eventGuid: 0,
       todayStr: new Date().toISOString().replace(/T.*$/, ""),
       calendarOptions: {
         plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -34,74 +39,114 @@ export default {
           right: "dayGridMonth,timeGridWeek,timeGridDay",
         },
         initialView: "dayGridMonth",
-        initialEvents: [
-          {
-            id: this.createEventId(),
-            title: "All-day event",
-            start: this.todayStr,
-          },
-          {
-            id: this.createEventId(),
-            title: "Timed event",
-            start: this.todayStr + "T12:00:00",
-          },
-        ], // alternatively, use the `events` setting to fetch from a feed
-        editable: true,
-        selectable: true,
-        selectMirror: true,
+        events: null,
         dayMaxEvents: true,
-        weekends: true,
-        select: this.handleDateSelect,
         eventClick: this.handleEventClick,
-        eventsSet: this.handleEvents,
-        /* you can update a remote database when these fire:
-        eventAdd:
-        eventChange:
-        eventRemove:
-        */
+        viewDidMount: this.handleViewMount,
       },
-      currentEvents: [],
+      from: null,
+      to: null,
+      error: null,
+      events: null,
+      element: null,
     };
   },
-
+  mounted() {
+    this.$nextTick(() => {
+      window.addEventListener("resize", this.setCalendarView);
+    });
+    this.setCalendarView();
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.onResize);
+  },
   methods: {
-    handleWeekendsToggle() {
-      this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
-    },
-
-    handleDateSelect(selectInfo) {
-      let title = prompt("Please enter a new title for your event");
-      let calendarApi = selectInfo.view.calendar;
-
-      calendarApi.unselect(); // clear date selection
-
-      if (title) {
-        calendarApi.addEvent({
-          id: this.createEventId(),
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay,
-        });
+    setCalendarView() {
+      let api = this.$refs.fullCalendar.getApi();
+      if (window.innerWidth < 550) {
+        this.calendarOptions.initialView = "timeGridDay";
+        api.changeView("timeGridDay");
+        this.calendarOptions.headerToolbar.left = "title";
+        this.calendarOptions.headerToolbar.center = "";
+        this.calendarOptions.headerToolbar.right = "prev,next";
+      } else if (window.innerWidth < 650) {
+        this.calendarOptions.initialView = "timeGridWeek";
+        if (api.view.type == "dayGridMonth") {
+          api.changeView("timeGridWeek");
+        }
+        this.calendarOptions.headerToolbar.left = "prev,next";
+        this.calendarOptions.headerToolbar.center = "title";
+        this.calendarOptions.headerToolbar.right = "timeGridWeek,timeGridDay";
+      } else if (window.innerWidth < 850) {
+        this.calendarOptions.initialView = "timeGridWeek";
+        if (api.view.type == "dayGridMonth") {
+          api.changeView("timeGridWeek");
+        }
+        this.calendarOptions.headerToolbar.left = "prev,next today";
+        this.calendarOptions.headerToolbar.center = "title";
+        this.calendarOptions.headerToolbar.right = "timeGridWeek,timeGridDay";
+      } else {
+        this.calendarOptions.initialView = "dayGridMonth";
+        this.calendarOptions.headerToolbar.left = "prev,next today";
+        this.calendarOptions.headerToolbar.center = "title";
+        this.calendarOptions.headerToolbar.right =
+          "dayGridMonth,timeGridWeek,timeGridDay";
       }
     },
-
-    createEventId() {
-      return String(this.eventGuid++);
-    },
-
-    handleEventClick(clickInfo) {
-      if (
-        confirm(
-          `Are you sure you want to delete the event '${clickInfo.event.title}'`
+    getEvents() {
+      // let calendarApi = selectInfo.view.calendar;
+      axios
+        .get(
+          this.$store.state.apiURL +
+            "read_events.php?from=" +
+            this.from +
+            "&to=" +
+            this.to,
+          {
+            headers:
+              this.$store.state.jwt != null
+                ? { Authorization: this.$store.state.jwt }
+                : {},
+          }
         )
-      ) {
-        clickInfo.event.remove();
-      }
+        .then((response) => {
+          this.events = response.data.body;
+          this.events.forEach((x) => (x.allDay = x.allDay == 1));
+          this.calendarOptions.events = this.events;
+        })
+        .catch((error) => {
+          this.error = error;
+        });
     },
-
-    handleEvents(events) {
-      this.currentEvents = events;
+    // handleDateSelect(selectInfo) {},
+    handleEventClick(clickInfo) {
+      this.$router.push("/event/" + clickInfo.event.id, () => {});
+    },
+    handleViewMount(data) {
+      this.formatDatetime(data.view.currentStart, data.view.currentEnd);
+      this.getEvents();
+    },
+    formatDatetime(startString, endString) {
+      let start = new Date(startString);
+      let end = new Date(endString);
+      this.from =
+        start.getFullYear() +
+        "-" +
+        (start.getMonth() + 1 < 10 ? "0" : "") +
+        (start.getMonth() + 1) +
+        "-" +
+        (start.getDate() < 10 ? "0" : "") +
+        start.getDate() +
+        "T00:00:00";
+      this.to =
+        end.getFullYear() +
+        "-" +
+        (end.getMonth() + 1 < 10 ? "0" : "") +
+        (end.getMonth() + 1) +
+        "-" +
+        (end.getDate() < 10 ? "0" : "") +
+        end.getDate() +
+        "T00:00:00";
     },
   },
 };
@@ -117,5 +162,12 @@ export default {
 .demo-app-main {
   flex-grow: 1;
   padding: 3em;
+}
+.calendar /deep/ .fc-event {
+  cursor: pointer;
+}
+.calendar /deep/ .fc-event > span {
+  max-width: 100%;
+  overflow: hidden;
 }
 </style>

@@ -3,13 +3,19 @@
     <h1>{{ editing ? "Edit Event" : "Create New Event" }}</h1>
 
     <b-form-group id="input-group-name" label="Name:" label-for="input-name">
-      <b-input id="input-name" v-model="event.event_name" required></b-input>
+      <b-input id="input-name" v-model="event.title" required></b-input>
     </b-form-group>
 
-    <b-form-group label="From:" label-for="from">
-      <b-input-group id="from">
+    <b-form-group>
+      <b-form-checkbox id="checkbox-allday" v-model="event.allDay">
+        All day event
+      </b-form-checkbox>
+    </b-form-group>
+
+    <b-form-group label="Start:" label-for="start">
+      <b-input-group id="start">
         <b-form-datepicker
-          v-model="fromDate"
+          v-model="startDate"
           :date-format-options="{
             year: 'numeric',
             month: 'numeric',
@@ -18,7 +24,8 @@
           required
         ></b-form-datepicker>
         <b-form-timepicker
-          v-model="fromTime"
+          v-if="!event.allDay"
+          v-model="startTime"
           locale="en"
           no-close-button
           required
@@ -26,10 +33,10 @@
       </b-input-group>
     </b-form-group>
 
-    <b-form-group label="To:" label-for="to">
-      <b-input-group id="to">
+    <b-form-group label="End:" label-for="end">
+      <b-input-group id="end">
         <b-form-datepicker
-          v-model="toDate"
+          v-model="endDate"
           :date-format-options="{
             year: 'numeric',
             month: 'numeric',
@@ -38,7 +45,8 @@
           required
         ></b-form-datepicker>
         <b-form-timepicker
-          v-model="toTime"
+          v-if="!event.allDay"
+          v-model="endTime"
           locale="en"
           no-close-button
           required
@@ -147,21 +155,21 @@ export default {
         ? "pledges"
         : "brothers";
       this.altPledgeName = this.event.alt_pledge_name != null;
-      let from = this.event.from_datetime.split(" ");
-      let to = this.event.to_datetime.split(" ");
-      this.fromDate = from[0];
-      this.fromTime = from[1];
-      this.toDate = to[0];
-      this.toTime = to[1];
+      let from = this.event.start.split("T");
+      let to = this.event.end.split("T");
+      this.startDate = from[0];
+      this.startTime = from[1];
+      this.endDate = to[0];
+      this.endTime = to[1];
     }
   },
   data() {
     return {
       editing: false,
-      fromDate: null,
-      fromTime: null,
-      toDate: null,
-      toTime: null,
+      startDate: null,
+      startTime: null,
+      endDate: null,
+      endTime: null,
       committeeOptions: null,
       visibility: null,
       visibilityOptions: [
@@ -176,11 +184,11 @@ export default {
   computed: {
     submitDisabled() {
       return (
-        !this.fromDate ||
-        !this.fromTime ||
-        !this.toDate ||
-        !this.toTime ||
-        !this.event.event_name
+        !this.startDate ||
+        (!this.startTime && !this.event.allDay) ||
+        !this.endDate ||
+        (!this.endTime && !this.event.allDay) ||
+        !this.event.title
       );
     },
   },
@@ -205,10 +213,16 @@ export default {
       this.$emit("goback");
     },
     onSubmit() {
-      this.event.from_datetime = this.fromDate + " " + this.fromTime;
-      this.event.to_datetime = this.toDate + " " + this.toTime;
-
-      if (this.event.from_datetime > this.event.to_datetime) {
+      this.event.start =
+        this.startDate +
+        "T" +
+        (this.event.allDay ? "00:00:00" : this.startTime);
+      this.event.end =
+        (this.event.allDay ? this.incrementDay(this.endDate) : this.endDate) +
+        "T" +
+        (this.event.allDay ? "00:00:00" : this.endTime);
+      this.event.allDay = this.event.allDay ? 1 : 0;
+      if (this.event.start >= this.event.end) {
         let modalTitle = "Invalid Start & End Times";
         let modalMessage =
           "The time at which your event starts must be before the time at which it ends.";
@@ -230,29 +244,43 @@ export default {
                 this.resetEvent();
               }
             } else {
-              this.$root.$children[0].showError(response.data.error);
+              this.$root.$children[0].showError(
+                "Event could not be " + (this.editing ? "updated." : "created.")
+              );
             }
           })
           .catch(() => {
             this.$root.$children[0].showError(
-              "Event could not be " + this.editing ? "updated." : "created."
+              "Event could not be " + (this.editing ? "updated." : "created.")
             );
           });
       }
     },
+    incrementDay(dateString) {
+      let date = new Date(dateString + "T00:00:00");
+      date.setDate(date.getDate() + 1);
+      let month = "" + (date.getMonth() + 1),
+        day = "" + date.getDate(),
+        year = date.getFullYear();
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+      let returnString = [year, month, day].join("-");
+      return returnString;
+    },
     resetEvent() {
-      this.fromDate = null;
-      this.fromTime = null;
-      this.toDate = null;
-      this.toTime = null;
+      this.startDate = null;
+      this.startTime = null;
+      this.endDate = null;
+      this.endTime = null;
       this.visibility = null;
       this.event = {
         id: null,
-        event_name: null,
+        title: null,
         event_description: null,
         event_location: null,
-        from_datetime: null,
-        to_datetime: null,
+        start: null,
+        end: null,
+        allDay: false,
         committee: null,
         is_public: null,
         is_for_pledges: null,

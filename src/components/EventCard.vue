@@ -1,24 +1,39 @@
 <template>
   <div>
-    <div v-if="error">{{ error }}</div>
+    <div id="error" v-if="error">
+      <h2>Error 404</h2>
+      <h3>The chosen event could not be found.</h3>
+    </div>
     <div v-else-if="loaded" class="event-card">
       <h3>
         {{
           $store.state.isPledge && event.alt_pledge_name
             ? event.alt_pledge_name
-            : event.event_name
+            : event.title
         }}
       </h3>
-      <div v-if="fromDateString == toDateString">
+      <div v-if="startDateString == endDateString">
         <h4>
-          {{ fromDateString }}
+          {{ startDateString }}
         </h4>
-        <h5>{{ fromTimeString + " to " + toTimeString }}</h5>
+        <h5 v-if="event.allDay == 0">
+          {{ startTimeString + " to " + endTimeString }}
+        </h5>
+        <h5 v-else>All day event</h5>
       </div>
       <div v-else>
         <h5>
-          {{ "From " + fromDateString + " at " + fromTimeString }} <br />
-          {{ " to " + toDateString + " at " + toTimeString }}
+          {{
+            "From " +
+            startDateString +
+            (event.allDay == 1 ? "" : " at " + startTimeString)
+          }}
+          <br v-if="event.allDay == 0" />
+          {{
+            " to " +
+            endDateString +
+            (event.allDay == 1 ? "" : " at " + endTimeString)
+          }}
         </h5>
       </div>
       <h6 v-if="event.event_location">{{ "At " + event.event_location }}</h6>
@@ -67,10 +82,10 @@ export default {
   data() {
     return {
       deleting: false,
-      fromDateString: null,
-      toDateString: null,
-      fromTimeString: null,
-      toTimeString: null,
+      startDateString: null,
+      endDateString: null,
+      startTimeString: null,
+      endTimeString: null,
       event: null,
       error: null,
       loaded: false,
@@ -79,7 +94,10 @@ export default {
   created() {
     axios
       .get(this.$store.state.apiURL + "read_event.php?id=" + this.eventId, {
-        headers: { Authorization: this.$store.state.jwt },
+        headers:
+          this.$store.state.jwt != null
+            ? { Authorization: this.$store.state.jwt }
+            : {},
       })
       .then((response) => {
         this.event = response.data;
@@ -93,14 +111,17 @@ export default {
   },
   methods: {
     getTimeStrings() {
-      let from = new Date(this.event.from_datetime.replace(" ", "T"));
-      let to = new Date(this.event.to_datetime.replace(" ", "T"));
-      this.fromDateString = from.toLocaleDateString("en-US");
-      this.toDateString = to.toLocaleDateString("en-US");
-      this.fromTimeString = from
+      let start = new Date(this.event.start);
+      let end = new Date(this.event.end);
+      if (this.event.allDay == 1) {
+        end.setDate(end.getDate() - 1);
+      }
+      this.startDateString = start.toLocaleDateString("en-US");
+      this.endDateString = end.toLocaleDateString("en-US");
+      this.startTimeString = start
         .toLocaleTimeString("en-US")
         .replace(":00 ", " ");
-      this.toTimeString = to.toLocaleTimeString("en-US").replace(":00 ", " ");
+      this.endTimeString = end.toLocaleTimeString("en-US").replace(":00 ", " ");
     },
     editEvent() {
       this.$router.push("/editevent/" + this.eventId, () => {});
@@ -140,5 +161,9 @@ h4 {
 .select-button {
   margin-right: 10px;
   margin-top: 10px;
+}
+#error > h2,
+h3 {
+  text-align: center;
 }
 </style>

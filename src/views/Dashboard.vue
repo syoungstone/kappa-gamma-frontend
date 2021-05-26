@@ -13,8 +13,12 @@
           :key="event.id"
           @click="viewEvent(event.id)"
         >
-          <strong>{{ event.event_name }}</strong>
-          <br />{{ getDisplayTime(event.from_datetime) }}
+          <strong>{{ event.title }}</strong>
+          <br />{{
+            event.allDay == 1
+              ? "All day"
+              : getDisplayTime(event.start) + " to " + getDisplayTime(event.end)
+          }}
         </div>
       </div>
       <h3 v-else>No upcoming events today!</h3>
@@ -68,7 +72,7 @@ export default {
         "-" +
         (date.getDate() < 10 ? "0" : "") +
         date.getDate() +
-        " " +
+        "T" +
         (date.getHours() < 10 ? "0" : "") +
         date.getHours() +
         ":" +
@@ -85,7 +89,7 @@ export default {
         "-" +
         (date.getDate() < 10 ? "0" : "") +
         date.getDate() +
-        " " +
+        "T" +
         "23:59:59";
     },
     viewEvent(id) {
@@ -97,7 +101,7 @@ export default {
       let hour = hms[0] % 12 == 0 ? 12 : hms[0] % 12;
       let minute = hms[1];
       let ampm = hms[0] > 11 ? "pm" : "am";
-      return hour + ":" + minute + " " + ampm;
+      return hour + ":" + minute + ampm;
     },
   },
 };
