@@ -75,6 +75,7 @@
         id="textarea-description"
         rows="3"
         no-resize
+        placeholder="If this event is open to pledges or the general public, they will be able to read this too!"
         v-model="event.event_description"
       ></b-form-textarea>
     </b-form-group>
@@ -216,7 +217,6 @@ export default {
         this.event.is_public = this.visibility == "public" ? 1 : 0;
         this.event.is_for_pledges = this.visibility == "pledges" ? 1 : 0;
         let apiCall = this.editing ? "update_event.php" : "create_event.php";
-        console.log(this.event);
         axios
           .post(this.$store.state.apiURL + apiCall, this.event, {
             headers: { Authorization: this.$store.state.jwt },

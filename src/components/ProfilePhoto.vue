@@ -15,12 +15,6 @@ export default {
     photo: {
       required: true,
     },
-    watch: {
-      photo: function () {
-        console.log("Photo changed");
-        console.log(this.photo);
-      },
-    },
     editable: {
       type: Boolean,
       default: false,

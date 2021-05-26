@@ -84,7 +84,6 @@ export default {
       .then((response) => {
         this.event = response.data;
         this.getTimeStrings();
-        console.log(this.event);
         this.loaded = true;
       })
       .catch((error) => {
