@@ -23,6 +23,11 @@ export default {
   components: {
     CalendarComponent,
   },
+  computed: {
+    wideEnough() {
+      return window.innerWidth > 650;
+    },
+  },
   methods: {
     createEvent() {
       this.$router.push("/createevent", () => {});
@@ -34,8 +39,8 @@ export default {
 <style scoped>
 #header {
   display: flex;
-  margin-right: 3em;
-  margin-left: 3em;
+  padding-right: 1em;
+  padding-left: 1em;
 }
 #nav-button {
   margin-left: auto;

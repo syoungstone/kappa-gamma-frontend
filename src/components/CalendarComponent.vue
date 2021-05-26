@@ -71,22 +71,19 @@ export default {
         this.calendarOptions.headerToolbar.right = "prev,next";
       } else if (window.innerWidth < 650) {
         this.calendarOptions.initialView = "timeGridWeek";
-        if (api.view.type == "dayGridMonth") {
-          api.changeView("timeGridWeek");
-        }
+        api.changeView("timeGridWeek");
         this.calendarOptions.headerToolbar.left = "prev,next";
         this.calendarOptions.headerToolbar.center = "title";
         this.calendarOptions.headerToolbar.right = "timeGridWeek,timeGridDay";
       } else if (window.innerWidth < 850) {
         this.calendarOptions.initialView = "timeGridWeek";
-        if (api.view.type == "dayGridMonth") {
-          api.changeView("timeGridWeek");
-        }
+        api.changeView("timeGridWeek");
         this.calendarOptions.headerToolbar.left = "prev,next today";
         this.calendarOptions.headerToolbar.center = "title";
         this.calendarOptions.headerToolbar.right = "timeGridWeek,timeGridDay";
       } else {
         this.calendarOptions.initialView = "dayGridMonth";
+        api.changeView("dayGridMonth");
         this.calendarOptions.headerToolbar.left = "prev,next today";
         this.calendarOptions.headerToolbar.center = "title";
         this.calendarOptions.headerToolbar.right =
@@ -167,11 +164,10 @@ export default {
   min-height: 100%;
   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
   font-size: 14px;
+  padding: 1em;
 }
 .demo-app-main {
   flex-grow: 1;
-  padding: 3em;
-  padding-top: 1em;
 }
 .calendar /deep/ .fc-event {
   cursor: pointer;
