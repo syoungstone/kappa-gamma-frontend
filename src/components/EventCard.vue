@@ -163,7 +163,7 @@ h4 {
   margin-top: 10px;
 }
 #error > h2,
-h3 {
+#error > h3 {
   text-align: center;
 }
 </style>
