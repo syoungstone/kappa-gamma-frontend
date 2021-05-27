@@ -57,63 +57,34 @@ export default {
     LoadingSpinner,
   },
   created() {
-    axios
-      .get(this.$store.state.apiURL + "read_active_for_pledges.php", {
-        headers: { Authorization: this.$store.state.jwt },
-      })
-      .then((response) => {
-        this.data = response.data;
-        this.loaded = true;
-        this.totalRows = this.data.body.length;
-      })
-      .catch((error) => this.$root.$children[0].showError(error));
+    this.showActive();
   },
   data() {
     return {
       selected: null,
-      fields: [
-        {
-          key: "roll_number",
-          label: "Roll",
-          sortable: true,
-        },
-        {
-          key: "name_last",
-          label: "Last Name",
-          sortable: true,
-        },
-        {
-          key: "phone_number",
-          sortable: false,
-        },
-      ],
+      fields: null,
       data: [],
       totalRows: 1,
       currentPage: 1,
       perPage: 5,
       response: null,
-      error: null,
       loaded: false,
       active: true,
       pledges: false,
-      alumni: false,
-      all: false,
     };
   },
   methods: {
     showActive() {
       this.active = true;
       this.pledges = false;
-      this.alumni = false;
-      this.all = false;
       axios
         .get(this.$store.state.apiURL + "read_active_for_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          this.data = response.data;
+          this.data = response.data.body;
           this.loaded = true;
-          this.totalRows = this.data.body.length;
+          this.totalRows = this.data.itemCount;
           this.fields = [
             {
               key: "roll_number",
@@ -131,21 +102,21 @@ export default {
             },
           ];
         })
-        .catch((error) => this.$root.$children[0].showError(error));
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
     showPledges() {
       this.active = false;
       this.pledges = true;
-      this.alumni = false;
-      this.all = false;
       axios
         .get(this.$store.state.apiURL + "read_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          this.data = response.data;
+          this.data = response.data.body;
           this.loaded = true;
-          this.totalRows = this.data.body.length;
+          this.totalRows = this.data.itemCount;
           this.fields = [
             {
               key: "name_last",
@@ -164,7 +135,9 @@ export default {
             { key: "actions", label: "Actions", sortable: false },
           ];
         })
-        .catch((error) => this.$root.$children[0].showError(error));
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
     viewStudent(id) {
       this.$router.push("/student/" + id, () => {});

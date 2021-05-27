@@ -61,7 +61,7 @@ export default {
       })
       .catch((error) => {
         this.loaded = true;
-        this.$root.$children[0].showError(error);
+        this.$root.$children[0].showError(error.response.statusText);
       });
   },
   data() {
@@ -89,7 +89,7 @@ export default {
         })
         .catch((error) => {
           this.loaded = true;
-          this.$root.$children[0].showError(error);
+          this.$root.$children[0].showError(error.response.statusText);
         });
     },
     getCustomDescription(option) {
@@ -116,13 +116,11 @@ export default {
             }
           )
           .then((response) => {
-            if (response.data.success) {
-              this.$root.$children[0].showSuccess(response.data.message);
-            } else {
-              this.$root.$children[0].showError(response.data.message);
-            }
+            this.$root.$children[0].showSuccess(response.data.message);
           })
-          .catch((error) => this.$root.$children[0].showError(error));
+          .catch((error) =>
+            this.$root.$children[0].showError(error.response.statusText)
+          );
       } else {
         this.newOfficer = null;
         this.$root.$children[0].showError(

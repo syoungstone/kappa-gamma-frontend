@@ -210,7 +210,7 @@ export default {
             this.committeeOptions = response.data.body;
           })
           .catch((error) => {
-            this.$root.$children[0].showError(error);
+            this.$root.$children[0].showError(error.response.statusText);
           });
       }
     },
@@ -242,23 +242,15 @@ export default {
             headers: { Authorization: this.$store.state.jwt },
           })
           .then((response) => {
-            if (response.data.success) {
-              this.$root.$children[0].showSuccess(response.data.message);
-              if (this.editing) {
-                this.$emit("goback");
-              } else {
-                this.resetEvent();
-              }
+            this.$root.$children[0].showSuccess(response.data.message);
+            if (this.editing) {
+              this.$emit("goback");
             } else {
-              this.$root.$children[0].showError(
-                "Event could not be " + (this.editing ? "updated." : "created.")
-              );
+              this.resetEvent();
             }
           })
-          .catch(() => {
-            this.$root.$children[0].showError(
-              "Event could not be " + (this.editing ? "updated." : "created.")
-            );
+          .catch((error) => {
+            this.$root.$children[0].showError(error.response.statusText);
           });
       }
     },

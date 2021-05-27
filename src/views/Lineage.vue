@@ -28,7 +28,9 @@ export default {
         this.lineageName = this.students[0].lineage_name;
         this.loaded = true;
       })
-      .catch((error) => this.$root.$children[0].showError(error));
+      .catch((error) =>
+        this.$root.$children[0].showError(error.response.statusText)
+      );
   },
   data() {
     return {

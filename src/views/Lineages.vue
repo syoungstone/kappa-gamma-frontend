@@ -143,25 +143,30 @@ export default {
             JSON.stringify(this.newLineage),
             { headers: { Authorization: this.$store.state.jwt } }
           )
-          .then(() => {
+          .then((response) => {
+            this.$root.$children[0].showSuccess(response.data.message);
             this.newLineage.lineage_name = null;
             this.newLineage.founder_name = null;
             this.newLineage.founder = null;
             this.load();
           })
-          .catch((error) => this.$root.$children[0].showError(error));
+          .catch((error) =>
+            this.$root.$children[0].showError(error.response.statusText)
+          );
       }
     },
     readBrothers() {
       axios
-        .get(this.$store.state.apiURL + "read_brothers.php", {
+        .get(this.$store.state.apiURL + "read_brother_names.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
           this.brothers = response.data.body;
           this.load();
         })
-        .catch((error) => this.$root.$children[0].showError(error));
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
     load() {
       axios
@@ -172,7 +177,9 @@ export default {
           this.lineages = response.data.body;
           this.loaded = true;
         })
-        .catch((error) => this.$root.$children[0].showError(error));
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
     prepareDeletion(lineage) {
       this.toDelete = lineage;
@@ -193,7 +200,7 @@ export default {
           this.load();
         })
         .catch((error) => {
-          this.$root.$children[0].showError(error);
+          this.$root.$children[0].showError(error.response.statusText);
         });
     },
     viewLineage(id) {
@@ -206,7 +213,7 @@ export default {
       return lineage.founder == this.newLineage.founder;
     },
     getCustomDescription(option) {
-      return option.name_first + " " + option.name_last;
+      return option.full_name;
     },
   },
 };

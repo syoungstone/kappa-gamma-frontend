@@ -3,9 +3,9 @@
     <h1>{{ $route.name }}</h1>
     <b-form @submit.prevent="onSubmit">
       <p>Only current pledges and brothers may register for an account.</p>
-      <p>Email must match the information we have on file for you.</p>
+      <p>Your email must match the information we have on file for you.</p>
       <p>
-        If you would like to use a different email than the one we have on file,
+        If you are unable to create an account with the email you wish to use,
         please contact your Regent or Pledge Instructor.
       </p>
       <b-form-group id="input-group-3" label="Email:" label-for="input-3">
@@ -75,7 +75,6 @@ export default {
         password: "",
       },
       password_confirm: "",
-      error: null,
       state1: null,
       state2: null,
     };
@@ -90,12 +89,9 @@ export default {
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
         })
-        .catch((error) => {
-          this.$root.$children[0].showError(
-            "Account creation failed. Check if the email you are using is available."
-          );
-          this.error = error;
-        });
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
     updateState1() {
       this.state1 = this.form.password.length >= 8;

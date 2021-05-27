@@ -57,7 +57,7 @@ export default {
         this.loaded = true;
       })
       .catch((error) => {
-        this.error = error;
+        this.error = error.response.statusText;
         this.loaded = true;
       });
   },

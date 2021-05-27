@@ -16,7 +16,7 @@
         <b-button
           id="edit-button"
           variant="primary"
-          v-if="$store.state.position != null"
+          v-if="$store.state.position != null || id == $store.state.id"
           @click="editStudent()"
           >Edit</b-button
         >
@@ -108,9 +108,6 @@
       </div>
     </div>
     <LoadingSpinner v-else />
-    <div v-if="error" class="mt-3">
-      <strong>{{ error }}</strong>
-    </div>
   </div>
 </template>
 
@@ -128,7 +125,6 @@ export default {
     return {
       id: 0,
       data: {},
-      error: "",
       hometown: "",
       loaded: false,
     };
@@ -154,11 +150,17 @@ export default {
             this.data.home_country;
         }
       })
-      .catch((error) => (this.error = error));
+      .catch((error) =>
+        this.$root.$children[0].showError(error.response.statusText)
+      );
   },
   methods: {
     editStudent() {
-      this.$router.push("/editstudent/" + this.id, () => {});
+      if (this.$store.state.position != null) {
+        this.$router.push("/editstudent/" + this.id, () => {});
+      } else {
+        this.$router.push("/editprofile", () => {});
+      }
     },
   },
 };

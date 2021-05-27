@@ -121,7 +121,7 @@ export default {
           this.calendarOptions.events = this.events;
         })
         .catch((error) => {
-          this.error = error;
+          this.error = error.response.statusText;
         });
     },
     // handleDateSelect(selectInfo) {},

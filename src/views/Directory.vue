@@ -240,8 +240,6 @@ export default {
       perPage: 5,
       filter: null,
       filter_included_fields: ["name_first", "name_middle", "name_last"],
-      response: null,
-      error: null,
       loaded: false,
       toDeleteName: null,
       toDeleteId: null,
@@ -260,7 +258,9 @@ export default {
           this.appendGradYears();
           this.getPledgeClasses();
         })
-        .catch((error) => this.$root.$children[0].showError(error));
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
     getFirstEmail() {
       let i;
@@ -285,12 +285,14 @@ export default {
         })
         .then((response) => {
           let i;
-          for (i = 0; i < response.data.body.length; i++) {
+          for (i = 0; i < response.data.itemCount; i++) {
             this.pledgeClassOptions.push(response.data.body[i].class_name);
           }
           this.loaded = true;
         })
-        .catch((error) => this.$root.$children[0].showError(error));
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
     filterData(student) {
       let accept = true;
@@ -328,7 +330,6 @@ export default {
       this.$bvModal.show("delete-student-modal");
     },
     deleteStudent() {
-      // this.$bvModal.hide();
       axios
         .delete(
           this.$store.state.apiURL + "delete_student.php?id=" + this.toDeleteId,
@@ -337,12 +338,12 @@ export default {
           }
         )
         .then((response) => {
-          let modalTitle = "Student Deleted";
-          let modalMessage = response.data;
-          this.$root.$children[0].showMessage(modalTitle, modalMessage);
+          this.$root.$children[0].showSuccess(response.data.message);
           this.getStudents();
         })
-        .catch((error) => this.$root.$children[0].showError(error));
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
   },
 };
@@ -352,9 +353,7 @@ export default {
 .select-button {
   margin: 0px 5px;
 }
-#buttons,
-#error,
-#response {
+#buttons {
   text-align: center;
 }
 #search,

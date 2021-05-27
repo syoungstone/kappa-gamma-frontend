@@ -37,7 +37,7 @@ export default {
         this.loaded = true;
       })
       .catch((error) => {
-        this.$root.$children[0].showError(error);
+        this.$root.$children[0].showError(error.response.statusText);
       });
   },
   methods: {

@@ -346,7 +346,9 @@ export default {
           this.pledgeClasses = response.data.body.map((a) => a.class_name);
           this.getInfo();
         })
-        .catch((error) => this.$root.$children[0].showError(error));
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     } else {
       this.getInfo();
     }
@@ -728,7 +730,9 @@ export default {
                   );
             this.loaded = true;
           })
-          .catch((error) => this.$root.$children[0].showError(error));
+          .catch((error) =>
+            this.$root.$children[0].showError(error.response.statusText)
+          );
       } else {
         this.data = JSON.parse(JSON.stringify(this.defaultData));
         this.loaded = true;
@@ -776,19 +780,16 @@ export default {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          if (response.data.success) {
-            if (this.newEntry) {
-              this.response = response.data.message;
-              this.created = true;
-            } else {
-              this.$root.$children[0].showSuccess(response.data.message);
-            }
+          if (this.newEntry) {
+            this.response = response.data.message;
+            this.created = true;
           } else {
-            this.$root.$children[0].showError(response.data.message);
+            this.$root.$children[0].showSuccess(response.data.message);
+            this.$router.push("/student/" + this.data.id, () => {});
           }
         })
         .catch((error) => {
-          this.$root.$children[0].showError(error);
+          this.$root.$children[0].showError(error.response.statusText);
         });
     },
     updateState1() {
@@ -813,7 +814,7 @@ export default {
               : this.bigs.find((x) => x.id == this.data.big);
           this.bigsLoaded = true;
         })
-        .catch((error) => (this.bigsError = error));
+        .catch((error) => (this.bigsError = error.response.statusText));
     },
     getCustomDescriptionBig(option) {
       return option.roll_number + " " + option.full_name;

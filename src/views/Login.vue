@@ -40,7 +40,6 @@ export default {
         password: "",
       },
       loading: false,
-      error: null,
     };
   },
   methods: {
@@ -53,12 +52,9 @@ export default {
           let path = "/" + (redirect ? redirect : "dashboard");
           this.$router.push(path, () => {});
         })
-        .catch((error) => {
-          this.error = error;
-          this.$root.$children[0].showError(
-            "Login failed. Please make sure you are using the correct email and password."
-          );
-        });
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
     forgotPassword() {
       this.$router.push("/forgotpassword", () => {});

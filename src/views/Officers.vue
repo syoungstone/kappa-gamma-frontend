@@ -67,7 +67,7 @@ export default {
       })
       .catch((error) => {
         this.loaded = true;
-        this.$root.$children[0].showError(error);
+        this.$root.$children[0].showError(error.response.statusText);
       });
   },
   data() {

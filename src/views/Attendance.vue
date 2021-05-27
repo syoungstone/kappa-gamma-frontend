@@ -107,7 +107,7 @@ export default {
         this.getRecords();
       })
       .catch((error) => {
-        this.error = error;
+        this.$root.$children[0].showError(error.response.statusText);
       });
   },
   methods: {
@@ -132,10 +132,8 @@ export default {
           }
           this.loaded = true;
         })
-        .catch(() => {
-          this.$root.$children[0].showError(
-            "Records for this date could not be accessed"
-          );
+        .catch((error) => {
+          this.$root.$children[0].showError(error.response.statusText);
         });
     },
     toggleAttendance(id) {
@@ -154,7 +152,7 @@ export default {
           this.editing = false;
         })
         .catch((error) => {
-          this.$root.$children[0].showError(error);
+          this.$root.$children[0].showError(error.response.statusText);
         });
     },
   },

@@ -8,7 +8,7 @@
       of fraternal fellowship.
     </p>
     <p>The Kappa Gamma chapter at VCU was certified on September 9, 2000.</p>
-    <div v-if="loaded">
+    <div v-if="loaded && error == null">
       <h2>Our Officers</h2>
       <b-card
         v-for="officer in officers"
@@ -57,7 +57,7 @@ export default {
         this.loaded = true;
       })
       .catch((error) => {
-        this.error = error;
+        this.error = error.response.statusText;
         this.loaded = true;
       });
   },

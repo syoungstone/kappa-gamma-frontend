@@ -29,7 +29,6 @@ export default {
         email: "",
       },
       loading: false,
-      error: null,
     };
   },
   methods: {
@@ -42,12 +41,9 @@ export default {
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
         })
-        .catch((error) => {
-          this.error = error;
-          this.$root.$children[0].showError(
-            "There is no account currently associated with your email address. Please register an account."
-          );
-        });
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
   },
 };

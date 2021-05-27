@@ -40,8 +40,6 @@
       <b-button type="submit" variant="primary" :disabled="submitDisabled"
         >Submit</b-button
       >
-      <p v-if="error">Attempt to change password failed.</p>
-      <p v-if="error">{{ error }}</p>
     </b-form>
     <h4>Delete Account</h4>
     <div v-if="deletePressed" class="delete">
@@ -59,8 +57,6 @@
         >Delete</b-button
       >
     </div>
-    <p v-if="deleteError">Attempt to delete account failed.</p>
-    <p v-if="deleteError">{{ deleteError }}</p>
   </div>
 </template>
 
@@ -81,8 +77,6 @@ export default {
       },
       deletePressed: false,
       password_confirm: "",
-      error: "",
-      deleteError: "",
       state1: null,
       state2: null,
     };
@@ -98,7 +92,9 @@ export default {
           this.$root.$children[0].showSuccess(response.data.message);
           this.$store.commit("setJwt", response.data.jwt);
         })
-        .catch((error) => (this.error = error));
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
     deleteButton() {
       this.deletePressed = true;
@@ -113,7 +109,9 @@ export default {
           this.$store.commit("logout");
           this.$router.push("/", () => {});
         })
-        .catch((error) => (this.deleteError = error));
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
     updateState1() {
       this.state1 = this.form.password.length >= 8;

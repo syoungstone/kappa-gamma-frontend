@@ -2,7 +2,7 @@
   <div>
     <div id="error" v-if="error">
       <h2>Error 404</h2>
-      <h3>The chosen event could not be found.</h3>
+      <h3>{{ error }}</h3>
     </div>
     <div v-else-if="loaded" class="event-card">
       <h3>
@@ -105,7 +105,7 @@ export default {
         this.loaded = true;
       })
       .catch((error) => {
-        this.error = error;
+        this.error = error.response.statusText;
         this.loaded = true;
       });
   },
@@ -138,9 +138,9 @@ export default {
           this.$root.$children[0].showSuccess(response.data.message);
           this.$emit("deleted");
         })
-        .catch(() => {
-          this.$root.$children[0].showError("Event could not be deleted.");
-        });
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
   },
 };

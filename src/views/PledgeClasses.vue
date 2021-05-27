@@ -143,13 +143,16 @@ export default {
             JSON.stringify(this.newPledgeClass),
             { headers: { Authorization: this.$store.state.jwt } }
           )
-          .then(() => {
+          .then((response) => {
+            this.$root.$children[0].showSuccess(response.data.message);
             this.newPledgeClass.class_name = null;
             this.newPledgeClass.accounting_year = null;
             this.newPledgeClass.semester = null;
             this.load();
           })
-          .catch((error) => this.$root.$children[0].showError(error));
+          .catch((error) =>
+            this.$root.$children[0].showError(error.response.statusText)
+          );
       }
     },
     load() {
@@ -162,7 +165,9 @@ export default {
           this.newPledgeClass.accounting_year = new Date().getFullYear();
           this.loaded = true;
         })
-        .catch((error) => this.$root.$children[0].showError(error));
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
     deletePledgeClass(deleteMe, numStudents) {
       this.toDelete.class_name = deleteMe;
@@ -179,10 +184,13 @@ export default {
             data: this.toDelete,
             headers: { Authorization: this.$store.state.jwt },
           })
-          .then(() => {
+          .then((response) => {
+            this.$root.$children[0].showSuccess(response.data.message);
             this.load();
           })
-          .catch((error) => this.$root.$children[0].showError(error));
+          .catch((error) =>
+            this.$root.$children[0].showError(error.response.statusText)
+          );
       }
     },
     viewPledgeClass(semester, year, num_students) {

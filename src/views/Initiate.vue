@@ -47,9 +47,6 @@
       </b-card>
     </div>
     <LoadingSpinner v-else />
-    <div v-if="error" class="mt-3">
-      <strong>{{ error }}</strong>
-    </div>
   </div>
 </template>
 
@@ -71,7 +68,6 @@ export default {
     return {
       noPledges: null,
       pledges: null,
-      error: null,
       loaded: false,
       showPhotoModal: false,
       photoId: null,
@@ -113,7 +109,9 @@ export default {
               this.$root.$children[0].showError(response.data.message);
             }
           })
-          .catch((error) => this.$root.$children[0].showError(error));
+          .catch((error) =>
+            this.$root.$children[0].showError(error.response.statusText)
+          );
       }
     },
     load() {
@@ -123,14 +121,11 @@ export default {
         })
         .then((response) => {
           this.pledges = response.data.body;
+          this.noPledges = response.data.itemCount == 0;
           this.loaded = true;
         })
         .catch((error) => {
-          if (error.response && error.response.status == 404) {
-            this.noPledges = true;
-          } else {
-            this.$root.$children[0].showError(error);
-          }
+          this.$root.$children[0].showError(error.response.statusText);
           this.loaded = true;
         });
     },

@@ -58,7 +58,6 @@ export default {
         password: null,
       },
       password_confirm: "",
-      error: "",
       state1: null,
       state2: null,
     };
@@ -77,10 +76,7 @@ export default {
           this.$router.push("/login", () => {});
         })
         .catch((error) => {
-          this.error = error;
-          this.$root.$children[0].showError(
-            "We were unable to reset your password. Please check the URL in your password reset email and try again."
-          );
+          this.$root.$children[0].showError(error.response.statusText);
         });
     },
     updateState1() {

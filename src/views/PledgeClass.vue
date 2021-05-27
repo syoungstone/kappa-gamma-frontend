@@ -34,9 +34,6 @@
       </b-card>
     </div>
     <LoadingSpinner v-else />
-    <div v-if="error" class="mt-3">
-      <strong>{{ error }}</strong>
-    </div>
   </div>
 </template>
 
@@ -63,7 +60,7 @@ export default {
         this.parseMajors();
         this.loaded = true;
       })
-      .catch((error) => (this.error = error));
+      .catch((error) => (this.error = error.response.statusText));
   },
   data() {
     return {
@@ -72,7 +69,6 @@ export default {
       className: null,
       students: null,
       id: null,
-      error: null,
       loaded: false,
     };
   },

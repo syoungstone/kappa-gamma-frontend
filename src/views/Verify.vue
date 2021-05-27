@@ -17,7 +17,6 @@ export default {
         id: "",
         verify_hash: "",
       },
-      error: null,
     };
   },
   created() {
@@ -33,10 +32,7 @@ export default {
         this.$router.push("/login", () => {});
       })
       .catch((error) => {
-        this.error = error;
-        this.$root.$children[0].showError(
-          "We were unable to verify your account at this time. Please check your verification URL and try again."
-        );
+        this.$root.$children[0].showError(error.response.statusText);
         this.$router.push("/", () => {});
       });
   },
