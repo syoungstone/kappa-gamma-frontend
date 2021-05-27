@@ -26,12 +26,20 @@
               >
               <b-dropdown-item to="/lineages">Lineages</b-dropdown-item>
               <b-dropdown-item to="/officers">Officers</b-dropdown-item>
+              <b-dropdown-item
+                v-if="$store.state.position == null"
+                to="/attendance"
+                >Attendance</b-dropdown-item
+              >
             </b-nav-item-dropdown>
             <b-nav-item v-else to="/pledgedirectory">Directory</b-nav-item>
             <b-nav-item-dropdown
               v-if="$store.state.position != null"
               text="Actions"
             >
+              <b-dropdown-item to="/attendance"
+                >Take Attendance</b-dropdown-item
+              >
               <b-dropdown-item to="/createevent">Create Event</b-dropdown-item>
               <b-dropdown-item to="/updateofficers"
                 >Update Officers</b-dropdown-item

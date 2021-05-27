@@ -7,7 +7,12 @@
     </b-form-group>
 
     <b-form-group>
-      <b-form-checkbox id="checkbox-allday" v-model="event.allDay">
+      <b-form-checkbox
+        id="checkbox-allday"
+        v-model="event.allDay"
+        :value="1"
+        :unchecked-value="0"
+      >
         All day event
       </b-form-checkbox>
     </b-form-group>
@@ -24,7 +29,7 @@
           required
         ></b-form-datepicker>
         <b-form-timepicker
-          v-if="!event.allDay"
+          v-if="event.allDay != 1"
           v-model="startTime"
           locale="en"
           no-close-button
@@ -45,7 +50,7 @@
           required
         ></b-form-datepicker>
         <b-form-timepicker
-          v-if="!event.allDay"
+          v-if="event.allDay != 1"
           v-model="endTime"
           locale="en"
           no-close-button
@@ -185,9 +190,9 @@ export default {
     submitDisabled() {
       return (
         !this.startDate ||
-        (!this.startTime && !this.event.allDay) ||
+        (!this.startTime && this.event.allDay != 1) ||
         !this.endDate ||
-        (!this.endTime && !this.event.allDay) ||
+        (!this.endTime && this.event.allDay != 1) ||
         !this.event.title
       );
     },
@@ -216,12 +221,13 @@ export default {
       this.event.start =
         this.startDate +
         "T" +
-        (this.event.allDay ? "00:00:00" : this.startTime);
+        (this.event.allDay == 1 ? "00:00:00" : this.startTime);
       this.event.end =
-        (this.event.allDay ? this.incrementDay(this.endDate) : this.endDate) +
+        (this.event.allDay == 1
+          ? this.incrementDay(this.endDate)
+          : this.endDate) +
         "T" +
-        (this.event.allDay ? "00:00:00" : this.endTime);
-      this.event.allDay = this.event.allDay ? 1 : 0;
+        (this.event.allDay == 1 ? "00:00:00" : this.endTime);
       if (this.event.start >= this.event.end) {
         let modalTitle = "Invalid Start & End Times";
         let modalMessage =
@@ -280,7 +286,7 @@ export default {
         event_location: null,
         start: null,
         end: null,
-        allDay: false,
+        allDay: 0,
         committee: null,
         is_public: null,
         is_for_pledges: null,
