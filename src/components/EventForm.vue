@@ -243,13 +243,13 @@ export default {
           })
           .then((response) => {
             this.$root.$children[0].showSuccess(response.data.message);
-            if (this.editing) {
-              this.$emit("goback");
-            } else {
-              this.resetEvent();
+            if (!this.editing) {
+              this.event.id = response.data.id;
             }
+            this.$router.push("/event/" + this.event.id, () => {});
           })
           .catch((error) => {
+            console.log(error);
             this.$root.$children[0].showError(error.response.statusText);
           });
       }

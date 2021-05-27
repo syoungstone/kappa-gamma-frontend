@@ -2,6 +2,9 @@
   <div class="narrow-wrapper">
     <div v-if="created" id="created">
       <h2>{{ response }}</h2>
+      <b-button class="selection-button" @click="viewCreated()">{{
+        "View " + (data.is_pledge == 1 ? "Pledge" : "Brother")
+      }}</b-button>
       <b-button class="selection-button" @click="reset()"
         >Create Another</b-button
       >
@@ -356,6 +359,7 @@ export default {
   data() {
     return {
       defaultData: {
+        id: null,
         is_pledge: null,
         name_first: null,
         nume_middle: null,
@@ -378,6 +382,7 @@ export default {
       },
       data: null,
       countryList: [
+        "United States of America",
         "Afghanistan",
         "Åland Islands",
         "Albania",
@@ -612,7 +617,6 @@ export default {
         "Ukraine",
         "United Arab Emirates",
         "United Kingdom",
-        "United States of America",
         "Uruguay",
         "Uzbekistan",
         "Vanuatu",
@@ -627,6 +631,7 @@ export default {
         "Zimbabwe",
       ],
       stateList: [
+        { name: "Virginia", abbreviation: "VA" },
         { name: "Alabama", abbreviation: "AL" },
         { name: "Alaska", abbreviation: "AK" },
         { name: "American Samoa", abbreviation: "AS" },
@@ -681,7 +686,6 @@ export default {
         { name: "Utah", abbreviation: "UT" },
         { name: "Vermont", abbreviation: "VT" },
         { name: "Virgin Islands", abbreviation: "VI" },
-        { name: "Virginia", abbreviation: "VA" },
         { name: "Washington", abbreviation: "WA" },
         { name: "West Virginia", abbreviation: "WV" },
         { name: "Wisconsin", abbreviation: "WI" },
@@ -783,6 +787,7 @@ export default {
           if (this.newEntry) {
             this.response = response.data.message;
             this.created = true;
+            this.data.id = response.data.id;
           } else {
             this.$root.$children[0].showSuccess(response.data.message);
             this.$router.push("/student/" + this.data.id, () => {});
@@ -862,6 +867,9 @@ export default {
     reset() {
       this.data = JSON.parse(JSON.stringify(this.defaultData));
       this.created = false;
+    },
+    viewCreated() {
+      this.$router.push("/student/" + this.data.id, () => {});
     },
   },
 };

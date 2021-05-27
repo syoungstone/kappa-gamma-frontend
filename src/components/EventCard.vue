@@ -136,7 +136,7 @@ export default {
         )
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
-          this.$emit("deleted");
+          this.$router.push("/dashboard", () => {});
         })
         .catch((error) =>
           this.$root.$children[0].showError(error.response.statusText)

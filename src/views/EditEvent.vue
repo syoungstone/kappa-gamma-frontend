@@ -1,10 +1,6 @@
 <template>
   <div class="narrow-wrapper">
-    <EventForm
-      v-if="loaded"
-      :eventData="event"
-      @goback="hasHistory() ? $router.go(-1) : $router.push('/')"
-    />
+    <EventForm v-if="loaded" :eventData="event" />
     <LoadingSpinner v-else />
   </div>
 </template>
@@ -39,11 +35,6 @@ export default {
       .catch((error) => {
         this.$root.$children[0].showError(error.response.statusText);
       });
-  },
-  methods: {
-    hasHistory() {
-      return window.history.length > 2;
-    },
   },
 };
 </script>
