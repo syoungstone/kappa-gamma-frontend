@@ -42,7 +42,7 @@ export default {
         events: null,
         dayMaxEvents: true,
         eventClick: this.handleEventClick,
-        viewDidMount: this.handleViewMount,
+        datesSet: this.handleDatesSet,
       },
       from: null,
       to: null,
@@ -124,18 +124,18 @@ export default {
           this.error = error.response.statusText;
         });
     },
-    // handleDateSelect(selectInfo) {},
     handleEventClick(clickInfo) {
       this.$router.push("/event/" + clickInfo.event.id, () => {});
     },
-    handleViewMount(data) {
-      console.log("Change of view");
-      this.formatDatetime(data.view.currentStart, data.view.currentEnd);
-      this.getEvents();
+    handleDatesSet(data) {
+      // Only call getEvents() if there has been a change in start and end dates
+      if (this.formatDatetime(data.start, data.end)) {
+        this.getEvents();
+      }
     },
-    formatDatetime(startString, endString) {
-      let start = new Date(startString);
-      let end = new Date(endString);
+    formatDatetime(start, end) {
+      let oldFrom = this.from;
+      let oldTo = this.to;
       this.from =
         start.getFullYear() +
         "-" +
@@ -154,6 +154,7 @@ export default {
         (end.getDate() < 10 ? "0" : "") +
         end.getDate() +
         "T00:00:00";
+      return oldFrom != this.from || oldTo != this.to;
     },
   },
 };
