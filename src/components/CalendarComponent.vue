@@ -129,6 +129,7 @@ export default {
       this.$router.push("/event/" + clickInfo.event.id, () => {});
     },
     handleViewMount(data) {
+      console.log("Change of view");
       this.formatDatetime(data.view.currentStart, data.view.currentEnd);
       this.getEvents();
     },

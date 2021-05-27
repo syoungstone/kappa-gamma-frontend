@@ -24,6 +24,8 @@
             <b-form-checkbox
               v-model="officer.display_publicly"
               class="mb-2 mr-sm-2 mb-sm-0 officer-checkbox"
+              :value="1"
+              :unchecked-value="0"
               >Show on About page</b-form-checkbox
             >
             <b-button
@@ -54,9 +56,6 @@ export default {
       })
       .then((response) => {
         this.officers = response.data.body;
-        this.officers.forEach(
-          (x) => (x.display_publicly = x.display_publicly == 1)
-        );
         this.getActives();
       })
       .catch((error) => {

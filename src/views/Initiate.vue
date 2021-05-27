@@ -102,12 +102,8 @@ export default {
             }
           )
           .then((response) => {
-            if (response.data.success) {
-              this.$root.$children[0].showSuccess(response.data.message);
-              this.load();
-            } else {
-              this.$root.$children[0].showError(response.data.message);
-            }
+            this.$root.$children[0].showSuccess(response.data.message);
+            this.load();
           })
           .catch((error) =>
             this.$root.$children[0].showError(error.response.statusText)

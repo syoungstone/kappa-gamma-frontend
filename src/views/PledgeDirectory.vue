@@ -16,7 +16,7 @@
       <b-table
         striped
         hover
-        :items="data.body"
+        :items="data"
         :fields="fields"
         stacked="md"
         show-empty
@@ -84,7 +84,7 @@ export default {
         .then((response) => {
           this.data = response.data.body;
           this.loaded = true;
-          this.totalRows = this.data.itemCount;
+          this.totalRows = response.data.itemCount;
           this.fields = [
             {
               key: "roll_number",
@@ -116,7 +116,7 @@ export default {
         .then((response) => {
           this.data = response.data.body;
           this.loaded = true;
-          this.totalRows = this.data.itemCount;
+          this.totalRows = response.data.itemCount;
           this.fields = [
             {
               key: "name_last",

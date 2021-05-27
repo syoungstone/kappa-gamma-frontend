@@ -84,13 +84,10 @@ export default {
   methods: {
     onSubmit() {
       axios
-        .post(
-          this.$store.state.apiURL + "update_user.php",
-          JSON.stringify(this.form)
-        )
+        .post(this.$store.state.apiURL + "update_user.php", this.form)
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
-          this.$store.commit("setJwt", response.data.jwt);
+          this.$store.commit("setUser", response.data.jwt);
         })
         .catch((error) =>
           this.$root.$children[0].showError(error.response.statusText)

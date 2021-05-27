@@ -160,8 +160,8 @@ export default {
         ? "pledges"
         : "brothers";
       this.altPledgeName = this.event.alt_pledge_name != null;
-      let from = this.event.start.split("T");
-      let to = this.event.end.split("T");
+      let from = this.event.start.split(" ");
+      let to = this.event.end.split(" ");
       this.startDate = from[0];
       this.startTime = from[1];
       this.endDate = to[0];

@@ -60,7 +60,9 @@ export default {
         this.parseMajors();
         this.loaded = true;
       })
-      .catch((error) => (this.error = error.response.statusText));
+      .catch((error) =>
+        this.$root.$children[0].showError(error.response.statusText)
+      );
   },
   data() {
     return {
@@ -94,7 +96,9 @@ export default {
     parseMajors() {
       let i;
       for (i = 0; i < this.students.length; i++) {
-        this.students[i].majors = this.students[i].majors.split(",");
+        if (this.students[i].majors != null) {
+          this.students[i].majors = this.students[i].majors.split(",");
+        }
       }
     },
   },

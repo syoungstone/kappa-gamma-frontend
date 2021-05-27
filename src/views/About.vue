@@ -72,7 +72,9 @@ export default {
     parseMajors() {
       let i;
       for (i = 0; i < this.officers.length; i++) {
-        this.officers[i].majors = this.officers[i].majors.split(",");
+        if (this.officers[i].majors != null) {
+          this.officers[i].majors = this.officers[i].majors.split(",");
+        }
       }
     },
   },
