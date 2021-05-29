@@ -150,9 +150,14 @@ export default {
             this.data.home_country;
         }
       })
-      .catch((error) =>
-        this.$root.$children[0].showError(error.response.statusText)
-      );
+      .catch((error) => {
+        this.$root.$children[0].showError(error.response.statusText);
+        if (error.response.status == 404) {
+          this.$router.push("/404", () => {});
+        } else if (error.response.status == 401) {
+          this.$router.push("/", () => {});
+        }
+      });
   },
   methods: {
     editStudent() {

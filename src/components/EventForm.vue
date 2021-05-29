@@ -249,7 +249,6 @@ export default {
             this.$router.push("/event/" + this.event.id, () => {});
           })
           .catch((error) => {
-            console.log(error);
             this.$root.$children[0].showError(error.response.statusText);
           });
       }

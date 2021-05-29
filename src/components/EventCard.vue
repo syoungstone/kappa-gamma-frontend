@@ -138,9 +138,14 @@ export default {
           this.$root.$children[0].showSuccess(response.data.message);
           this.$router.push("/dashboard", () => {});
         })
-        .catch((error) =>
-          this.$root.$children[0].showError(error.response.statusText)
-        );
+        .catch((error) => {
+          this.$root.$children[0].showError(error.response.statusText);
+          if (error.response.status == 404) {
+            this.$router.push("/404", () => {});
+          } else if (error.response.status == 401) {
+            this.$router.push("/", () => {});
+          }
+        });
     },
   },
 };
