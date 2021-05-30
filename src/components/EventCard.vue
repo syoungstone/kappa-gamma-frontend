@@ -52,8 +52,11 @@
           >Delete</b-button
         >
       </div>
-      <div v-if="deleting">
-        <h5>Are you sure you want to delete this event?</h5>
+      <div v-if="deleting && event.repeat_id == null">
+        <h5>
+          Are you sure you want to delete this event? Deleting an event will
+          also erase attendance records for that event.
+        </h5>
         <div>
           <b-button class="select-button" @click="deleting = false"
             >Cancel</b-button
@@ -63,6 +66,39 @@
             variant="danger"
             @click="deleteEvent()"
             >Yes, Delete</b-button
+          >
+        </div>
+      </div>
+      <div id="delete-options" v-else-if="deleting">
+        <h5>
+          This is a repeat event. Would you like to delete this event only, this
+          and following events, or all events in this sequence?<br /><br />Note
+          that deleting an event will also erase attendance records for that
+          event.
+        </h5>
+        <div>
+          <b-button
+            class="select-button delete-button"
+            @click="deleting = false"
+            >Cancel</b-button
+          >
+          <b-button
+            class="select-button delete-button"
+            variant="primary"
+            @click="deleteEvent()"
+            >Delete This Event Only</b-button
+          >
+          <b-button
+            class="select-button delete-button"
+            variant="warning"
+            @click="deleteFollowing()"
+            >Delete This And Following Events</b-button
+          >
+          <b-button
+            class="select-button delete-button"
+            variant="danger"
+            @click="deleteAll()"
+            >Delete All Events In Sequence</b-button
           >
         </div>
       </div>
@@ -82,6 +118,8 @@ export default {
   data() {
     return {
       deleting: false,
+      deleteAllFollowing: false,
+      deleteAllInSequence: false,
       startDateString: null,
       endDateString: null,
       startTimeString: null,
@@ -126,14 +164,30 @@ export default {
     editEvent() {
       this.$router.push("/editevent/" + this.eventId, () => {});
     },
+    deleteFollowing() {
+      this.deleteAllFollowing = true;
+      this.deleteAllInSequence = false;
+      this.deleteEvent();
+    },
+    deleteAll() {
+      this.deleteAllFollowing = false;
+      this.deleteAllInSequence = true;
+      this.deleteEvent();
+    },
     deleteEvent() {
+      let apiCall =
+        this.$store.state.apiURL +
+        "delete_event.php?id=" +
+        this.event.id +
+        (this.deleteAllInSequence || this.deleteAllFollowing
+          ? "&repeat_id=" + this.event.repeat_id
+          : "") +
+        (this.deleteAllFollowing ? "&following=true" : "") +
+        (this.deleteAllInSequence ? "&all=true" : "");
       axios
-        .delete(
-          this.$store.state.apiURL + "delete_event.php?id=" + this.event.id,
-          {
-            headers: { Authorization: this.$store.state.jwt },
-          }
-        )
+        .delete(apiCall, {
+          headers: { Authorization: this.$store.state.jwt },
+        })
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
           this.$router.push("/dashboard", () => {});
@@ -145,6 +199,8 @@ export default {
           } else if (error.response.status == 401) {
             this.$router.push("/", () => {});
           }
+          this.deleteAllFollowing = false;
+          this.deleteAllInSequence = false;
         });
     },
   },
@@ -166,6 +222,14 @@ h4 {
 .select-button {
   margin-right: 10px;
   margin-top: 10px;
+}
+#delete-options {
+  padding: 15px;
+  background-color: white;
+  border-radius: 10px;
+}
+.delete-button {
+  width: 100%;
 }
 #error > h2,
 #error > h3 {
