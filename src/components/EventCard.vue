@@ -4,110 +4,129 @@
       <h2>Error 404</h2>
       <h3>{{ error }}</h3>
     </div>
-    <div v-else-if="loaded" class="event-card">
-      <h3>
-        {{
-          $store.state.isPledge && event.alt_pledge_name
-            ? event.alt_pledge_name
-            : event.title
-        }}
-      </h3>
-      <div v-if="startDateString == endDateString">
-        <h4>
-          {{ startDateString }}
-        </h4>
-        <h5 v-if="event.allDay == 0">
-          {{ startTimeString + " to " + endTimeString }}
-        </h5>
-        <h5 v-else>All day event</h5>
-      </div>
-      <div v-else>
-        <h5>
+    <div v-else-if="loaded">
+      <div class="event-card">
+        <h3>
           {{
-            "From " +
-            startDateString +
-            (event.allDay == 1 ? "" : " at " + startTimeString)
+            $store.state.isPledge && event.alt_pledge_name
+              ? event.alt_pledge_name
+              : event.title
           }}
-          <br v-if="event.allDay == 0" />
-          {{
-            " to " +
-            endDateString +
-            (event.allDay == 1 ? "" : " at " + endTimeString)
-          }}
-        </h5>
-      </div>
-      <h6 v-if="event.event_location">{{ "At " + event.event_location }}</h6>
-      <p v-if="event.committee_name">
-        Hosted by the {{ event.committee_name }} committee
-      </p>
-      <p v-if="event.event_description">{{ event.event_description }}</p>
-      <div v-if="$store.state.isBrother && !deleting">
-        <b-button class="select-button" variant="primary" @click="editEvent()"
-          >Edit</b-button
-        >
-        <b-button
-          class="select-button"
-          variant="danger"
-          @click="deleting = true"
-          >Delete</b-button
-        >
-      </div>
-      <div v-if="deleting && event.repeat_id == null">
-        <h5>
-          Are you sure you want to delete this event? Deleting an event will
-          also erase attendance records for that event.
-        </h5>
-        <div>
-          <b-button class="select-button" @click="deleting = false"
-            >Cancel</b-button
+        </h3>
+        <div v-if="startDateString == endDateString">
+          <h4>
+            {{ startDateString }}
+          </h4>
+          <h5 v-if="event.allDay == 0">
+            {{ startTimeString + " to " + endTimeString }}
+          </h5>
+          <h5 v-else>All day event</h5>
+        </div>
+        <div v-else>
+          <h5>
+            {{
+              "From " +
+              startDateString +
+              (event.allDay == 1 ? "" : " at " + startTimeString)
+            }}
+            <br v-if="event.allDay == 0" />
+            {{
+              " to " +
+              endDateString +
+              (event.allDay == 1 ? "" : " at " + endTimeString)
+            }}
+          </h5>
+        </div>
+        <h6 v-if="event.event_location">{{ "At " + event.event_location }}</h6>
+        <p v-if="event.committee_name">
+          Hosted by the {{ event.committee_name }} committee
+        </p>
+        <p v-if="event.event_description">{{ event.event_description }}</p>
+        <div v-if="$store.state.isBrother && !deleting">
+          <b-button class="select-button" variant="primary" @click="editEvent()"
+            >Edit</b-button
           >
           <b-button
             class="select-button"
             variant="danger"
-            @click="deleteEvent()"
-            >Yes, Delete</b-button
+            @click="deleting = true"
+            >Delete</b-button
           >
         </div>
-      </div>
-      <div id="delete-options" v-else-if="deleting">
-        <h5>
-          This is a repeat event. Would you like to delete this event only, this
-          and following events, or all events in this sequence?<br /><br />Note
-          that deleting an event will also erase attendance records for that
-          event.
-        </h5>
-        <div>
-          <b-button
-            class="select-button delete-button"
-            @click="deleting = false"
-            >Cancel</b-button
-          >
-          <b-button
-            class="select-button delete-button"
-            variant="primary"
-            @click="deleteEvent()"
-            >Delete This Event Only</b-button
-          >
-          <b-button
-            class="select-button delete-button"
-            variant="warning"
-            @click="deleteFollowing()"
-            >Delete This And Following Events</b-button
-          >
-          <b-button
-            class="select-button delete-button"
-            variant="danger"
-            @click="deleteAll()"
-            >Delete All Events In Sequence</b-button
-          >
+        <div v-if="deleting && event.repeat_id == null">
+          <h5>
+            Are you sure you want to delete this event? Deleting an event will
+            also erase attendance records for that event.
+          </h5>
+          <div>
+            <b-button class="select-button" @click="deleting = false"
+              >Cancel</b-button
+            >
+            <b-button
+              class="select-button"
+              variant="danger"
+              @click="deleteEvent()"
+              >Yes, Delete</b-button
+            >
+          </div>
+        </div>
+        <div id="delete-options" v-else-if="deleting">
+          <h5>
+            This is a repeat event. Would you like to delete this event only,
+            this and following events, or all events in this sequence?<br /><br />Note
+            that deleting an event will also erase attendance records for that
+            event.
+          </h5>
+          <div>
+            <b-button
+              class="select-button delete-button"
+              @click="deleting = false"
+              >Cancel</b-button
+            >
+            <b-button
+              class="select-button delete-button"
+              variant="primary"
+              @click="deleteEvent()"
+              >Delete This Event Only</b-button
+            >
+            <b-button
+              class="select-button delete-button"
+              variant="warning"
+              @click="deleteFollowing()"
+              >Delete This And Following Events</b-button
+            >
+            <b-button
+              class="select-button delete-button"
+              variant="danger"
+              @click="deleteAll()"
+              >Delete All Events In Sequence</b-button
+            >
+          </div>
         </div>
       </div>
+      <div id="attendance-link" v-if="$store.state.isBrother">
+        <b-link @click="showAttendance = !showAttendance">
+          {{
+            showAttendance
+              ? "Hide Attendance"
+              : $store.state.position != null
+              ? "Take Attendance"
+              : "Show Attendance"
+          }}
+        </b-link>
+      </div>
+      <AttendanceTable
+        v-if="showAttendance"
+        :eventId="event.id"
+        @reset="showAttendance = !showAttendance"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import AttendanceTable from "@/components/AttendanceTable.vue";
 export default {
   name: "EventCard",
   props: {
@@ -115,8 +134,12 @@ export default {
       required: true,
     },
   },
+  components: {
+    AttendanceTable,
+  },
   data() {
     return {
+      showAttendance: false,
       deleting: false,
       deleteAllFollowing: false,
       deleteAllInSequence: false,
@@ -234,5 +257,9 @@ h4 {
 #error > h2,
 #error > h3 {
   text-align: center;
+}
+#attendance-link {
+  text-align: center;
+  margin: 20px;
 }
 </style>
