@@ -46,9 +46,9 @@
         </b-form>
       </div>
       <b-table
+        class="b-table"
         striped
         hover
-        small
         :items="lineages"
         :fields="fields"
         id="lineage-table"

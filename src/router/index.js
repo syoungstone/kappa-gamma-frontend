@@ -80,6 +80,11 @@ const routes = [
     component: () => import("../views/Attendance.vue"),
   },
   {
+    path: "/standing",
+    name: "Brother Standing",
+    component: () => import("../views/BrotherStanding.vue"),
+  },
+  {
     path: "/pledgedirectory",
     name: "Pledge Directory",
     component: () => import("../views/PledgeDirectory.vue"),
@@ -172,6 +177,7 @@ const brotherRestricted = officerRestricted.concat([
   "Edit Event",
   "Directory",
   "Attendance",
+  "Brother Standing",
   "Pledge Classes",
   "Pledge Class",
   "Officers",

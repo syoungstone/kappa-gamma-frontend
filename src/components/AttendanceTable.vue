@@ -16,6 +16,7 @@
       </div>
     </div>
     <b-table
+      class="b-table"
       v-if="recordsExist || $store.state.position != null"
       striped
       hover

@@ -1,6 +1,6 @@
 <template>
   <div class="narrow-wrapper">
-    <EventForm v-if="loaded" :eventData="event" />
+    <EventForm v-if="loaded" :eventData="event" @goback="goBack()" />
     <LoadingSpinner v-else />
   </div>
 </template>
@@ -35,6 +35,11 @@ export default {
       .catch((error) => {
         this.$root.$children[0].showError(error.response.statusText);
       });
+  },
+  methods: {
+    goBack() {
+      this.$router.push("/event/" + this.$route.params.id, () => {});
+    },
   },
 };
 </script>

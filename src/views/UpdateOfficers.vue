@@ -1,5 +1,15 @@
 <template>
   <div class="wide-wrapper">
+    <b-modal
+      id="not-good-standing-modal"
+      v-model="notGoodStanding"
+      title="Brother Not In Good Standing"
+      @ok="submitData"
+      @cancel="resetOfficer"
+    >
+      The brother you selected for this position is not in good standing. Are
+      you sure you wish to proceed?
+    </b-modal>
     <h1>Update Officers</h1>
     <div v-if="loaded">
       <b-card
@@ -69,6 +79,7 @@ export default {
       actives: null,
       newOfficer: null,
       loaded: false,
+      notGoodStanding: false,
     };
   },
   methods: {
@@ -106,26 +117,40 @@ export default {
             x.id == this.newOfficer.id && x.office != this.newOfficer.office
         )
       ) {
-        axios
-          .post(
-            this.$store.state.apiURL + "update_officer.php",
-            this.newOfficer,
-            {
-              headers: { Authorization: this.$store.state.jwt },
-            }
-          )
-          .then((response) => {
-            this.$root.$children[0].showSuccess(response.data.message);
-          })
-          .catch((error) =>
-            this.$root.$children[0].showError(error.response.statusText)
-          );
+        let activesIndex = this.actives.findIndex(
+          (x) => x.id == this.newOfficer.id
+        );
+        if (
+          this.actives[activesIndex].exceeds_unexcused == 1 ||
+          this.actives[activesIndex].exceeds_owed == 1
+        ) {
+          this.notGoodStanding = true;
+        } else {
+          this.submitData();
+        }
       } else {
         this.newOfficer = null;
         this.$root.$children[0].showError(
           "One brother may not hold multiple positions."
         );
       }
+    },
+    submitData() {
+      this.notGoodStanding = false;
+      axios
+        .post(
+          this.$store.state.apiURL + "update_officer.php",
+          this.newOfficer,
+          {
+            headers: { Authorization: this.$store.state.jwt },
+          }
+        )
+        .then((response) => {
+          this.$root.$children[0].showSuccess(response.data.message);
+        })
+        .catch((error) =>
+          this.$root.$children[0].showError(error.response.statusText)
+        );
     },
   },
 };

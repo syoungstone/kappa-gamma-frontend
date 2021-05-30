@@ -31,6 +31,7 @@
                 to="/attendance"
                 >Attendance</b-dropdown-item
               >
+              <b-dropdown-item to="/standing">Standing</b-dropdown-item>
             </b-nav-item-dropdown>
             <b-nav-item v-else to="/pledgedirectory">Directory</b-nav-item>
             <b-nav-item-dropdown
@@ -271,6 +272,12 @@ h1 {
 .card {
   margin-top: 20px;
   background-color: var(--ot-off-white) !important;
+}
+.b-table,
+.event,
+.event-card,
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .footer {
   flex-shrink: 0;

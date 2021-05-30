@@ -101,6 +101,7 @@
       </div>
 
       <b-table
+        class="b-table"
         striped
         hover
         :items="narrowedData"
@@ -112,6 +113,7 @@
         @filtered="onFiltered"
         :current-page="currentPage"
         :per-page="perPage"
+        sort-icon-left
       >
         <template #cell(actions)="row">
           <b-button
@@ -145,9 +147,9 @@
           </b-button>
         </template>
       </b-table>
-      <b-col sm="7" md="6" class="my-1">
+      <div id="separator"></div>
+      <b-col id="pages" sm="7" md="6" class="my-1">
         <b-pagination
-          id="pages"
           v-model="currentPage"
           :total-rows="totalRows"
           :per-page="perPage"
@@ -356,9 +358,11 @@ export default {
 #buttons {
   text-align: center;
 }
-#search,
-#pages {
+#search {
   margin-top: 20px;
+}
+#separator {
+  margin: 50px;
 }
 #contents > * {
   margin: auto;

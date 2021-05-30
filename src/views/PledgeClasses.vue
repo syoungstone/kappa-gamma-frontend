@@ -36,9 +36,9 @@
         </b-form>
       </div>
       <b-table
+        class="b-table"
         striped
         hover
-        small
         :items="pledgeClasses"
         :fields="fields"
         id="class-table"

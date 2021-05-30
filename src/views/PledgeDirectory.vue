@@ -14,6 +14,7 @@
         >
       </div>
       <b-table
+        class="b-table"
         striped
         hover
         :items="data"
@@ -22,6 +23,7 @@
         show-empty
         :current-page="currentPage"
         :per-page="perPage"
+        sort-icon-left
       >
         <template #cell(actions)="row">
           <b-button
