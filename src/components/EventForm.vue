@@ -6,16 +6,50 @@
       <b-input id="input-name" v-model="event.title" required></b-input>
     </b-form-group>
 
-    <b-form-group>
-      <b-form-checkbox
-        id="checkbox-allday"
-        v-model="event.allDay"
-        :value="1"
-        :unchecked-value="0"
-      >
-        All day event
-      </b-form-checkbox>
-    </b-form-group>
+    <div id="checkboxes">
+      <b-form-group>
+        <b-form-checkbox
+          id="checkbox-allday"
+          v-model="event.allDay"
+          :value="1"
+          :unchecked-value="0"
+        >
+          All day event
+        </b-form-checkbox>
+      </b-form-group>
+
+      <b-form-group v-if="!editing">
+        <b-form-checkbox id="checkbox-repeats" v-model="event.repeats">
+          Repeats
+        </b-form-checkbox>
+      </b-form-group>
+    </div>
+
+    <div id="repeat-form" v-if="!editing && event.repeats">
+      <b-form-group label="Frequency:" label-for="select-frequency">
+        <b-form-select
+          id="select-frequency"
+          v-model="event.repeat_frequency"
+          :options="frequencyOptions"
+          required
+        >
+        </b-form-select>
+      </b-form-group>
+
+      <b-form-group label="Until:" label-for="datepicker-until">
+        <b-form-datepicker
+          id="datepicker-until"
+          v-model="event.repeat_until"
+          :date-format-options="{
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+          }"
+          required
+        >
+        </b-form-datepicker>
+      </b-form-group>
+    </div>
 
     <b-form-group label="Start:" label-for="start">
       <b-input-group id="start">
@@ -182,6 +216,11 @@ export default {
         { value: "pledges", text: "Brothers & pledges" },
         { value: "brothers", text: "Brothers only" },
       ],
+      frequencyOptions: [
+        { value: "day", text: "Daily" },
+        { value: "week", text: "Weekly" },
+        { value: "month", text: "Monthly" },
+      ],
       altPledgeName: false,
       event: null,
     };
@@ -233,6 +272,14 @@ export default {
         let modalMessage =
           "The time at which your event starts must be before the time at which it ends.";
         this.$root.$children[0].showMessage(modalTitle, modalMessage);
+      } else if (
+        this.event.repeats &&
+        this.event.repeat_until < this.startDate
+      ) {
+        let modalTitle = "Date Mismatch";
+        let modalMessage =
+          "The date given for your event to repeat until cannot come before the start date.";
+        this.$root.$children[0].showMessage(modalTitle, modalMessage);
       } else {
         this.event.is_public = this.visibility == "public" ? 1 : 0;
         this.event.is_for_pledges = this.visibility == "pledges" ? 1 : 0;
@@ -278,6 +325,9 @@ export default {
         start: null,
         end: null,
         allDay: 0,
+        repeats: false,
+        repeat_frequency: "week",
+        repeat_until: null,
         committee: null,
         is_public: null,
         is_for_pledges: null,
@@ -289,27 +339,18 @@ export default {
 </script>
 
 <style scoped>
-h3 {
+#checkboxes {
+  display: flex;
+  gap: 20px;
+}
+#repeat-form {
   border-radius: 10px;
-  background-color: var(--ot-gold);
   padding-top: 10px;
-  padding-bottom: 10px;
-  margin-top: 30px;
-  margin-bottom: 20px;
-}
-.profile-photo {
-  margin: auto;
-  border: 3px solid black;
-}
-#show {
-  cursor: pointer;
-}
-.selection-button {
-  margin: 10px;
-}
-#buttons,
-#created {
-  text-align: center;
+  padding-left: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  gap: 20px;
+  background-color: var(--ot-off-white);
 }
 .submit-button {
   margin-right: 10px;
