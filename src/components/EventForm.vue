@@ -30,12 +30,30 @@
       <h1>{{ editing ? "Edit Event" : "Create New Event" }}</h1>
 
       <b-form-group id="input-group-name" label="Name:" label-for="input-name">
-        <b-input id="input-name" v-model="event.title" required></b-input>
+        <b-input
+          id="input-name"
+          v-model="event.title"
+          :disabled="event.is_chapter_meeting == 1"
+          required
+        ></b-input>
       </b-form-group>
 
       <div id="checkboxes">
         <b-form-group>
           <b-form-checkbox
+            id="checkbox-meeting"
+            v-model="event.is_chapter_meeting"
+            :value="1"
+            :unchecked-value="0"
+            @input="isChapterMeetingChanged"
+          >
+            Chapter meeting
+          </b-form-checkbox>
+        </b-form-group>
+
+        <b-form-group>
+          <b-form-checkbox
+            v-if="event.is_chapter_meeting == 0"
             id="checkbox-allday"
             v-model="event.allDay"
             :value="1"
@@ -133,6 +151,7 @@
       </b-form-group>
 
       <b-form-group
+        v-if="event.is_chapter_meeting == 0"
         id="select-group-committee"
         label="Sponsoring committee (optional):"
         label-for="select-committee"
@@ -144,7 +163,11 @@
         ></b-form-select>
       </b-form-group>
 
-      <b-form-group label="Description:" label-for="textarea-description">
+      <b-form-group
+        v-if="event.is_chapter_meeting == 0"
+        label="Description:"
+        label-for="textarea-description"
+      >
         <b-form-textarea
           id="textarea-description"
           rows="3"
@@ -156,13 +179,14 @@
 
       <b-form-group
         id="select-group-visibility"
-        label="Visbility:"
+        label="Visibility:"
         label-for="select-visibility"
       >
         <b-form-select
           id="select-visibility"
           v-model="visibility"
           :options="visibilityOptions"
+          :disabled="event.is_chapter_meeting == 1"
           required
         ></b-form-select>
       </b-form-group>
@@ -267,6 +291,13 @@ export default {
       );
     },
   },
+  watch: {
+    startDate: function (newStartDate, oldStartDate) {
+      if (this.endDate == null || this.endDate == oldStartDate) {
+        this.endDate = newStartDate;
+      }
+    },
+  },
   methods: {
     getCommitteeOptions() {
       if (this.$store.state.position == null) {
@@ -352,7 +383,6 @@ export default {
         } else {
           apiCall = "create_event.php";
         }
-        console.log(this.event);
         axios
           .post(this.$store.state.apiURL + apiCall, this.event, {
             headers: { Authorization: this.$store.state.jwt },
@@ -389,6 +419,7 @@ export default {
       this.event = {
         id: null,
         title: null,
+        is_chapter_meeting: 0,
         event_description: null,
         event_location: null,
         start: null,
@@ -403,6 +434,18 @@ export default {
         alt_pledge_name: null,
         repeat_id: null,
       };
+    },
+    isChapterMeetingChanged() {
+      if (this.event.is_chapter_meeting == 1) {
+        this.event.title = "Chapter Meeting";
+        this.visibility = "brothers";
+        this.event.committee = null;
+        this.event.event_description = null;
+        this.event.allDay = 0;
+      } else {
+        this.event.title = null;
+        this.visibility = null;
+      }
     },
   },
 };

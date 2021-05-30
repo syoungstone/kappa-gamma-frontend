@@ -37,6 +37,20 @@
           ></b-form-checkbox>
         </div>
       </template>
+      <template #cell(excused)="row">
+        <div v-if="$store.state.position == null || (recordsExist && !editing)">
+          {{
+            row.item.excused == null ? "" : row.item.excused == 1 ? "Yes" : "No"
+          }}
+        </div>
+        <div v-else>
+          <b-form-checkbox
+            v-if="row.item.in_attendance == 0"
+            :checked="row.item.excused == 1"
+            @change="toggleExcused(row.item.id)"
+          ></b-form-checkbox>
+        </div>
+      </template>
     </b-table>
     <h5 v-else>No attendance records exist for this event.</h5>
     <div
@@ -80,6 +94,7 @@ export default {
           key: "name",
         },
         { key: "present" },
+        { key: "excused" },
       ],
       recordsExist: false,
       editing: false,
@@ -133,7 +148,15 @@ export default {
     toggleAttendance(id) {
       let index = this.data.attendance.findIndex((x) => x.id == id);
       let attended = this.data.attendance[index].in_attendance == 1;
-      this.data.attendance[index].in_attendance = attended ? 0 : 1;
+      attended = attended ? 0 : 1;
+      this.data.attendance[index].in_attendance = attended;
+      this.data.attendance[index].excused = attended ? null : 0;
+    },
+    toggleExcused(id) {
+      let index = this.data.attendance.findIndex((x) => x.id == id);
+      let excused = this.data.attendance[index].excused == 1;
+      excused = excused ? 0 : 1;
+      this.data.attendance[index].excused = excused;
     },
     onSubmit() {
       this.data.event_id = this.eventId;
