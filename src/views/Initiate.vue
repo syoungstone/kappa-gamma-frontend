@@ -91,7 +91,6 @@ export default {
       } else {
         pledge.is_pledge = 0;
         pledge.brother_status = "active";
-        pledge.good_standing = 1;
         pledge.photo = pledge.photo ? pledge.photo : null;
         axios
           .post(

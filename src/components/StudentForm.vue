@@ -74,20 +74,6 @@
 
       <b-form-group
         v-if="isBrother && $store.state.position != null"
-        id="select-group-1"
-        label="Standing:"
-        label-for="select-1"
-      >
-        <b-form-select
-          id="select-1"
-          v-model="data.good_standing"
-          :options="standingOptions"
-          :required="isBrother && $store.state.position != null"
-        ></b-form-select>
-      </b-form-group>
-
-      <b-form-group
-        v-if="isBrother && $store.state.position != null"
         id="input-group-0"
         label="Roll Number:"
         label-for="input-0"
@@ -377,7 +363,6 @@ export default {
         pledge_class: null,
         roll_number: null,
         brother_status: null,
-        good_standing: null,
         photo: null,
       },
       data: null,
@@ -700,10 +685,6 @@ export default {
         { value: "inactive", text: "Inactive" },
         { value: "early alum", text: "Early alum" },
         { value: "alumni", text: "Alumni" },
-      ],
-      standingOptions: [
-        { value: 1, text: "In Good Standing" },
-        { value: 0, text: "Not In Good Standing" },
       ],
       newEntry: false,
       created: false,
