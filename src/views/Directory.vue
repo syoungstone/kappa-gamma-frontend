@@ -23,8 +23,7 @@
       <b-col sm="7" md="6" class="my-1">
         <b-input-group size="sm" id="search">
           <b-form-input
-            id="filter-input"
-            v-model="filter"
+            v-model="search"
             type="search"
             placeholder="Type to Search"
           ></b-form-input>
@@ -104,13 +103,10 @@
         class="b-table"
         striped
         hover
-        :items="narrowedData"
+        :items="filteredData"
         :fields="fields"
-        :filter="filter"
-        :filter-included-fields="filter_included_fields"
         stacked="md"
         show-empty
-        @filtered="onFiltered"
         :current-page="currentPage"
         :per-page="perPage"
         sort-icon-left
@@ -126,6 +122,7 @@
           <b-button
             class="select-button"
             v-if="$store.state.position != null"
+            variant="primary"
             size="sm"
             @click="editStudent(row.item.id)"
           >
@@ -134,6 +131,7 @@
           <b-button
             class="select-button"
             v-if="$store.state.position != null"
+            variant="danger"
             size="sm"
             @click="
               prepareDeletion(
@@ -174,8 +172,11 @@ export default {
     this.getStudents();
   },
   computed: {
-    narrowedData: function () {
+    filteredData: function () {
       return this.data.filter(this.filterData);
+    },
+    totalRows: function () {
+      return this.filteredData.length;
     },
   },
   data() {
@@ -237,11 +238,9 @@ export default {
       major: null,
       gradYearOptions: [{ value: null, text: "All" }],
       gradYear: null,
-      totalRows: 1,
       currentPage: 1,
       perPage: 5,
-      filter: null,
-      filter_included_fields: ["name_first", "name_middle", "name_last"],
+      search: null,
       loaded: false,
       toDeleteName: null,
       toDeleteId: null,
@@ -255,7 +254,6 @@ export default {
         })
         .then((response) => {
           this.data = response.data.body;
-          this.totalRows = this.data.length;
           this.getFirstEmail();
           this.appendGradYears();
           this.getPledgeClasses();
@@ -266,7 +264,7 @@ export default {
     },
     getFirstEmail() {
       let i;
-      for (i = 0; i < this.totalRows; i++) {
+      for (i = 0; i < this.data.length; i++) {
         if (this.data[i].emails != null) {
           this.data[i].email = this.data[i].emails.split(",")[0];
         } else {
@@ -313,12 +311,23 @@ export default {
       if (this.major != null) {
         accept = accept && student.majors.includes(this.major);
       }
+      if (this.search != null && this.search.trim() != "") {
+        let searchMatchesFirst = student.name_first
+          .toLowerCase()
+          .includes(this.search.trim().toLowerCase());
+        let searchMatchesMiddle = student.name_middle
+          ? student.name_middle
+              .toLowerCase()
+              .includes(this.search.trim().toLowerCase())
+          : false;
+        let searchMatchesLast = student.name_last
+          .toLowerCase()
+          .includes(this.search.trim().toLowerCase());
+        accept =
+          accept &&
+          (searchMatchesFirst || searchMatchesMiddle || searchMatchesLast);
+      }
       return accept;
-    },
-    onFiltered(filteredItems) {
-      // Trigger pagination to update the number of buttons/pages due to filtering
-      this.totalRows = filteredItems.length;
-      this.currentPage = 1;
     },
     viewStudent(id) {
       this.$router.push("/student/" + id, () => {});

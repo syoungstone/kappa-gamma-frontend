@@ -2,11 +2,19 @@
   <div class="wide-wrapper">
     <h1>Active Brothers by Standing</h1>
     <div v-if="loaded" id="contents">
+      <b-form-group id="buttons" v-slot="{ ariaDescribedby }">
+        <b-form-radio-group
+          v-model="selected"
+          :options="options"
+          :aria-describedby="ariaDescribedby"
+          buttons
+        ></b-form-radio-group>
+      </b-form-group>
       <b-table
         class="b-table"
         striped
         hover
-        :items="data"
+        :items="narrowedData"
         :fields="fields"
         stacked="md"
         show-empty
@@ -27,7 +35,7 @@
               ? "Unpaid Dues"
               : row.item.exceeds_unexcused == 1
               ? "Attendance"
-              : ""
+              : "N/A"
           }}
         </template>
       </b-table>
@@ -71,9 +79,30 @@ export default {
         { key: "good_standing" },
         { key: "reason" },
       ],
+      options: [
+        { text: "Show All", value: null },
+        { text: "In Good Standing", value: "good" },
+        { text: "Not In Good Standing", value: "notgood" },
+      ],
       data: [],
       loaded: false,
     };
+  },
+  computed: {
+    narrowedData: function () {
+      return this.data.filter(this.filterData);
+    },
+  },
+  methods: {
+    filterData(student) {
+      if (this.selected == "notgood") {
+        return student.exceeds_owed == 1 || student.exceeds_unexcused == 1;
+      } else if (this.selected == "good") {
+        return student.exceeds_owed == 0 && student.exceeds_unexcused == 0;
+      } else {
+        return true;
+      }
+    },
   },
 };
 </script>

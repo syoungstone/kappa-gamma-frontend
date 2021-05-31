@@ -2,17 +2,14 @@
   <div class="narrow-wrapper">
     <h1>Directory</h1>
     <div v-if="loaded" id="contents">
-      <div id="buttons">
-        <b-button class="select-button" :pressed="active" @click="showActive()"
-          >Active Brothers</b-button
-        >
-        <b-button
-          class="select-button"
-          :pressed="pledges"
-          @click="showPledges()"
-          >Pledges</b-button
-        >
-      </div>
+      <b-form-group id="buttons" v-slot="{ ariaDescribedby }">
+        <b-form-radio-group
+          v-model="selected"
+          :options="options"
+          :aria-describedby="ariaDescribedby"
+          buttons
+        ></b-form-radio-group>
+      </b-form-group>
       <b-table
         class="b-table"
         striped
@@ -35,6 +32,7 @@
           </b-button>
         </template>
       </b-table>
+      <div id="separator"></div>
       <b-col sm="7" md="6" class="my-1">
         <b-pagination
           id="pages"
@@ -42,7 +40,6 @@
           :total-rows="totalRows"
           :per-page="perPage"
           align="fill"
-          size="sm"
           class="my-0"
         ></b-pagination>
       </b-col>
@@ -63,7 +60,11 @@ export default {
   },
   data() {
     return {
-      selected: null,
+      selected: "active",
+      options: [
+        { text: "Active Brothers", value: "active" },
+        { text: "Pledges", value: "pledges" },
+      ],
       fields: null,
       data: [],
       totalRows: 1,
@@ -71,14 +72,19 @@ export default {
       perPage: 5,
       response: null,
       loaded: false,
-      active: true,
-      pledges: false,
     };
+  },
+  watch: {
+    selected: function () {
+      if (this.selected == "active") {
+        this.showActive();
+      } else {
+        this.showPledges();
+      }
+    },
   },
   methods: {
     showActive() {
-      this.active = true;
-      this.pledges = false;
       axios
         .get(this.$store.state.apiURL + "read_active_for_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
@@ -109,8 +115,6 @@ export default {
         );
     },
     showPledges() {
-      this.active = false;
-      this.pledges = true;
       axios
         .get(this.$store.state.apiURL + "read_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
