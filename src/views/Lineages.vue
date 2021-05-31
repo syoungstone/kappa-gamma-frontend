@@ -65,6 +65,7 @@
             class="select-button"
             v-if="$store.state.position != null"
             size="sm"
+            variant="danger"
             @click="prepareDeletion(row.item)"
           >
             Delete

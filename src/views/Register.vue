@@ -2,12 +2,14 @@
   <div class="narrow-wrapper">
     <h1>{{ $route.name }}</h1>
     <b-form @submit.prevent="onSubmit">
-      <p>Only current pledges and brothers may register for an account.</p>
-      <p>Your email must match the information we have on file for you.</p>
-      <p>
-        If you are unable to create an account with the email you wish to use,
-        please contact your Regent or Pledge Instructor.
-      </p>
+      <div id="text">
+        <p>Only current pledges and brothers may register for an account.</p>
+        <p>Your email must match the information we have on file for you.</p>
+        <p>
+          If you are unable to create an account with the email you wish to use,
+          please contact your Regent or Pledge Instructor.
+        </p>
+      </div>
       <b-form-group id="input-group-3" label="Email:" label-for="input-3">
         <b-form-input
           id="input-3"
@@ -103,3 +105,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+h1 {
+  margin-bottom: 20px;
+}
+#text {
+  margin-bottom: 30px;
+}
+</style>

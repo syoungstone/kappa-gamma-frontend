@@ -6,6 +6,9 @@
 </template>
 
 <style scoped>
+h1 {
+  margin-bottom: 30px;
+}
 img {
   margin: auto;
   width: 100%;

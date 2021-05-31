@@ -41,7 +41,11 @@
       <template #cell(excused)="row">
         <div v-if="$store.state.position == null || (recordsExist && !editing)">
           {{
-            row.item.excused == null ? "" : row.item.excused == 1 ? "Yes" : "No"
+            row.item.excused == null
+              ? "N/A"
+              : row.item.excused == 1
+              ? "Yes"
+              : "No"
           }}
         </div>
         <div v-else>

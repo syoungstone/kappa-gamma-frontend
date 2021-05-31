@@ -64,6 +64,7 @@
             class="select-button"
             v-if="$store.state.position != null"
             size="sm"
+            variant="danger"
             @click="
               deletePledgeClass(row.item.class_name, row.item.num_students)
             "
@@ -216,6 +217,9 @@ export default {
 </script>
 
 <style scoped>
+h4 {
+  margin-bottom: 20px;
+}
 .select-button {
   margin: 5px;
 }

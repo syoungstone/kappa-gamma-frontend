@@ -171,6 +171,9 @@ export default {
 .demo-app-main {
   flex-grow: 1;
 }
+.calendar /deep/ .fc-view {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 .calendar /deep/ .fc-event {
   cursor: pointer;
 }

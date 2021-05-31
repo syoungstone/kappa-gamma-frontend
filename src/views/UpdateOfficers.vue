@@ -5,7 +5,6 @@
       v-model="notGoodStanding"
       title="Brother Not In Good Standing"
       @ok="submitData"
-      @cancel="resetOfficer"
     >
       The brother you selected for this position is not in good standing. Are
       you sure you wish to proceed?
