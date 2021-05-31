@@ -213,7 +213,7 @@
           required
         ></b-input>
       </b-form-group>
-      <div v-if="$store.state.isBrother">
+      <div v-if="$store.state.permissionTier >= $tierBrother">
         <b-button class="submit-button" v-if="editing" @click="cancel()"
           >Cancel</b-button
         >
@@ -300,7 +300,7 @@ export default {
   },
   methods: {
     getCommitteeOptions() {
-      if (this.$store.state.position == null) {
+      if (this.$store.state.permissionTier < this.$tierOfficer) {
         this.committeeOptions = this.$store.state.committees;
       } else {
         axios

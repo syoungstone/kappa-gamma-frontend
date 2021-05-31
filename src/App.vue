@@ -17,7 +17,7 @@
             <b-nav-item to="/dashboard">Dashboard</b-nav-item>
             <b-nav-item to="/events">Events</b-nav-item>
             <b-nav-item-dropdown
-              v-if="$store.state.isBrother"
+              v-if="$store.state.permissionTier >= $tierBrother"
               text="Membership"
             >
               <b-dropdown-item to="/directory">Directory</b-dropdown-item>
@@ -27,26 +27,42 @@
               <b-dropdown-item to="/lineages">Lineages</b-dropdown-item>
               <b-dropdown-item to="/officers">Officers</b-dropdown-item>
               <b-dropdown-item
-                v-if="$store.state.position == null"
+                v-if="$store.state.permissionTier >= $tierActive"
                 to="/attendance"
                 >Attendance</b-dropdown-item
               >
-              <b-dropdown-item to="/standing">Standing</b-dropdown-item>
+              <b-dropdown-item
+                v-if="$store.state.permissionTier >= $tierActive"
+                to="/standing"
+                >Standing</b-dropdown-item
+              >
             </b-nav-item-dropdown>
             <b-nav-item v-else to="/pledgedirectory">Directory</b-nav-item>
             <b-nav-item-dropdown
-              v-if="$store.state.position != null"
+              v-if="$store.state.permissionTier >= $tierActive"
               text="Actions"
             >
-              <b-dropdown-item to="/attendance"
+              <b-dropdown-item
+                v-if="$store.state.permissionTier >= $tierCommittee"
+                to="/attendance"
                 >Take Attendance</b-dropdown-item
               >
               <b-dropdown-item to="/createevent">Create Event</b-dropdown-item>
-              <b-dropdown-item to="/updateofficers"
+              <b-dropdown-item
+                v-if="$store.state.permissionTier >= $tierOfficer"
+                to="/create"
+                >Create New Student</b-dropdown-item
+              >
+              <b-dropdown-item
+                v-if="$store.state.permissionTier >= $tierOfficer"
+                to="/initiate"
+                >Initiate Pledges</b-dropdown-item
+              >
+              <b-dropdown-item
+                v-if="$store.state.permissionTier == $tierAll"
+                to="/updateofficers"
                 >Update Officers</b-dropdown-item
               >
-              <b-dropdown-item to="/create">Create New Student</b-dropdown-item>
-              <b-dropdown-item to="/initiate">Initiate Pledges</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
           <b-navbar-nav v-else>

@@ -34,6 +34,7 @@ Vue.prototype.$tierCommittee = 4;
 Vue.prototype.$tierActive = 3;
 Vue.prototype.$tierBrother = 2;
 Vue.prototype.$tierPledge = 1;
+Vue.prototype.$tierNone = 0;
 
 new Vue({
   router,

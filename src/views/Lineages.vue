@@ -2,7 +2,7 @@
   <div class="wide-wrapper">
     <h1>Lineages</h1>
     <div v-if="loaded">
-      <div v-if="$store.state.position != null" id="create-new">
+      <div v-if="$store.state.permissionTier >= $tierOfficer" id="create-new">
         <b-modal
           id="delete-lineage-modal"
           ref="modal"
@@ -63,7 +63,7 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.position != null"
+            v-if="$store.state.permissionTier >= $tierOfficer"
             size="sm"
             variant="danger"
             @click="prepareDeletion(row.item)"
@@ -85,7 +85,7 @@ export default {
     LoadingSpinner,
   },
   created() {
-    if (this.$store.state.position != null) {
+    if (this.$store.state.permissionTier >= this.$tierOfficer) {
       this.readBrothers();
     } else {
       this.load();

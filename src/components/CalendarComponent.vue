@@ -105,10 +105,9 @@ export default {
         .get(
           this.$apiUrl + "read_events.php?from=" + this.from + "&to=" + this.to,
           {
-            headers:
-              this.$store.state.jwt != null
-                ? { Authorization: this.$store.state.jwt }
-                : {},
+            headers: this.$store.state.loggedIn
+              ? { Authorization: this.$store.state.jwt }
+              : {},
           }
         )
         .then((response) => {

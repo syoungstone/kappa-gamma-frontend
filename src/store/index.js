@@ -10,7 +10,7 @@ export default new Vuex.Store({
     id: null,
     jwt: null,
     jwtExpiration: null,
-    permissionTier: null,
+    permissionTier: 0,
     firstName: null,
     lastName: null,
     isBrother: null,
@@ -43,7 +43,7 @@ export default new Vuex.Store({
       state.id = null;
       state.jwt = null;
       state.jwtExpiration = null;
-      state.permissionTier = null;
+      state.permissionTier = 0;
       state.firstName = null;
       state.lastName = null;
       state.isBrother = null;

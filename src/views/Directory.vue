@@ -121,7 +121,7 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.position != null"
+            v-if="$store.state.permissionTier >= $tierOfficer"
             variant="primary"
             size="sm"
             @click="editStudent(row.item.id)"
@@ -130,7 +130,7 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.position != null"
+            v-if="$store.state.permissionTier >= $tierOfficer"
             variant="danger"
             size="sm"
             @click="

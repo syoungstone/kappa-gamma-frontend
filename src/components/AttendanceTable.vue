@@ -3,7 +3,9 @@
     <h2 v-if="eventTitle">{{ eventTitle }}</h2>
     <div
       id="records-exist"
-      v-if="$store.state.position != null && recordsExist && !editing"
+      v-if="
+        $store.state.permissionTier >= $tierOfficer && recordsExist && !editing
+      "
     >
       <div id="records-message">
         <strong>Attendance records already exist for this event.</strong>
@@ -17,7 +19,7 @@
     </div>
     <b-table
       class="b-table"
-      v-if="recordsExist || $store.state.position != null"
+      v-if="recordsExist || $store.state.permissionTier >= $tierOfficer"
       striped
       hover
       :items="data.attendance"
@@ -28,7 +30,12 @@
         {{ row.item.name_first + " " + row.item.name_last }}
       </template>
       <template #cell(present)="row">
-        <div v-if="$store.state.position == null || (recordsExist && !editing)">
+        <div
+          v-if="
+            $store.state.permissionTier < $tierOfficer ||
+            (recordsExist && !editing)
+          "
+        >
           {{ row.item.in_attendance == 1 ? "Yes" : "No" }}
         </div>
         <div v-else>
@@ -39,7 +46,12 @@
         </div>
       </template>
       <template #cell(excused)="row">
-        <div v-if="$store.state.position == null || (recordsExist && !editing)">
+        <div
+          v-if="
+            $store.state.permissionTier < $tierOfficer ||
+            (recordsExist && !editing)
+          "
+        >
           {{
             row.item.excused == null
               ? "N/A"
@@ -59,7 +71,10 @@
     </b-table>
     <h5 v-else>No attendance records exist for this event.</h5>
     <div
-      v-if="$store.state.position != null && (!recordsExist || editing)"
+      v-if="
+        $store.state.permissionTier >= $tierOfficer &&
+        (!recordsExist || editing)
+      "
       id="bottom-buttons"
     >
       <b-button id="cancel-button" @click="cancel()">Cancel</b-button>

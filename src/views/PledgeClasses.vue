@@ -2,7 +2,7 @@
   <div class="wide-wrapper">
     <h1>Pledge Classes</h1>
     <div v-if="loaded">
-      <div v-if="$store.state.position != null" id="create-new">
+      <div v-if="$store.state.permissionTier >= $tierOfficer" id="create-new">
         <h4>Create new pledge class</h4>
         <b-form inline @submit.prevent="onSubmit" id="create-form">
           <b-form-input
@@ -62,7 +62,7 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.position != null"
+            v-if="$store.state.permissionTier >= $tierOfficer"
             size="sm"
             variant="danger"
             @click="

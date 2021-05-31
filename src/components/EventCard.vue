@@ -8,7 +8,9 @@
       <div class="event-card">
         <h3>
           {{
-            $store.state.isPledge && event.alt_pledge_name
+            $store.state.loggedIn &&
+            !$store.state.isBrother &&
+            event.alt_pledge_name
               ? event.alt_pledge_name
               : event.title
           }}
@@ -42,7 +44,7 @@
           Hosted by the {{ event.committee_name }} committee
         </p>
         <p v-if="event.event_description">{{ event.event_description }}</p>
-        <div v-if="$store.state.isBrother && !deleting">
+        <div v-if="$store.state.permissionTier >= $tierBrother && !deleting">
           <b-button class="select-button" variant="primary" @click="editEvent()"
             >Edit</b-button
           >
@@ -104,12 +106,15 @@
           </div>
         </div>
       </div>
-      <div id="attendance-link" v-if="$store.state.isBrother">
+      <div
+        id="attendance-link"
+        v-if="$store.state.permissionTier >= $tierBrother"
+      >
         <b-link @click="showAttendance = !showAttendance">
           {{
             showAttendance
               ? "Hide Attendance"
-              : $store.state.position != null
+              : $store.state.permissionTier >= $tierOfficer
               ? "Take Attendance"
               : "Show Attendance"
           }}
@@ -155,10 +160,9 @@ export default {
   created() {
     axios
       .get(this.$apiUrl + "read_event.php?id=" + this.eventId, {
-        headers:
-          this.$store.state.jwt != null
-            ? { Authorization: this.$store.state.jwt }
-            : {},
+        headers: this.$store.state.loggedIn
+          ? { Authorization: this.$store.state.jwt }
+          : {},
       })
       .then((response) => {
         this.event = response.data;

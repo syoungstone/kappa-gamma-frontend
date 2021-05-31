@@ -22,7 +22,7 @@
       <a id="show" @click="show()">
         <ProfilePhoto
           class="profile-photo"
-          v-if="isBrother && $store.state.position != null"
+          v-if="isBrother && $store.state.permissionTier >= $tierOfficer"
           :photo="data.photo"
           :editable="true"
         />
@@ -56,10 +56,10 @@
         {{ data.name_last }}
       </h1>
 
-      <h3 v-if="$store.state.position != null">Membership</h3>
+      <h3 v-if="$store.state.permissionTier >= $tierOfficer">Membership</h3>
 
       <b-form-group
-        v-if="isBrother && $store.state.position != null"
+        v-if="isBrother && $store.state.permissionTier >= $tierOfficer"
         id="select-group-0"
         label="Status:"
         label-for="select-0"
@@ -68,12 +68,12 @@
           id="select-0"
           v-model="data.brother_status"
           :options="statusOptions"
-          :required="isBrother && $store.state.position != null"
+          :required="isBrother && $store.state.permissionTier >= $tierOfficer"
         ></b-form-select>
       </b-form-group>
 
       <b-form-group
-        v-if="isBrother && $store.state.position != null"
+        v-if="isBrother && $store.state.permissionTier >= $tierOfficer"
         id="input-group-0"
         label="Roll Number:"
         label-for="input-0"
@@ -82,12 +82,12 @@
           id="input-0"
           v-model="data.roll_number"
           type="number"
-          :required="isBrother && $store.state.position != null"
+          :required="isBrother && $store.state.permissionTier >= $tierOfficer"
         ></b-form-input>
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.position != null"
+        v-if="$store.state.permissionTier >= $tierOfficer"
         id="input-group-pledge-class"
         label="Pledge Class:"
         label-for="input-pledge-class"
@@ -96,12 +96,12 @@
           inputId="input-pledge-class"
           v-model="data.pledge_class"
           :options="pledgeClasses"
-          :required="$store.state.position != null"
+          :required="$store.state.permissionTier >= $tierOfficer"
         ></vue-single-select>
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.position != null"
+        v-if="$store.state.permissionTier >= $tierOfficer"
         id="input-group-d"
         label="Nickname:"
         label-for="input-d"
@@ -110,7 +110,7 @@
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.position != null"
+        v-if="$store.state.permissionTier >= $tierOfficer"
         id="input-group-big"
         label="Big:"
         label-for="input-big"
@@ -139,7 +139,7 @@
       <h3>Personal</h3>
 
       <b-form-group
-        v-if="$store.state.position != null"
+        v-if="$store.state.permissionTier >= $tierOfficer"
         id="input-group-a"
         label="First Name:"
         label-for="input-a"
@@ -147,12 +147,12 @@
         <b-form-input
           id="input-a"
           v-model="data.name_first"
-          :required="$store.state.position != null"
+          :required="$store.state.permissionTier >= $tierOfficer"
         ></b-form-input>
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.position != null"
+        v-if="$store.state.permissionTier >= $tierOfficer"
         id="input-group-b"
         label="Middle Name:"
         label-for="input-b"
@@ -161,7 +161,7 @@
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.position != null"
+        v-if="$store.state.permissionTier >= $tierOfficer"
         id="input-group-c"
         label="Last Name:"
         label-for="input-c"
@@ -169,7 +169,7 @@
         <b-form-input
           id="input-c"
           v-model="data.name_last"
-          :required="$store.state.position != null"
+          :required="$store.state.permissionTier >= $tierOfficer"
         ></b-form-input>
       </b-form-group>
 
@@ -326,7 +326,7 @@ export default {
   },
   created() {
     this.newEntry = this.id == null;
-    if (this.$store.state.position != null) {
+    if (this.$store.state.permissionTier >= this.$tierOfficer) {
       axios
         .get(this.$apiUrl + "read_pledge_classes.php", {
           headers: { Authorization: this.$store.state.jwt },
