@@ -67,10 +67,7 @@ export default {
       this.form.id = this.$route.params.id;
       this.form.verify_hash = this.$route.params.verify_hash;
       axios
-        .post(
-          this.$store.state.apiURL + "reset_password.php",
-          JSON.stringify(this.form)
-        )
+        .post(this.$apiUrl + "reset_password.php", JSON.stringify(this.form))
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
           this.$router.push("/login", () => {});

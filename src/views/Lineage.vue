@@ -20,7 +20,7 @@ export default {
   created() {
     this.id = this.$route.params.id;
     axios
-      .get(this.$store.state.apiURL + "read_lineage.php?id=" + this.id, {
+      .get(this.$apiUrl + "read_lineage.php?id=" + this.id, {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {

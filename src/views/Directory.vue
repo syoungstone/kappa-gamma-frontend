@@ -249,7 +249,7 @@ export default {
   methods: {
     getStudents() {
       axios
-        .get(this.$store.state.apiURL + "read_students.php", {
+        .get(this.$apiUrl + "read_students.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -280,7 +280,7 @@ export default {
     },
     getPledgeClasses() {
       axios
-        .get(this.$store.state.apiURL + "read_pledge_classes.php", {
+        .get(this.$apiUrl + "read_pledge_classes.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -342,12 +342,9 @@ export default {
     },
     deleteStudent() {
       axios
-        .delete(
-          this.$store.state.apiURL + "delete_student.php?id=" + this.toDeleteId,
-          {
-            headers: { Authorization: this.$store.state.jwt },
-          }
-        )
+        .delete(this.$apiUrl + "delete_student.php?id=" + this.toDeleteId, {
+          headers: { Authorization: this.$store.state.jwt },
+        })
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
           this.getStudents();

@@ -60,7 +60,7 @@ export default {
   },
   created() {
     axios
-      .get(this.$store.state.apiURL + "read_officers_internal.php", {
+      .get(this.$apiUrl + "read_officers_internal.php", {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
@@ -84,7 +84,7 @@ export default {
   methods: {
     getActives() {
       axios
-        .get(this.$store.state.apiURL + "read_active.php", {
+        .get(this.$apiUrl + "read_active.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -137,13 +137,9 @@ export default {
     submitData() {
       this.notGoodStanding = false;
       axios
-        .post(
-          this.$store.state.apiURL + "update_officer.php",
-          this.newOfficer,
-          {
-            headers: { Authorization: this.$store.state.jwt },
-          }
-        )
+        .post(this.$apiUrl + "update_officer.php", this.newOfficer, {
+          headers: { Authorization: this.$store.state.jwt },
+        })
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
         })

@@ -304,7 +304,7 @@ export default {
         this.committeeOptions = this.$store.state.committees;
       } else {
         axios
-          .get(this.$store.state.apiURL + "read_committees.php", {
+          .get(this.$apiUrl + "read_committees.php", {
             headers: { Authorization: this.$store.state.jwt },
           })
           .then((response) => {
@@ -384,7 +384,7 @@ export default {
           apiCall = "create_event.php";
         }
         axios
-          .post(this.$store.state.apiURL + apiCall, this.event, {
+          .post(this.$apiUrl + apiCall, this.event, {
             headers: { Authorization: this.$store.state.jwt },
           })
           .then((response) => {

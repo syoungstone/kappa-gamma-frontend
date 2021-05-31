@@ -50,7 +50,7 @@ export default {
   },
   created() {
     axios
-      .get(this.$store.state.apiURL + "read_officers_public.php")
+      .get(this.$apiUrl + "read_officers_public.php")
       .then((response) => {
         this.officers = response.data.body;
         this.parseMajors();

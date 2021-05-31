@@ -328,7 +328,7 @@ export default {
     this.newEntry = this.id == null;
     if (this.$store.state.position != null) {
       axios
-        .get(this.$store.state.apiURL + "read_pledge_classes.php", {
+        .get(this.$apiUrl + "read_pledge_classes.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -702,7 +702,7 @@ export default {
     getInfo() {
       if (!this.newEntry) {
         axios
-          .get(this.$store.state.apiURL + "read_student.php?id=" + this.id, {
+          .get(this.$apiUrl + "read_student.php?id=" + this.id, {
             headers: { Authorization: this.$store.state.jwt },
           })
           .then((response) => {
@@ -761,7 +761,7 @@ export default {
         ? "create_student.php"
         : "update_student.php?id=" + this.data.id;
       axios
-        .post(this.$store.state.apiURL + apiCall, this.data, {
+        .post(this.$apiUrl + apiCall, this.data, {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -789,7 +789,7 @@ export default {
     },
     loadBigs() {
       axios
-        .get(this.$store.state.apiURL + "read_brother_names.php", {
+        .get(this.$apiUrl + "read_brother_names.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

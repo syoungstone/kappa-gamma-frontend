@@ -140,7 +140,7 @@ export default {
       } else {
         axios
           .post(
-            this.$store.state.apiURL + "create_pledge_class.php",
+            this.$apiUrl + "create_pledge_class.php",
             JSON.stringify(this.newPledgeClass),
             { headers: { Authorization: this.$store.state.jwt } }
           )
@@ -158,7 +158,7 @@ export default {
     },
     load() {
       axios
-        .get(this.$store.state.apiURL + "read_pledge_classes.php", {
+        .get(this.$apiUrl + "read_pledge_classes.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -181,7 +181,7 @@ export default {
         this.$root.$children[0].showMessage(modalTitle, modalMessage);
       } else {
         axios
-          .delete(this.$store.state.apiURL + "delete_pledge_class.php", {
+          .delete(this.$apiUrl + "delete_pledge_class.php", {
             data: this.toDelete,
             headers: { Authorization: this.$store.state.jwt },
           })

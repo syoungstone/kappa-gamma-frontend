@@ -5,12 +5,12 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    apiURL: "http://api.vcuthetatau.org/",
     loggedIn: false,
     email: null,
     id: null,
     jwt: null,
     jwtExpiration: null,
+    permissionTier: null,
     firstName: null,
     lastName: null,
     isBrother: null,
@@ -28,6 +28,7 @@ export default new Vuex.Store({
         state.id = parsed.data.id;
         state.jwt = jwt;
         state.jwtExpiration = parsed.exp;
+        state.permissionTier = parsed.data.permission_tier;
         state.firstName = parsed.data.name_first;
         state.lastName = parsed.data.name_last;
         state.isBrother = parsed.data.is_brother;
@@ -42,6 +43,7 @@ export default new Vuex.Store({
       state.id = null;
       state.jwt = null;
       state.jwtExpiration = null;
+      state.permissionTier = null;
       state.firstName = null;
       state.lastName = null;
       state.isBrother = null;

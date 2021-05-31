@@ -84,10 +84,7 @@ export default {
   methods: {
     onSubmit() {
       axios
-        .post(
-          this.$store.state.apiURL + "create_user.php",
-          JSON.stringify(this.form)
-        )
+        .post(this.$apiUrl + "create_user.php", JSON.stringify(this.form))
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
         })

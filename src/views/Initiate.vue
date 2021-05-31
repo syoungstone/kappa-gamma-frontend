@@ -93,13 +93,9 @@ export default {
         pledge.brother_status = "active";
         pledge.photo = pledge.photo ? pledge.photo : null;
         axios
-          .post(
-            this.$store.state.apiURL + "update_student.php?id=" + pledge.id,
-            pledge,
-            {
-              headers: { Authorization: this.$store.state.jwt },
-            }
-          )
+          .post(this.$apiUrl + "update_student.php?id=" + pledge.id, pledge, {
+            headers: { Authorization: this.$store.state.jwt },
+          })
           .then((response) => {
             this.$root.$children[0].showSuccess(response.data.message);
             this.load();
@@ -111,7 +107,7 @@ export default {
     },
     load() {
       axios
-        .get(this.$store.state.apiURL + "read_pledges.php", {
+        .get(this.$apiUrl + "read_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

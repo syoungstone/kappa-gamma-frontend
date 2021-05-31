@@ -22,12 +22,9 @@ export default {
   },
   created() {
     axios
-      .get(
-        this.$store.state.apiURL + "read_event.php?id=" + this.$route.params.id,
-        {
-          headers: { Authorization: this.$store.state.jwt },
-        }
-      )
+      .get(this.$apiUrl + "read_event.php?id=" + this.$route.params.id, {
+        headers: { Authorization: this.$store.state.jwt },
+      })
       .then((response) => {
         this.event = response.data;
         this.loaded = true;

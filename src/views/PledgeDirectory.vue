@@ -86,7 +86,7 @@ export default {
   methods: {
     showActive() {
       axios
-        .get(this.$store.state.apiURL + "read_active_for_pledges.php", {
+        .get(this.$apiUrl + "read_active_for_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -116,7 +116,7 @@ export default {
     },
     showPledges() {
       axios
-        .get(this.$store.state.apiURL + "read_pledges.php", {
+        .get(this.$apiUrl + "read_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

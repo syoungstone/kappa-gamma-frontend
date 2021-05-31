@@ -53,7 +53,7 @@ export default {
   },
   created() {
     axios
-      .get(this.$store.state.apiURL + "read_active.php", {
+      .get(this.$apiUrl + "read_active.php", {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {

@@ -1,5 +1,5 @@
 <template>
-  <StudentForm v-if="this.$store.state.position != null" />
+  <StudentForm v-if="$store.state.position != null" />
 </template>
 
 <script>

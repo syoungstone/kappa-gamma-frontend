@@ -154,7 +154,7 @@ export default {
   },
   created() {
     axios
-      .get(this.$store.state.apiURL + "read_event.php?id=" + this.eventId, {
+      .get(this.$apiUrl + "read_event.php?id=" + this.eventId, {
         headers:
           this.$store.state.jwt != null
             ? { Authorization: this.$store.state.jwt }
@@ -199,7 +199,7 @@ export default {
     },
     deleteEvent() {
       let apiCall =
-        this.$store.state.apiURL +
+        this.$apiUrl +
         "delete_event.php?id=" +
         this.event.id +
         (this.deleteAllInSequence || this.deleteAllFollowing

@@ -140,7 +140,7 @@ export default {
       } else {
         axios
           .post(
-            this.$store.state.apiURL + "create_lineage.php",
+            this.$apiUrl + "create_lineage.php",
             JSON.stringify(this.newLineage),
             { headers: { Authorization: this.$store.state.jwt } }
           )
@@ -158,7 +158,7 @@ export default {
     },
     readBrothers() {
       axios
-        .get(this.$store.state.apiURL + "read_brother_names.php", {
+        .get(this.$apiUrl + "read_brother_names.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -171,7 +171,7 @@ export default {
     },
     load() {
       axios
-        .get(this.$store.state.apiURL + "read_lineages.php", {
+        .get(this.$apiUrl + "read_lineages.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -189,9 +189,7 @@ export default {
     deleteLineage() {
       axios
         .delete(
-          this.$store.state.apiURL +
-            "delete_lineage.php?id=" +
-            this.toDelete.lineage_id,
+          this.$apiUrl + "delete_lineage.php?id=" + this.toDelete.lineage_id,
           {
             headers: { Authorization: this.$store.state.jwt },
           }

@@ -103,11 +103,7 @@ export default {
       this.setAspectRatio();
       axios
         .get(
-          this.$store.state.apiURL +
-            "read_events.php?from=" +
-            this.from +
-            "&to=" +
-            this.to,
+          this.$apiUrl + "read_events.php?from=" + this.from + "&to=" + this.to,
           {
             headers:
               this.$store.state.jwt != null

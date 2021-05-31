@@ -60,11 +60,7 @@ export default {
       }
       axios
         .get(
-          this.$store.state.apiURL +
-            "read_events.php?from=" +
-            this.from +
-            "&to=" +
-            this.to,
+          this.$apiUrl + "read_events.php?from=" + this.from + "&to=" + this.to,
           {
             headers: { Authorization: this.$store.state.jwt },
           }

@@ -84,10 +84,9 @@ export default {
   methods: {
     onSubmit() {
       axios
-        .post(this.$store.state.apiURL + "update_user.php", this.form)
+        .post(this.$apiUrl + "update_user.php", this.form)
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
-          this.$store.commit("setUser", response.data.jwt);
         })
         .catch((error) =>
           this.$root.$children[0].showError(error.response.statusText)
@@ -98,7 +97,7 @@ export default {
     },
     deleteAccount() {
       axios
-        .delete(this.$store.state.apiURL + "delete_user.php", {
+        .delete(this.$apiUrl + "delete_user.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

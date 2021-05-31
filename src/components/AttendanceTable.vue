@@ -108,7 +108,7 @@ export default {
   },
   created() {
     axios
-      .get(this.$store.state.apiURL + "read_active.php", {
+      .get(this.$apiUrl + "read_active.php", {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
@@ -125,14 +125,9 @@ export default {
     },
     getRecords() {
       axios
-        .get(
-          this.$store.state.apiURL +
-            "read_attendance.php?event=" +
-            this.eventId,
-          {
-            headers: { Authorization: this.$store.state.jwt },
-          }
-        )
+        .get(this.$apiUrl + "read_attendance.php?event=" + this.eventId, {
+          headers: { Authorization: this.$store.state.jwt },
+        })
         .then((response) => {
           this.recordsExist = response.data.itemCount > 0;
           if (this.recordsExist) {
@@ -166,7 +161,7 @@ export default {
     onSubmit() {
       this.data.event_id = this.eventId;
       axios
-        .post(this.$store.state.apiURL + "submit_attendance.php", this.data, {
+        .post(this.$apiUrl + "submit_attendance.php", this.data, {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

@@ -23,10 +23,7 @@ export default {
     this.data.id = this.$route.params.id;
     this.data.verify_hash = this.$route.params.verify_hash;
     axios
-      .post(
-        this.$store.state.apiURL + "verify_user.php",
-        JSON.stringify(this.data)
-      )
+      .post(this.$apiUrl + "verify_user.php", JSON.stringify(this.data))
       .then((response) => {
         this.$root.$children[0].showSuccess(response.data.message);
         this.$router.push("/login", () => {});

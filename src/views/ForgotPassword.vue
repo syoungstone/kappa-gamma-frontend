@@ -34,10 +34,7 @@ export default {
   methods: {
     onSubmit() {
       axios
-        .post(
-          this.$store.state.apiURL + "forgot_password.php",
-          JSON.stringify(this.form)
-        )
+        .post(this.$apiUrl + "forgot_password.php", JSON.stringify(this.form))
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
         })

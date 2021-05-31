@@ -57,7 +57,7 @@ export default {
   },
   created() {
     axios
-      .get(this.$store.state.apiURL + "read_officers_internal.php", {
+      .get(this.$apiUrl + "read_officers_internal.php", {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {

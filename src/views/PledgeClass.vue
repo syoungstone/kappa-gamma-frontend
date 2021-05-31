@@ -51,7 +51,7 @@ export default {
     this.semester = this.id.substring(0, 1);
     this.year = parseInt(this.id.substring(1));
     axios
-      .get(this.$store.state.apiURL + "read_pledge_class.php?id=" + this.id, {
+      .get(this.$apiUrl + "read_pledge_class.php?id=" + this.id, {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
