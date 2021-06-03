@@ -2,7 +2,10 @@
   <div class="wide-wrapper">
     <h1>Pledge Classes</h1>
     <div v-if="loaded">
-      <div v-if="$store.state.permissionTier >= $tierOfficer" id="create-new">
+      <div
+        v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
+        id="create-new"
+      >
         <h4>Create new pledge class</h4>
         <b-form inline @submit.prevent="onSubmit" id="create-form">
           <b-form-input
@@ -62,7 +65,7 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.permissionTier >= $tierOfficer"
+            v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
             size="sm"
             variant="danger"
             @click="
@@ -80,6 +83,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   components: {
@@ -90,6 +94,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       pledgeClasses: null,
       fields: [
         {
@@ -140,7 +145,7 @@ export default {
       } else {
         axios
           .post(
-            this.$apiUrl + "create_pledge_class.php",
+            API_URL + "create_pledge_class.php",
             JSON.stringify(this.newPledgeClass),
             { headers: { Authorization: this.$store.state.jwt } }
           )
@@ -158,7 +163,7 @@ export default {
     },
     load() {
       axios
-        .get(this.$apiUrl + "read_pledge_classes.php", {
+        .get(API_URL + "read_pledge_classes.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -181,7 +186,7 @@ export default {
         this.$root.$children[0].showMessage(modalTitle, modalMessage);
       } else {
         axios
-          .delete(this.$apiUrl + "delete_pledge_class.php", {
+          .delete(API_URL + "delete_pledge_class.php", {
             data: this.toDelete,
             headers: { Authorization: this.$store.state.jwt },
           })

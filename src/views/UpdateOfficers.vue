@@ -53,6 +53,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   components: {
@@ -60,7 +61,7 @@ export default {
   },
   created() {
     axios
-      .get(this.$apiUrl + "read_officers_internal.php", {
+      .get(API_URL + "read_officers_internal.php", {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
@@ -74,6 +75,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       officers: null,
       actives: null,
       newOfficer: null,
@@ -84,7 +86,7 @@ export default {
   methods: {
     getActives() {
       axios
-        .get(this.$apiUrl + "read_active.php", {
+        .get(API_URL + "read_active.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -137,7 +139,7 @@ export default {
     submitData() {
       this.notGoodStanding = false;
       axios
-        .post(this.$apiUrl + "update_officer.php", this.newOfficer, {
+        .post(API_URL + "update_officer.php", this.newOfficer, {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

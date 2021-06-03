@@ -7,6 +7,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import EventForm from "@/components/EventForm.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
@@ -16,13 +17,14 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       loaded: false,
       event: null,
     };
   },
   created() {
     axios
-      .get(this.$apiUrl + "read_event.php?id=" + this.$route.params.id, {
+      .get(API_URL + "read_event.php?id=" + this.$route.params.id, {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {

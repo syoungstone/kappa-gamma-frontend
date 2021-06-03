@@ -121,7 +121,7 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.permissionTier >= $tierOfficer"
+            v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
             variant="primary"
             size="sm"
             @click="editStudent(row.item.id)"
@@ -130,7 +130,7 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.permissionTier >= $tierOfficer"
+            v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
             variant="danger"
             size="sm"
             @click="
@@ -163,6 +163,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   components: {
@@ -181,6 +182,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       showFilters: false,
       fields: [
         {
@@ -249,7 +251,7 @@ export default {
   methods: {
     getStudents() {
       axios
-        .get(this.$apiUrl + "read_students.php", {
+        .get(API_URL + "read_students.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -280,7 +282,7 @@ export default {
     },
     getPledgeClasses() {
       axios
-        .get(this.$apiUrl + "read_pledge_classes.php", {
+        .get(API_URL + "read_pledge_classes.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -342,7 +344,7 @@ export default {
     },
     deleteStudent() {
       axios
-        .delete(this.$apiUrl + "delete_student.php?id=" + this.toDeleteId, {
+        .delete(API_URL + "delete_student.php?id=" + this.toDeleteId, {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

@@ -22,7 +22,7 @@
       <a id="show" @click="show()">
         <ProfilePhoto
           class="profile-photo"
-          v-if="isBrother && $store.state.permissionTier >= $tierOfficer"
+          v-if="isBrother && $store.state.permissionTier >= AUTH_TIERS.OFFICER"
           :photo="data.photo"
           :editable="true"
         />
@@ -56,10 +56,12 @@
         {{ data.name_last }}
       </h1>
 
-      <h3 v-if="$store.state.permissionTier >= $tierOfficer">Membership</h3>
+      <h3 v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER">
+        Membership
+      </h3>
 
       <b-form-group
-        v-if="isBrother && $store.state.permissionTier >= $tierOfficer"
+        v-if="isBrother && $store.state.permissionTier >= AUTH_TIERS.OFFICER"
         id="select-group-0"
         label="Status:"
         label-for="select-0"
@@ -68,12 +70,14 @@
           id="select-0"
           v-model="data.brother_status"
           :options="statusOptions"
-          :required="isBrother && $store.state.permissionTier >= $tierOfficer"
+          :required="
+            isBrother && $store.state.permissionTier >= AUTH_TIERS.OFFICER
+          "
         ></b-form-select>
       </b-form-group>
 
       <b-form-group
-        v-if="isBrother && $store.state.permissionTier >= $tierOfficer"
+        v-if="isBrother && $store.state.permissionTier >= AUTH_TIERS.OFFICER"
         id="input-group-0"
         label="Roll Number:"
         label-for="input-0"
@@ -82,12 +86,14 @@
           id="input-0"
           v-model="data.roll_number"
           type="number"
-          :required="isBrother && $store.state.permissionTier >= $tierOfficer"
+          :required="
+            isBrother && $store.state.permissionTier >= AUTH_TIERS.OFFICER
+          "
         ></b-form-input>
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.permissionTier >= $tierOfficer"
+        v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
         id="input-group-pledge-class"
         label="Pledge Class:"
         label-for="input-pledge-class"
@@ -96,12 +102,12 @@
           inputId="input-pledge-class"
           v-model="data.pledge_class"
           :options="pledgeClasses"
-          :required="$store.state.permissionTier >= $tierOfficer"
+          :required="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
         ></vue-single-select>
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.permissionTier >= $tierOfficer"
+        v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
         id="input-group-d"
         label="Nickname:"
         label-for="input-d"
@@ -110,7 +116,7 @@
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.permissionTier >= $tierOfficer"
+        v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
         id="input-group-big"
         label="Big:"
         label-for="input-big"
@@ -139,7 +145,7 @@
       <h3>Personal</h3>
 
       <b-form-group
-        v-if="$store.state.permissionTier >= $tierOfficer"
+        v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
         id="input-group-a"
         label="First Name:"
         label-for="input-a"
@@ -147,12 +153,12 @@
         <b-form-input
           id="input-a"
           v-model="data.name_first"
-          :required="$store.state.permissionTier >= $tierOfficer"
+          :required="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
         ></b-form-input>
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.permissionTier >= $tierOfficer"
+        v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
         id="input-group-b"
         label="Middle Name:"
         label-for="input-b"
@@ -161,7 +167,7 @@
       </b-form-group>
 
       <b-form-group
-        v-if="$store.state.permissionTier >= $tierOfficer"
+        v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
         id="input-group-c"
         label="Last Name:"
         label-for="input-c"
@@ -169,7 +175,7 @@
         <b-form-input
           id="input-c"
           v-model="data.name_last"
-          :required="$store.state.permissionTier >= $tierOfficer"
+          :required="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
         ></b-form-input>
       </b-form-group>
 
@@ -298,6 +304,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import ProfilePhoto from "@/components/ProfilePhoto.vue";
 import PhotoModal from "@/components/PhotoModal.vue";
 import MajorSelect from "@/components/MajorSelect.vue";
@@ -326,9 +333,9 @@ export default {
   },
   created() {
     this.newEntry = this.id == null;
-    if (this.$store.state.permissionTier >= this.$tierOfficer) {
+    if (this.$store.state.permissionTier >= AUTH_TIERS.OFFICER) {
       axios
-        .get(this.$apiUrl + "read_pledge_classes.php", {
+        .get(API_URL + "read_pledge_classes.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -344,6 +351,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       defaultData: {
         id: null,
         is_pledge: null,
@@ -702,7 +710,7 @@ export default {
     getInfo() {
       if (!this.newEntry) {
         axios
-          .get(this.$apiUrl + "read_student.php?id=" + this.id, {
+          .get(API_URL + "read_student.php?id=" + this.id, {
             headers: { Authorization: this.$store.state.jwt },
           })
           .then((response) => {
@@ -761,7 +769,7 @@ export default {
         ? "create_student.php"
         : "update_student.php?id=" + this.data.id;
       axios
-        .post(this.$apiUrl + apiCall, this.data, {
+        .post(API_URL + apiCall, this.data, {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -789,7 +797,7 @@ export default {
     },
     loadBigs() {
       axios
-        .get(this.$apiUrl + "read_brother_names.php", {
+        .get(API_URL + "read_brother_names.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

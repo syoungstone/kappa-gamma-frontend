@@ -6,6 +6,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   components: {
@@ -13,6 +14,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       data: {
         id: "",
         verify_hash: "",
@@ -23,7 +25,7 @@ export default {
     this.data.id = this.$route.params.id;
     this.data.verify_hash = this.$route.params.verify_hash;
     axios
-      .post(this.$apiUrl + "verify_user.php", JSON.stringify(this.data))
+      .post(API_URL + "verify_user.php", JSON.stringify(this.data))
       .then((response) => {
         this.$root.$children[0].showSuccess(response.data.message);
         this.$router.push("/login", () => {});

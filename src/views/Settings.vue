@@ -62,6 +62,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 export default {
   computed: {
     submitDisabled() {
@@ -70,6 +71,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       form: {
         email: this.$store.state.user,
         password: "",
@@ -84,7 +86,7 @@ export default {
   methods: {
     onSubmit() {
       axios
-        .post(this.$apiUrl + "update_user.php", this.form)
+        .post(API_URL + "update_user.php", this.form)
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
         })
@@ -97,7 +99,7 @@ export default {
     },
     deleteAccount() {
       axios
-        .delete(this.$apiUrl + "delete_user.php", {
+        .delete(API_URL + "delete_user.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

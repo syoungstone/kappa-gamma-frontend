@@ -17,7 +17,8 @@
           id="edit-button"
           variant="primary"
           v-if="
-            $store.state.permissionTier >= $tierOfficer || id == $store.state.id
+            $store.state.permissionTier >= AUTH_TIERS.OFFICER ||
+            id == $store.state.id
           "
           @click="editStudent()"
           >Edit</b-button
@@ -115,6 +116,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import ProfilePhoto from "@/components/ProfilePhoto.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
@@ -125,6 +127,7 @@ export default {
   name: "Brother",
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       id: 0,
       data: {},
       hometown: "",
@@ -134,7 +137,7 @@ export default {
   created() {
     this.id = this.$route.params.id;
     axios
-      .get(this.$apiUrl + "read_student.php?id=" + this.id, {
+      .get(API_URL + "read_student.php?id=" + this.id, {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
@@ -163,7 +166,7 @@ export default {
   },
   methods: {
     editStudent() {
-      if (this.$store.state.permissionTier >= this.$tierOfficer) {
+      if (this.$store.state.permissionTier >= AUTH_TIERS.OFFICER) {
         this.$router.push("/editstudent/" + this.id, () => {});
       } else {
         this.$router.push("/editprofile", () => {});

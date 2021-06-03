@@ -44,7 +44,9 @@
           Hosted by the {{ event.committee_name }} committee
         </p>
         <p v-if="event.event_description">{{ event.event_description }}</p>
-        <div v-if="$store.state.permissionTier >= $tierBrother && !deleting">
+        <div
+          v-if="$store.state.permissionTier >= AUTH_TIERS.BROTHER && !deleting"
+        >
           <b-button class="select-button" variant="primary" @click="editEvent()"
             >Edit</b-button
           >
@@ -108,13 +110,13 @@
       </div>
       <div
         id="attendance-link"
-        v-if="$store.state.permissionTier >= $tierBrother"
+        v-if="$store.state.permissionTier >= AUTH_TIERS.BROTHER"
       >
         <b-link @click="showAttendance = !showAttendance">
           {{
             showAttendance
               ? "Hide Attendance"
-              : $store.state.permissionTier >= $tierOfficer
+              : $store.state.permissionTier >= AUTH_TIERS.OFFICER
               ? "Take Attendance"
               : "Show Attendance"
           }}
@@ -131,6 +133,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import AttendanceTable from "@/components/AttendanceTable.vue";
 export default {
   name: "EventCard",
@@ -144,6 +147,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       showAttendance: false,
       deleting: false,
       deleteAllFollowing: false,
@@ -159,7 +163,7 @@ export default {
   },
   created() {
     axios
-      .get(this.$apiUrl + "read_event.php?id=" + this.eventId, {
+      .get(API_URL + "read_event.php?id=" + this.eventId, {
         headers: this.$store.state.loggedIn
           ? { Authorization: this.$store.state.jwt }
           : {},
@@ -203,7 +207,7 @@ export default {
     },
     deleteEvent() {
       let apiCall =
-        this.$apiUrl +
+        API_URL +
         "delete_event.php?id=" +
         this.event.id +
         (this.deleteAllInSequence || this.deleteAllFollowing

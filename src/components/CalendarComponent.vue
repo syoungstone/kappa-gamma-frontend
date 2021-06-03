@@ -20,6 +20,7 @@
 
 <script>
 import axios from "axios";
+import { API_URL } from "../constants/index.js";
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -102,14 +103,11 @@ export default {
     getEvents() {
       this.setAspectRatio();
       axios
-        .get(
-          this.$apiUrl + "read_events.php?from=" + this.from + "&to=" + this.to,
-          {
-            headers: this.$store.state.loggedIn
-              ? { Authorization: this.$store.state.jwt }
-              : {},
-          }
-        )
+        .get(API_URL + "read_events.php?from=" + this.from + "&to=" + this.to, {
+          headers: this.$store.state.loggedIn
+            ? { Authorization: this.$store.state.jwt }
+            : {},
+        })
         .then((response) => {
           this.events = response.data.body;
           this.events.forEach((x) => (x.allDay = x.allDay == 1));

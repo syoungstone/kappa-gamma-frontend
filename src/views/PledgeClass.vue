@@ -39,6 +39,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import ProfilePhoto from "@/components/ProfilePhoto.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
@@ -51,7 +52,7 @@ export default {
     this.semester = this.id.substring(0, 1);
     this.year = parseInt(this.id.substring(1));
     axios
-      .get(this.$apiUrl + "read_pledge_class.php?id=" + this.id, {
+      .get(API_URL + "read_pledge_class.php?id=" + this.id, {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
@@ -66,6 +67,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       semester: null,
       year: null,
       className: null,

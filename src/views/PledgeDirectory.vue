@@ -50,6 +50,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   components: {
@@ -60,6 +61,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       selected: "active",
       options: [
         { text: "Active Brothers", value: "active" },
@@ -86,7 +88,7 @@ export default {
   methods: {
     showActive() {
       axios
-        .get(this.$apiUrl + "read_active_for_pledges.php", {
+        .get(API_URL + "read_active_for_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -116,7 +118,7 @@ export default {
     },
     showPledges() {
       axios
-        .get(this.$apiUrl + "read_pledges.php", {
+        .get(API_URL + "read_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

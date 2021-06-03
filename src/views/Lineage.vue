@@ -10,6 +10,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import LineageTree from "@/components/LineageTree.vue";
 export default {
@@ -20,7 +21,7 @@ export default {
   created() {
     this.id = this.$route.params.id;
     axios
-      .get(this.$apiUrl + "read_lineage.php?id=" + this.id, {
+      .get(API_URL + "read_lineage.php?id=" + this.id, {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
@@ -34,6 +35,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       lineageName: null,
       students: null,
       id: null,

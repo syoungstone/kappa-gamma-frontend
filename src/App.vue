@@ -17,7 +17,7 @@
             <b-nav-item to="/dashboard">Dashboard</b-nav-item>
             <b-nav-item to="/events">Events</b-nav-item>
             <b-nav-item-dropdown
-              v-if="$store.state.permissionTier >= $tierBrother"
+              v-if="$store.state.permissionTier >= AUTH_TIERS.BROTHER"
               text="Membership"
             >
               <b-dropdown-item to="/directory">Directory</b-dropdown-item>
@@ -27,39 +27,39 @@
               <b-dropdown-item to="/lineages">Lineages</b-dropdown-item>
               <b-dropdown-item to="/officers">Officers</b-dropdown-item>
               <b-dropdown-item
-                v-if="$store.state.permissionTier >= $tierActive"
+                v-if="$store.state.permissionTier >= AUTH_TIERS.ACTIVE"
                 to="/attendance"
                 >Attendance</b-dropdown-item
               >
               <b-dropdown-item
-                v-if="$store.state.permissionTier >= $tierActive"
+                v-if="$store.state.permissionTier >= AUTH_TIERS.ACTIVE"
                 to="/standing"
                 >Standing</b-dropdown-item
               >
             </b-nav-item-dropdown>
             <b-nav-item v-else to="/pledgedirectory">Directory</b-nav-item>
             <b-nav-item-dropdown
-              v-if="$store.state.permissionTier >= $tierActive"
+              v-if="$store.state.permissionTier >= AUTH_TIERS.ACTIVE"
               text="Actions"
             >
               <b-dropdown-item
-                v-if="$store.state.permissionTier >= $tierCommittee"
+                v-if="$store.state.permissionTier >= AUTH_TIERS.COMMITTEE"
                 to="/attendance"
                 >Take Attendance</b-dropdown-item
               >
               <b-dropdown-item to="/createevent">Create Event</b-dropdown-item>
               <b-dropdown-item
-                v-if="$store.state.permissionTier >= $tierOfficer"
+                v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
                 to="/create"
                 >Create New Student</b-dropdown-item
               >
               <b-dropdown-item
-                v-if="$store.state.permissionTier >= $tierOfficer"
+                v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
                 to="/initiate"
                 >Initiate Pledges</b-dropdown-item
               >
               <b-dropdown-item
-                v-if="$store.state.permissionTier == $tierAll"
+                v-if="$store.state.permissionTier == AUTH_TIERS.ALL"
                 to="/updateofficers"
                 >Update Officers</b-dropdown-item
               >
@@ -165,9 +165,11 @@
 
 <script>
 import axios from "axios";
+import { API_URL, AUTH_TIERS } from "./constants/index.js";
 export default {
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       notifyModal: false,
       notifyModalMessage: null,
       notifyModalTitle: null,
@@ -227,7 +229,7 @@ export default {
     },
     bugSubmit() {
       axios
-        .post(this.$apiUrl + "report_bug.php", this.bugReport)
+        .post(API_URL + "report_bug.php", this.bugReport)
         .then((response) => {
           this.reportBugModal = false;
           this.showSuccess(response.data.message);

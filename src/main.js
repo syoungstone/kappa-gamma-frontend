@@ -23,19 +23,6 @@ Vue.use(IconsPlugin);
 
 Vue.config.productionTip = false;
 
-// API URL constant
-Vue.prototype.$apiUrl = "http://api.vcuthetatau.org/";
-
-// Permission tier constants for determining what to display to whom
-Vue.prototype.$tierAll = 7;
-Vue.prototype.$tierFinancial = 6;
-Vue.prototype.$tierOfficer = 5;
-Vue.prototype.$tierCommittee = 4;
-Vue.prototype.$tierActive = 3;
-Vue.prototype.$tierBrother = 2;
-Vue.prototype.$tierPledge = 1;
-Vue.prototype.$tierNone = 0;
-
 new Vue({
   router,
   store,

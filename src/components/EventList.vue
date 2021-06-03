@@ -29,6 +29,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 export default {
   name: "EventList",
   props: {
@@ -36,6 +37,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       from: null,
       to: null,
       events: null,
@@ -59,12 +61,9 @@ export default {
         this.getFromAndToUpcoming();
       }
       axios
-        .get(
-          this.$apiUrl + "read_events.php?from=" + this.from + "&to=" + this.to,
-          {
-            headers: { Authorization: this.$store.state.jwt },
-          }
-        )
+        .get(API_URL + "read_events.php?from=" + this.from + "&to=" + this.to, {
+          headers: { Authorization: this.$store.state.jwt },
+        })
         .then((response) => {
           this.events = response.data.body;
           this.loaded = true;

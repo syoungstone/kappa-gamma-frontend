@@ -43,6 +43,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import ProfilePhoto from "@/components/ProfilePhoto.vue";
 export default {
   components: {
@@ -50,7 +51,7 @@ export default {
   },
   created() {
     axios
-      .get(this.$apiUrl + "read_officers_public.php")
+      .get(API_URL + "read_officers_public.php")
       .then((response) => {
         this.officers = response.data.body;
         this.parseMajors();
@@ -63,6 +64,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       officers: null,
       error: null,
       loaded: false,

@@ -213,7 +213,7 @@
           required
         ></b-input>
       </b-form-group>
-      <div v-if="$store.state.permissionTier >= $tierBrother">
+      <div v-if="$store.state.permissionTier >= AUTH_TIERS.BROTHER">
         <b-button class="submit-button" v-if="editing" @click="cancel()"
           >Cancel</b-button
         >
@@ -231,11 +231,13 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 export default {
   name: "StudentForm",
   props: ["eventData"],
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       editing: false,
       showEditChoiceModal: false,
       editAllFollowing: false,
@@ -300,11 +302,11 @@ export default {
   },
   methods: {
     getCommitteeOptions() {
-      if (this.$store.state.permissionTier < this.$tierOfficer) {
+      if (this.$store.state.permissionTier < AUTH_TIERS.OFFICER) {
         this.committeeOptions = this.$store.state.committees;
       } else {
         axios
-          .get(this.$apiUrl + "read_committees.php", {
+          .get(API_URL + "read_committees.php", {
             headers: { Authorization: this.$store.state.jwt },
           })
           .then((response) => {
@@ -384,7 +386,7 @@ export default {
           apiCall = "create_event.php";
         }
         axios
-          .post(this.$apiUrl + apiCall, this.event, {
+          .post(API_URL + apiCall, this.event, {
             headers: { Authorization: this.$store.state.jwt },
           })
           .then((response) => {

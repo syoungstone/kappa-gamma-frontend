@@ -64,6 +64,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 export default {
   computed: {
     submitDisabled() {
@@ -72,6 +73,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       form: {
         email: "",
         password: "",
@@ -84,7 +86,7 @@ export default {
   methods: {
     onSubmit() {
       axios
-        .post(this.$apiUrl + "create_user.php", JSON.stringify(this.form))
+        .post(API_URL + "create_user.php", JSON.stringify(this.form))
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
         })

@@ -32,9 +32,11 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 export default {
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       form: {
         email: "",
         password: "",
@@ -45,7 +47,7 @@ export default {
   methods: {
     onSubmit() {
       axios
-        .post(this.$apiUrl + "login.php", JSON.stringify(this.form))
+        .post(API_URL + "login.php", JSON.stringify(this.form))
         .then((response) => {
           this.$store.commit("setUser", response.data.jwt);
           let redirect = this.$route.params.redirect;

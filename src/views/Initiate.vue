@@ -52,6 +52,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import ProfilePhoto from "@/components/ProfilePhoto.vue";
 import PhotoModal from "@/components/PhotoModal.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
@@ -66,6 +67,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       noPledges: null,
       pledges: null,
       loaded: false,
@@ -93,7 +95,7 @@ export default {
         pledge.brother_status = "active";
         pledge.photo = pledge.photo ? pledge.photo : null;
         axios
-          .post(this.$apiUrl + "update_student.php?id=" + pledge.id, pledge, {
+          .post(API_URL + "update_student.php?id=" + pledge.id, pledge, {
             headers: { Authorization: this.$store.state.jwt },
           })
           .then((response) => {
@@ -107,7 +109,7 @@ export default {
     },
     load() {
       axios
-        .get(this.$apiUrl + "read_pledges.php", {
+        .get(API_URL + "read_pledges.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

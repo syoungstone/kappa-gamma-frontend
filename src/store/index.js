@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { AUTH_TIERS } from "../constants/index.js";
 
 Vue.use(Vuex);
 
@@ -10,7 +11,7 @@ export default new Vuex.Store({
     id: null,
     jwt: null,
     jwtExpiration: null,
-    permissionTier: 0,
+    permissionTier: AUTH_TIERS.NONE,
     firstName: null,
     lastName: null,
     isBrother: null,
@@ -43,7 +44,7 @@ export default new Vuex.Store({
       state.id = null;
       state.jwt = null;
       state.jwtExpiration = null;
-      state.permissionTier = 0;
+      state.permissionTier = AUTH_TIERS.NONE;
       state.firstName = null;
       state.lastName = null;
       state.isBrother = null;

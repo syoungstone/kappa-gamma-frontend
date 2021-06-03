@@ -5,7 +5,7 @@
       <b-button
         id="edit-button"
         variant="primary"
-        v-if="$store.state.permissionTier >= $tierOfficer"
+        v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
         @click="editOfficers()"
         >Edit</b-button
       >
@@ -48,6 +48,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import ProfilePhoto from "@/components/ProfilePhoto.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
@@ -57,7 +58,7 @@ export default {
   },
   created() {
     axios
-      .get(this.$apiUrl + "read_officers_internal.php", {
+      .get(API_URL + "read_officers_internal.php", {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
@@ -72,6 +73,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       officers: null,
       loaded: false,
     };

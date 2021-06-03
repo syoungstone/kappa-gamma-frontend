@@ -7,7 +7,10 @@
         internal events.
       </h5>
     </div>
-    <div id="header" v-else-if="$store.state.permissionTier >= $tierCommittee">
+    <div
+      id="header"
+      v-else-if="$store.state.permissionTier >= AUTH_TIERS.COMMITTEE"
+    >
       <h1>Calendar</h1>
       <b-button id="nav-button" @click="createEvent()" variant="primary"
         >Create Event</b-button
@@ -18,8 +21,14 @@
 </template>
 
 <script>
+import { AUTH_TIERS } from "../constants/index.js";
 import CalendarComponent from "@/components/CalendarComponent.vue";
 export default {
+  data() {
+    return {
+      AUTH_TIERS: AUTH_TIERS,
+    };
+  },
   components: {
     CalendarComponent,
   },

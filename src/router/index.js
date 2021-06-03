@@ -2,26 +2,16 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import store from "../store/index.js";
+import { AUTH_TIERS } from "../constants/index.js";
 
 Vue.use(VueRouter);
-
-const tiers = {
-  all: 7,
-  financial: 6,
-  officer: 5,
-  committee: 4,
-  active: 3,
-  brother: 2,
-  pledge: 1,
-  none: 0,
-};
 
 const routes = [
   {
     path: "/",
     name: "Home",
     component: Home,
-    meta: { minAuthRequired: tiers.none },
+    meta: { minAuthRequired: AUTH_TIERS.NONE },
   },
   {
     path: "/about",
@@ -30,175 +20,175 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import("../views/About.vue"),
-    meta: { minAuthRequired: tiers.none },
+    meta: { minAuthRequired: AUTH_TIERS.NONE },
   },
   {
     path: "/events",
     name: "Events",
     component: () => import("../views/Events.vue"),
-    meta: { minAuthRequired: tiers.none },
+    meta: { minAuthRequired: AUTH_TIERS.NONE },
   },
   {
     path: "/login",
     name: "Log In",
     component: () => import("../views/Login.vue"),
-    meta: { minAuthRequired: tiers.none },
+    meta: { minAuthRequired: AUTH_TIERS.NONE },
   },
   {
     path: "/login/:redirect",
     name: "Log In Redirect",
     component: () => import("../views/Login.vue"),
-    meta: { minAuthRequired: tiers.none },
+    meta: { minAuthRequired: AUTH_TIERS.NONE },
   },
   {
     path: "/register",
     name: "Register",
     component: () => import("../views/Register.vue"),
-    meta: { minAuthRequired: tiers.none },
+    meta: { minAuthRequired: AUTH_TIERS.NONE },
   },
   {
     path: "/forgotpassword",
     name: "Forgot Password",
     component: () => import("../views/ForgotPassword.vue"),
-    meta: { minAuthRequired: tiers.none },
+    meta: { minAuthRequired: AUTH_TIERS.NONE },
   },
   {
     path: "/resetpassword/:id/:verify_hash",
     name: "Reset Password",
     component: () => import("../views/ResetPassword.vue"),
-    meta: { minAuthRequired: tiers.none },
+    meta: { minAuthRequired: AUTH_TIERS.NONE },
   },
   {
     path: "/verify/:id/:verify_hash",
     name: "Verify",
     component: () => import("../views/Verify.vue"),
-    meta: { minAuthRequired: tiers.none },
+    meta: { minAuthRequired: AUTH_TIERS.NONE },
   },
   {
     path: "/event/:id",
     name: "Event",
     component: () => import("../views/Event.vue"),
-    meta: { minAuthRequired: tiers.none },
+    meta: { minAuthRequired: AUTH_TIERS.NONE },
   },
   {
     path: "/dashboard",
     name: "Dashboard",
     component: () => import("../views/Dashboard.vue"),
-    meta: { minAuthRequired: tiers.pledge },
+    meta: { minAuthRequired: AUTH_TIERS.PLEDGE },
   },
   {
     path: "/settings",
     name: "Settings",
     component: () => import("../views/Settings.vue"),
-    meta: { minAuthRequired: tiers.pledge },
+    meta: { minAuthRequired: AUTH_TIERS.PLEDGE },
   },
   {
     path: "/editprofile",
     name: "Edit Profile",
     component: () => import("../views/EditProfile.vue"),
-    meta: { minAuthRequired: tiers.pledge },
+    meta: { minAuthRequired: AUTH_TIERS.PLEDGE },
   },
   {
     path: "/pledgedirectory",
     name: "Pledge Directory",
     component: () => import("../views/PledgeDirectory.vue"),
-    meta: { minAuthRequired: tiers.pledge },
+    meta: { minAuthRequired: AUTH_TIERS.PLEDGE },
   },
   {
     path: "/student/:id",
     name: "Student",
     component: () => import("../views/Student.vue"),
-    meta: { minAuthRequired: tiers.pledge },
+    meta: { minAuthRequired: AUTH_TIERS.PLEDGE },
   },
   {
     path: "/directory",
     name: "Directory",
     component: () => import("../views/Directory.vue"),
-    meta: { minAuthRequired: tiers.brother },
+    meta: { minAuthRequired: AUTH_TIERS.BROTHER },
   },
   {
     path: "/pledgeclasses",
     name: "Pledge Classes",
     component: () => import("../views/PledgeClasses.vue"),
-    meta: { minAuthRequired: tiers.brother },
+    meta: { minAuthRequired: AUTH_TIERS.BROTHER },
   },
   {
     path: "/pledgeclass/:id",
     name: "Pledge Class",
     component: () => import("../views/PledgeClass.vue"),
-    meta: { minAuthRequired: tiers.brother },
+    meta: { minAuthRequired: AUTH_TIERS.BROTHER },
   },
   {
     path: "/lineages",
     name: "Lineages",
     component: () => import("../views/Lineages.vue"),
-    meta: { minAuthRequired: tiers.brother },
+    meta: { minAuthRequired: AUTH_TIERS.BROTHER },
   },
   {
     path: "/lineage/:id",
     name: "Lineage",
     component: () => import("../views/Lineage.vue"),
-    meta: { minAuthRequired: tiers.brother },
+    meta: { minAuthRequired: AUTH_TIERS.BROTHER },
   },
   {
     path: "/officers",
     name: "Officers",
     component: () => import("../views/Officers.vue"),
-    meta: { minAuthRequired: tiers.brother },
+    meta: { minAuthRequired: AUTH_TIERS.BROTHER },
   },
   {
     path: "/attendance",
     name: "Attendance",
     component: () => import("../views/Attendance.vue"),
-    meta: { minAuthRequired: tiers.active },
+    meta: { minAuthRequired: AUTH_TIERS.ACTIVE },
   },
   {
     path: "/standing",
     name: "Brother Standing",
     component: () => import("../views/BrotherStanding.vue"),
-    meta: { minAuthRequired: tiers.active },
+    meta: { minAuthRequired: AUTH_TIERS.ACTIVE },
   },
   {
     path: "/createevent",
     name: "Create Event",
     component: () => import("../views/CreateEvent.vue"),
-    meta: { minAuthRequired: tiers.committee },
+    meta: { minAuthRequired: AUTH_TIERS.COMMITTEE },
   },
   {
     path: "/editevent/:id",
     name: "Edit Event",
     component: () => import("../views/EditEvent.vue"),
-    meta: { minAuthRequired: tiers.committee },
+    meta: { minAuthRequired: AUTH_TIERS.COMMITTEE },
   },
   {
     path: "/editstudent/:id",
     name: "Edit Student",
     component: () => import("../views/EditStudent.vue"),
-    meta: { minAuthRequired: tiers.officer },
+    meta: { minAuthRequired: AUTH_TIERS.OFFICER },
   },
   {
     path: "/create",
     name: "Create Student",
     component: () => import("../views/CreateStudent.vue"),
-    meta: { minAuthRequired: tiers.officer },
+    meta: { minAuthRequired: AUTH_TIERS.OFFICER },
   },
   {
     path: "/initiate",
     name: "Initiate Pledges",
     component: () => import("../views/Initiate.vue"),
-    meta: { minAuthRequired: tiers.officer },
+    meta: { minAuthRequired: AUTH_TIERS.OFFICER },
   },
   {
     path: "/updateofficers",
     name: "Update Officers",
     component: () => import("../views/UpdateOfficers.vue"),
-    meta: { minAuthRequired: tiers.all },
+    meta: { minAuthRequired: AUTH_TIERS.ALL },
   },
   {
     path: "/:catchAll(.*)",
     name: "Not Found",
     component: () => import("../views/NotFound.vue"),
-    meta: { minAuthRequired: tiers.none },
+    meta: { minAuthRequired: AUTH_TIERS.NONE },
   },
 ];
 

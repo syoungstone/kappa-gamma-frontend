@@ -44,6 +44,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 export default {
   computed: {
     submitDisabled() {
@@ -52,6 +53,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       form: {
         id: null,
         verify_hash: null,
@@ -67,7 +69,7 @@ export default {
       this.form.id = this.$route.params.id;
       this.form.verify_hash = this.$route.params.verify_hash;
       axios
-        .post(this.$apiUrl + "reset_password.php", JSON.stringify(this.form))
+        .post(API_URL + "reset_password.php", JSON.stringify(this.form))
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
           this.$router.push("/login", () => {});

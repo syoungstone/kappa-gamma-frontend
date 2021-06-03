@@ -4,7 +4,9 @@
     <div
       id="records-exist"
       v-if="
-        $store.state.permissionTier >= $tierOfficer && recordsExist && !editing
+        $store.state.permissionTier >= AUTH_TIERS.OFFICER &&
+        recordsExist &&
+        !editing
       "
     >
       <div id="records-message">
@@ -19,7 +21,7 @@
     </div>
     <b-table
       class="b-table"
-      v-if="recordsExist || $store.state.permissionTier >= $tierOfficer"
+      v-if="recordsExist || $store.state.permissionTier >= AUTH_TIERS.OFFICER"
       striped
       hover
       :items="data.attendance"
@@ -32,7 +34,7 @@
       <template #cell(present)="row">
         <div
           v-if="
-            $store.state.permissionTier < $tierOfficer ||
+            $store.state.permissionTier < AUTH_TIERS.OFFICER ||
             (recordsExist && !editing)
           "
         >
@@ -48,7 +50,7 @@
       <template #cell(excused)="row">
         <div
           v-if="
-            $store.state.permissionTier < $tierOfficer ||
+            $store.state.permissionTier < AUTH_TIERS.OFFICER ||
             (recordsExist && !editing)
           "
         >
@@ -72,7 +74,7 @@
     <h5 v-else>No attendance records exist for this event.</h5>
     <div
       v-if="
-        $store.state.permissionTier >= $tierOfficer &&
+        $store.state.permissionTier >= AUTH_TIERS.OFFICER &&
         (!recordsExist || editing)
       "
       id="bottom-buttons"
@@ -87,6 +89,7 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 export default {
   name: "EventList",
   props: {
@@ -99,6 +102,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       loaded: false,
       showEventAttendance: false,
       data: {
@@ -123,7 +127,7 @@ export default {
   },
   created() {
     axios
-      .get(this.$apiUrl + "read_active.php", {
+      .get(API_URL + "read_active.php", {
         headers: { Authorization: this.$store.state.jwt },
       })
       .then((response) => {
@@ -140,7 +144,7 @@ export default {
     },
     getRecords() {
       axios
-        .get(this.$apiUrl + "read_attendance.php?event=" + this.eventId, {
+        .get(API_URL + "read_attendance.php?event=" + this.eventId, {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -176,7 +180,7 @@ export default {
     onSubmit() {
       this.data.event_id = this.eventId;
       axios
-        .post(this.$apiUrl + "submit_attendance.php", this.data, {
+        .post(API_URL + "submit_attendance.php", this.data, {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

@@ -2,7 +2,10 @@
   <div class="wide-wrapper">
     <h1>Lineages</h1>
     <div v-if="loaded">
-      <div v-if="$store.state.permissionTier >= $tierOfficer" id="create-new">
+      <div
+        v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
+        id="create-new"
+      >
         <b-modal
           id="delete-lineage-modal"
           ref="modal"
@@ -63,7 +66,7 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.permissionTier >= $tierOfficer"
+            v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
             size="sm"
             variant="danger"
             @click="prepareDeletion(row.item)"
@@ -79,13 +82,14 @@
 
 <script>
 import axios from "axios";
+import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   components: {
     LoadingSpinner,
   },
   created() {
-    if (this.$store.state.permissionTier >= this.$tierOfficer) {
+    if (this.$store.state.permissionTier >= AUTH_TIERS.OFFICER) {
       this.readBrothers();
     } else {
       this.load();
@@ -93,6 +97,7 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       lineages: null,
       brothers: null,
       fields: [
@@ -140,7 +145,7 @@ export default {
       } else {
         axios
           .post(
-            this.$apiUrl + "create_lineage.php",
+            API_URL + "create_lineage.php",
             JSON.stringify(this.newLineage),
             { headers: { Authorization: this.$store.state.jwt } }
           )
@@ -158,7 +163,7 @@ export default {
     },
     readBrothers() {
       axios
-        .get(this.$apiUrl + "read_brother_names.php", {
+        .get(API_URL + "read_brother_names.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -171,7 +176,7 @@ export default {
     },
     load() {
       axios
-        .get(this.$apiUrl + "read_lineages.php", {
+        .get(API_URL + "read_lineages.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -188,12 +193,9 @@ export default {
     },
     deleteLineage() {
       axios
-        .delete(
-          this.$apiUrl + "delete_lineage.php?id=" + this.toDelete.lineage_id,
-          {
-            headers: { Authorization: this.$store.state.jwt },
-          }
-        )
+        .delete(API_URL + "delete_lineage.php?id=" + this.toDelete.lineage_id, {
+          headers: { Authorization: this.$store.state.jwt },
+        })
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
           this.load();
