@@ -99,11 +99,15 @@
                 <dt>Email(s)</dt>
                 <dd>
                   <div v-for="email in data.emails" :key="email">
-                    {{ email }}
+                    <a :href="'mailto:' + email" target="_blank">{{ email }}</a>
                   </div>
                 </dd>
                 <dt>Phone</dt>
-                <dd>{{ data.phone_number }}</dd>
+                <dd>
+                  <a :href="'tel:' + data.phone_number">{{
+                    formatPhone(data.phone_number)
+                  }}</a>
+                </dd>
               </dl>
             </b-card-body>
           </b-collapse>
@@ -171,6 +175,16 @@ export default {
       } else {
         this.$router.push("/editprofile", () => {});
       }
+    },
+    formatPhone(numberString) {
+      return (
+        "(" +
+        numberString.substring(0, 3) +
+        ") " +
+        numberString.substring(3, 6) +
+        "-" +
+        numberString.substring(6)
+      );
     },
   },
 };

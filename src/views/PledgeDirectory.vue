@@ -22,6 +22,11 @@
         :per-page="perPage"
         sort-icon-left
       >
+        <template #cell(phone)="row">
+          <a :href="'tel:' + row.item.phone_number">
+            {{ formatPhone(row.item.phone_number) }}
+          </a>
+        </template>
         <template #cell(actions)="row">
           <b-button
             class="select-button"
@@ -107,7 +112,7 @@ export default {
               sortable: true,
             },
             {
-              key: "phone_number",
+              key: "phone",
               sortable: false,
             },
           ];
@@ -137,7 +142,7 @@ export default {
               sortable: true,
             },
             {
-              key: "phone_number",
+              key: "phone",
               sortable: false,
             },
             { key: "actions", label: "Actions", sortable: false },
@@ -146,6 +151,16 @@ export default {
         .catch((error) =>
           this.$root.$children[0].showError(error.response.statusText)
         );
+    },
+    formatPhone(numberString) {
+      return (
+        "(" +
+        numberString.substring(0, 3) +
+        ") " +
+        numberString.substring(3, 6) +
+        "-" +
+        numberString.substring(6)
+      );
     },
     viewStudent(id) {
       this.$router.push("/student/" + id, () => {});

@@ -284,11 +284,11 @@
       >
         <b-form-input
           id="input-1"
-          v-model="data.phone_number"
+          v-model="phoneString"
           type="tel"
           :state="state1"
-          required
           @input="updateState1()"
+          required
         ></b-form-input>
       </b-form-group>
 
@@ -329,6 +329,24 @@ export default {
     },
     isBrother() {
       return this.data.is_pledge == 0;
+    },
+    phoneNumberIsValid() {
+      if (this.phoneNumber == null || this.phoneNumber == "") {
+        return null;
+      }
+      const regex = new RegExp("[0-9]{10}");
+      return regex.test(this.phoneNumber) && this.phoneNumber.length == 10;
+    },
+    gradYearIsValid() {
+      if (this.data.grad_year == null) {
+        return null;
+      }
+      return this.data.grad_year >= 1998 && this.data.grad_year < 2100;
+    },
+    phoneNumber() {
+      return this.phoneString == null || this.phoneString.match(/\d+/g) == null
+        ? null
+        : this.phoneString.match(/\d+/g).join("");
     },
   },
   created() {
@@ -694,6 +712,7 @@ export default {
         { value: "early alum", text: "Early alum" },
         { value: "alumni", text: "Alumni" },
       ],
+      phoneString: null,
       newEntry: false,
       created: false,
       showPhotoModal: false,
@@ -721,6 +740,7 @@ export default {
                 : this.stateList.find(
                     (x) => x.abbreviation == this.data.home_state
                   );
+            this.phoneString = this.formatPhone(this.data.phone_number);
             this.loaded = true;
           })
           .catch((error) =>
@@ -733,6 +753,12 @@ export default {
     },
     show() {
       this.showPhotoModal = true;
+    },
+    updateState1() {
+      this.state1 = this.phoneNumberIsValid;
+    },
+    updateState2() {
+      this.state2 = this.gradYearIsValid;
     },
     updatePhoto(photo) {
       this.data.photo = photo;
@@ -765,6 +791,7 @@ export default {
     sendData() {
       this.data.home_state =
         this.newState == null ? null : this.newState.abbreviation;
+      this.data.phone_number = this.phoneNumber;
       let apiCall = this.newEntry
         ? "create_student.php"
         : "update_student.php?id=" + this.data.id;
@@ -785,15 +812,6 @@ export default {
         .catch((error) => {
           this.$root.$children[0].showError(error.response.statusText);
         });
-    },
-    updateState1() {
-      const regex = new RegExp("[0-9]{10}");
-      this.state1 =
-        regex.test(this.data.phone_number) &&
-        this.data.phone_number.length == 10;
-    },
-    updateState2() {
-      this.state2 = this.data.grad_year >= 1998 && this.data.grad_year < 2100;
     },
     loadBigs() {
       axios
@@ -852,6 +870,16 @@ export default {
     },
     deleteEmail(index) {
       this.data.emails.splice(index, 1);
+    },
+    formatPhone(numberString) {
+      return (
+        "(" +
+        numberString.substring(0, 3) +
+        ") " +
+        numberString.substring(3, 6) +
+        "-" +
+        numberString.substring(6)
+      );
     },
     reset() {
       this.data = JSON.parse(JSON.stringify(this.defaultData));

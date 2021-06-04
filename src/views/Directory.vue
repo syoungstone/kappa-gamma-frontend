@@ -111,6 +111,17 @@
         :per-page="perPage"
         sort-icon-left
       >
+        <template #cell(phone)="row">
+          <a :href="'tel:' + row.item.phone_number">
+            {{ formatPhone(row.item.phone_number) }}
+          </a>
+        </template>
+        <template #cell(email_link)="row">
+          <div v-if="row.item.email == 'N/A'">{{ row.item.email }}</div>
+          <a v-else :href="'mailto:' + row.item.email" target="_blank">{{
+            row.item.email
+          }}</a>
+        </template>
         <template #cell(actions)="row">
           <b-button
             class="select-button"
@@ -201,12 +212,12 @@ export default {
           sortable: true,
         },
         {
-          key: "phone_number",
-          label: "Phone",
+          key: "phone",
           sortable: false,
         },
         {
-          key: "email",
+          key: "email_link",
+          label: "Email",
           sortable: false,
         },
         { key: "actions", label: "Actions", sortable: false },
@@ -330,6 +341,16 @@ export default {
           (searchMatchesFirst || searchMatchesMiddle || searchMatchesLast);
       }
       return accept;
+    },
+    formatPhone(numberString) {
+      return (
+        "(" +
+        numberString.substring(0, 3) +
+        ") " +
+        numberString.substring(3, 6) +
+        "-" +
+        numberString.substring(6)
+      );
     },
     viewStudent(id) {
       this.$router.push("/student/" + id, () => {});
