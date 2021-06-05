@@ -1,4 +1,4 @@
-export const API_URL = "http://api.vcuthetatau.org/";
+export const API_URL = "https://api.vcuthetatau.org/";
 
 export const AUTH_TIERS = Object.freeze({
   ALL: 7,

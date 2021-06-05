@@ -198,8 +198,21 @@ export default {
       );
     },
     logout() {
-      this.$store.commit("logout");
-      this.$router.push("/", () => {});
+      const axiosInstance = axios.create();
+      axiosInstance.defaults.withCredentials = true;
+      axiosInstance
+        .post(API_URL + "logout.php", {
+          withCredentials: true,
+        })
+        .then(() => {
+          this.$store.commit("logout");
+          this.$router.push("/", () => {});
+        })
+        .catch((error) => {
+          this.showError(error.response.statusText);
+          this.$store.commit("logout");
+          this.$router.push("/", () => {});
+        });
     },
     editSelf() {
       this.$router.push("/editstudent/" + this.$store.state.id, () => {});

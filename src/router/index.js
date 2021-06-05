@@ -1,8 +1,9 @@
 import Vue from "vue";
+import axios from "axios";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import store from "../store/index.js";
-import { AUTH_TIERS } from "../constants/index.js";
+import { API_URL, AUTH_TIERS } from "../constants/index.js";
 
 Vue.use(VueRouter);
 
@@ -197,12 +198,18 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  if (!store.state.loggedIn) {
-    let jwt = localStorage.getItem("kappa-gamma-jwt");
-    if (jwt) {
-      store.commit("setUser", jwt);
-    }
+router.beforeEach(async (to, from, next) => {
+  if (!store.state.loggedIn && !store.state.refreshFailed) {
+    const axiosInstance = axios.create();
+    axiosInstance.defaults.withCredentials = true;
+    await axiosInstance
+      .post(API_URL + "refresh.php")
+      .then((response) => {
+        store.commit("setUser", response.data.jwt);
+      })
+      .catch(() => {
+        store.commit("refreshFailed");
+      });
   }
   if (store.state.permissionTier < to.meta.minAuthRequired) {
     if (store.state.loggedIn) {

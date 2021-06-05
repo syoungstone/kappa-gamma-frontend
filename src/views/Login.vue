@@ -47,7 +47,9 @@ export default {
   methods: {
     onSubmit() {
       axios
-        .post(API_URL + "login.php", JSON.stringify(this.form))
+        .post(API_URL + "login.php", JSON.stringify(this.form), {
+          withCredentials: true,
+        })
         .then((response) => {
           this.$store.commit("setUser", response.data.jwt);
           let redirect = this.$route.params.redirect;

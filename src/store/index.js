@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     loggedIn: false,
+    refreshFailed: false,
     email: null,
     id: null,
     jwt: null,
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     committees: null,
   },
   mutations: {
+    refreshFailed(state) {
+      state.refreshFailed = true;
+    },
     setUser(state, jwt) {
       let base64Url = jwt.split(".")[1];
       let base64 = base64Url.replace("-", "+").replace("_", "/");
@@ -35,7 +39,6 @@ export default new Vuex.Store({
         state.isBrother = parsed.data.is_brother;
         state.position = parsed.data.position;
         state.committees = parsed.data.committees;
-        localStorage.setItem("kappa-gamma-jwt", jwt);
       }
     },
     logout(state) {
@@ -49,7 +52,6 @@ export default new Vuex.Store({
       state.lastName = null;
       state.isBrother = null;
       state.position = null;
-      localStorage.removeItem("kappa-gamma-jwt");
     },
   },
   actions: {},
