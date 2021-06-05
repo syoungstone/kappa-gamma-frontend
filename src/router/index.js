@@ -199,7 +199,10 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (!store.state.loggedIn && !store.state.refreshFailed) {
+  if (
+    (!store.state.loggedIn && !store.state.refreshFailed) ||
+    (store.state.loggedIn && store.state.jwtExpiration * 1000 <= Date.now())
+  ) {
     const axiosInstance = axios.create();
     axiosInstance.defaults.withCredentials = true;
     await axiosInstance
@@ -209,6 +212,7 @@ router.beforeEach(async (to, from, next) => {
       })
       .catch(() => {
         store.commit("refreshFailed");
+        this.$store.commit("logout");
       });
   }
   if (store.state.permissionTier < to.meta.minAuthRequired) {

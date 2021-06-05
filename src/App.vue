@@ -181,29 +181,12 @@ export default {
       },
     };
   },
-  beforeUpdate() {
-    if (
-      this.$store.state.loggedIn &&
-      this.$store.state.jwtExpiration * 1000 <= Date.now()
-    ) {
-      this.timeout();
-    }
-  },
   methods: {
-    timeout() {
-      this.logout();
-      this.showMessage(
-        "Session Expired",
-        "Your session has expired. Please log back in."
-      );
-    },
     logout() {
       const axiosInstance = axios.create();
       axiosInstance.defaults.withCredentials = true;
       axiosInstance
-        .post(API_URL + "logout.php", {
-          withCredentials: true,
-        })
+        .post(API_URL + "logout.php")
         .then(() => {
           this.$store.commit("logout");
           this.$router.push("/", () => {});

@@ -59,7 +59,7 @@ export default {
     this.setCalendarView();
   },
   beforeDestroy() {
-    window.removeEventListener("resize", this.onResize);
+    window.removeEventListener("resize", this.setCalendarView);
   },
   methods: {
     setCalendarView() {
