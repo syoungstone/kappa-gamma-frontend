@@ -68,12 +68,40 @@
       >
         <b-form-select
           id="select-0"
-          v-model="data.brother_status"
+          v-model="newBrotherStatus"
           :options="statusOptions"
           :required="
             isBrother && $store.state.permissionTier >= AUTH_TIERS.OFFICER
           "
         ></b-form-select>
+      </b-form-group>
+
+      <b-form-group
+        v-if="newlyEarlyAlum"
+        id="newly-early-alum"
+        label="Please select when this brother first went early alum:"
+        label-for="select-semester"
+      >
+        <div id="newly-early-alum-fields">
+          <b-form-select
+            id="select-semester"
+            :options="[
+              { text: 'Semester', value: null },
+              { text: 'Fall', value: 'F' },
+              { text: 'Spring', value: 'S' },
+            ]"
+            v-model="earlyAlumSemester"
+            placeholder="Semester"
+            required
+          ></b-form-select>
+          <b-form-input
+            id="input-year"
+            type="number"
+            placeholder="Year"
+            v-model="earlyAlumYear"
+            required
+          ></b-form-input>
+        </div>
       </b-form-group>
 
       <b-form-group
@@ -335,6 +363,12 @@ export default {
     isBrother() {
       return this.data.is_pledge == 0;
     },
+    newlyEarlyAlum() {
+      return (
+        this.newBrotherStatus == "early alum" &&
+        this.data.brother_status != "early alum"
+      );
+    },
     phoneNumberIsValid() {
       if (this.phoneNumber == null || this.phoneNumber == "") {
         return null;
@@ -402,6 +436,9 @@ export default {
       bigs: [],
       newBig: null,
       newState: null,
+      newBrotherStatus: null,
+      earlyAlumSemester: null,
+      earlyAlumYear: null,
       pledgeClasses: null,
       statusOptions: [
         { value: "active", text: "Active" },
@@ -437,6 +474,7 @@ export default {
                 : US_STATE_LIST.find(
                     (x) => x.abbreviation == this.data.home_state
                   );
+            this.newBrotherStatus = this.data.brother_status;
             this.phoneString = this.formatPhone(this.data.phone_number);
             this.loaded = true;
           })
@@ -481,17 +519,31 @@ export default {
           "Changes cannot be saved. Big's roll number must be lower than student's roll number."
         );
         return false;
+      } else if (
+        this.newlyEarlyAlum &&
+        (this.earlyAlumYear > this.data.grad_year || this.earlyAlumYear < 1998)
+      ) {
+        this.$root.$children[0].showError(
+          "Year in which brother went early alum cannot be earlier than 1998 or later than brother's graduation year."
+        );
       } else {
         return true;
       }
     },
     sendData() {
+      this.data.early_alum_semester = this.newlyEarlyAlum
+        ? this.earlyAlumSemester
+        : null;
+      this.data.early_alum_year = this.newlyEarlyAlum
+        ? this.earlyAlumYear
+        : null;
       this.data.home_state =
         this.newState == null ||
         this.data.home_country != "United States of America"
           ? null
           : this.newState.abbreviation;
       this.data.phone_number = this.phoneNumber;
+      this.data.brother_status = this.newBrotherStatus;
       let apiCall = this.newEntry
         ? "create_student.php"
         : "update_student.php?id=" + this.data.id;
@@ -583,6 +635,10 @@ export default {
     },
     reset() {
       this.data = JSON.parse(JSON.stringify(this.defaultData));
+      this.newBrotherStatus = null;
+      this.phoneString = null;
+      this.state1 = null;
+      this.state2 = null;
       this.created = false;
     },
     viewCreated() {
@@ -609,6 +665,15 @@ h3 {
 }
 #show {
   cursor: pointer;
+}
+#newly-early-alum {
+  padding: 10px;
+  border-radius: 10px;
+  background-color: var(--ot-gold);
+}
+#newly-early-alum-fields {
+  display: flex;
+  gap: 10px;
 }
 .selection-button {
   margin: 10px;
