@@ -306,7 +306,7 @@ export default {
         this.committeeOptions = this.$store.state.committees;
       } else {
         axios
-          .get(API_URL + "read_committees.php", {
+          .get(API_URL + "read_committee_names.php", {
             headers: { Authorization: this.$store.state.jwt },
           })
           .then((response) => {
