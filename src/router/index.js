@@ -212,7 +212,7 @@ router.beforeEach(async (to, from, next) => {
       })
       .catch(() => {
         store.commit("refreshFailed");
-        this.$store.commit("logout");
+        store.commit("logout");
       });
   }
   if (store.state.permissionTier < to.meta.minAuthRequired) {
