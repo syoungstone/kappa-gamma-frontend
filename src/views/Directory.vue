@@ -206,21 +206,10 @@ export default {
           label: "Last Name",
           sortable: true,
         },
-        {
-          key: "name_first",
-          label: "First Name",
-          sortable: true,
-        },
-        {
-          key: "phone",
-          sortable: false,
-        },
-        {
-          key: "email_link",
-          label: "Email",
-          sortable: false,
-        },
-        { key: "actions", label: "Actions", sortable: false },
+        { key: "name_first", label: "First Name" },
+        { key: "phone" },
+        { key: "email_link", label: "Email" },
+        { key: "actions", label: "Actions" },
       ],
       data: [],
       isPledgeOptions: [

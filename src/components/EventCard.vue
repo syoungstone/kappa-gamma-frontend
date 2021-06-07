@@ -5,6 +5,37 @@
       <h3>{{ error }}</h3>
     </div>
     <div v-else-if="loaded">
+      <b-modal id="delete-modal" title="Repeat Event" v-model="showDeleteModal">
+        This is a repeat event. Would you like to delete this event only, this
+        and following events, or all events in this sequence?<br /><br />Note
+        that deleting an event will also erase attendance records for that
+        event.
+        <template #modal-footer="{}">
+          <b-button
+            class="select-button delete-button"
+            @click="showDeleteModal = false"
+            >Cancel</b-button
+          >
+          <b-button
+            class="select-button delete-button"
+            variant="primary"
+            @click="deleteEvent()"
+            >Delete This Event Only</b-button
+          >
+          <b-button
+            class="select-button delete-button"
+            variant="warning"
+            @click="deleteFollowing()"
+            >Delete This And Following Events</b-button
+          >
+          <b-button
+            class="select-button delete-button"
+            variant="danger"
+            @click="deleteAll()"
+            >Delete All Events In Sequence</b-button
+          >
+        </template>
+      </b-modal>
       <div class="event-card">
         <h3>
           {{
@@ -44,26 +75,24 @@
           Hosted by the {{ event.committee_name }} committee
         </p>
         <p v-if="event.event_description">{{ event.event_description }}</p>
-        <div
-          v-if="$store.state.permissionTier >= AUTH_TIERS.BROTHER && !deleting"
-        >
+        <div v-if="onCommittee && !showDeleteWarning">
           <b-button class="select-button" variant="primary" @click="editEvent()"
             >Edit</b-button
           >
           <b-button
             class="select-button"
             variant="danger"
-            @click="deleting = true"
+            @click="startDelete()"
             >Delete</b-button
           >
         </div>
-        <div v-if="deleting && event.repeat_id == null">
+        <div id="delete-options" v-if="showDeleteWarning">
           <h5>
             Are you sure you want to delete this event? Deleting an event will
             also erase attendance records for that event.
           </h5>
           <div>
-            <b-button class="select-button" @click="deleting = false"
+            <b-button class="select-button" @click="showDeleteWarning = false"
               >Cancel</b-button
             >
             <b-button
@@ -74,49 +103,16 @@
             >
           </div>
         </div>
-        <div id="delete-options" v-else-if="deleting">
-          <h5>
-            This is a repeat event. Would you like to delete this event only,
-            this and following events, or all events in this sequence?<br /><br />Note
-            that deleting an event will also erase attendance records for that
-            event.
-          </h5>
-          <div>
-            <b-button
-              class="select-button delete-button"
-              @click="deleting = false"
-              >Cancel</b-button
-            >
-            <b-button
-              class="select-button delete-button"
-              variant="primary"
-              @click="deleteEvent()"
-              >Delete This Event Only</b-button
-            >
-            <b-button
-              class="select-button delete-button"
-              variant="warning"
-              @click="deleteFollowing()"
-              >Delete This And Following Events</b-button
-            >
-            <b-button
-              class="select-button delete-button"
-              variant="danger"
-              @click="deleteAll()"
-              >Delete All Events In Sequence</b-button
-            >
-          </div>
-        </div>
       </div>
       <div
         id="attendance-link"
-        v-if="$store.state.permissionTier >= AUTH_TIERS.BROTHER"
+        v-if="$store.state.permissionTier >= AUTH_TIERS.ACTIVE"
       >
         <b-link @click="showAttendance = !showAttendance">
           {{
             showAttendance
               ? "Hide Attendance"
-              : $store.state.permissionTier >= AUTH_TIERS.OFFICER
+              : onCommittee
               ? "Take Attendance"
               : "Show Attendance"
           }}
@@ -149,7 +145,8 @@ export default {
     return {
       AUTH_TIERS: AUTH_TIERS,
       showAttendance: false,
-      deleting: false,
+      showDeleteModal: false,
+      showDeleteWarning: false,
       deleteAllFollowing: false,
       deleteAllInSequence: false,
       startDateString: null,
@@ -160,6 +157,18 @@ export default {
       error: null,
       loaded: false,
     };
+  },
+  computed: {
+    onCommittee() {
+      return (
+        this.$store.state.permissionTier >= AUTH_TIERS.OFFICER ||
+        (this.event.committee != null &&
+          this.$store.state.committees != null &&
+          this.$store.state.committees.find(
+            (x) => x.value == this.event.committee
+          ))
+      );
+    },
   },
   created() {
     axios
@@ -195,6 +204,13 @@ export default {
     editEvent() {
       this.$router.push("/editevent/" + this.eventId, () => {});
     },
+    startDelete() {
+      if (this.event.repeat_id == null) {
+        this.showDeleteWarning = true;
+      } else {
+        this.showDeleteModal = true;
+      }
+    },
     deleteFollowing() {
       this.deleteAllFollowing = true;
       this.deleteAllInSequence = false;
@@ -220,10 +236,12 @@ export default {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
+          this.showDeleteModal = false;
           this.$root.$children[0].showSuccess(response.data.message);
           this.$router.push("/dashboard", () => {});
         })
         .catch((error) => {
+          this.showDeleteModal = false;
           this.$root.$children[0].showError(error.response.statusText);
           if (error.response.status == 404) {
             this.$router.push("/404", () => {});
@@ -253,6 +271,7 @@ h4 {
   margin-top: 10px;
 }
 #delete-options {
+  margin-top: 15px;
   padding: 15px;
   background-color: white;
   border-radius: 10px;

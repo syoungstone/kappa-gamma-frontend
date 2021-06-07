@@ -39,7 +39,7 @@
       </b-form-group>
 
       <div id="checkboxes">
-        <b-form-group>
+        <b-form-group v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER">
           <b-form-checkbox
             id="checkbox-meeting"
             v-model="event.is_chapter_meeting"
@@ -153,13 +153,19 @@
       <b-form-group
         v-if="event.is_chapter_meeting == 0"
         id="select-group-committee"
-        label="Sponsoring committee (optional):"
+        :label="
+          'Sponsoring committee' +
+          ($store.state.permissionTier >= AUTH_TIERS.OFFICER
+            ? ' (optional):'
+            : ':')
+        "
         label-for="select-committee"
       >
         <b-form-select
           id="select-committee"
           v-model="event.committee"
           :options="committeeOptions"
+          :required="$store.state.permissionTier < AUTH_TIERS.OFFICER"
         ></b-form-select>
       </b-form-group>
 

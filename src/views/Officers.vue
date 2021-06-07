@@ -90,7 +90,7 @@ export default {
       }
     },
     editOfficers() {
-      this.$router.push("/updateofficers/", () => {});
+      this.$router.push("/editofficers", () => {});
     },
     parseMajors() {
       let i;

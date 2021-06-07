@@ -56,17 +56,19 @@
         :fields="fields"
         id="lineage-table"
       >
+        <template #cell(name)="row">
+          <router-link :to="'/lineage/' + row.item.lineage_id">{{
+            row.item.lineage_name
+          }}</router-link>
+        </template>
+        <template #cell(founder_field)="row">
+          <router-link :to="'/student/' + row.item.founder">{{
+            row.item.founder_name
+          }}</router-link>
+        </template>
         <template #cell(actions)="row">
           <b-button
             class="select-button"
-            size="sm"
-            @click="viewLineage(row.item.lineage_id)"
-          >
-            View
-          </b-button>
-          <b-button
-            class="select-button"
-            v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
             size="sm"
             variant="danger"
             @click="prepareDeletion(row.item)"
@@ -100,17 +102,6 @@ export default {
       AUTH_TIERS: AUTH_TIERS,
       lineages: null,
       brothers: null,
-      fields: [
-        {
-          key: "lineage_name",
-          label: "Name",
-        },
-        {
-          key: "founder_name",
-          label: "Founder",
-        },
-        { key: "actions", label: "Actions" },
-      ],
       newFounder: null,
       newLineage: {
         lineage_name: null,
@@ -124,6 +115,18 @@ export default {
       },
       loaded: false,
     };
+  },
+  computed: {
+    fields() {
+      let fields = [
+        { key: "name" },
+        { key: "founder_field", label: "Founder" },
+      ];
+      if (this.$store.state.permissionTier >= AUTH_TIERS.OFFICER) {
+        fields.push({ key: "actions" });
+      }
+      return fields;
+    },
   },
   methods: {
     onSubmit() {
@@ -224,9 +227,6 @@ export default {
 .founder-select {
   margin-top: 8px;
   margin-right: 10px;
-}
-.select-button {
-  margin: 5px;
 }
 #lineage-table {
   max-width: 500px;

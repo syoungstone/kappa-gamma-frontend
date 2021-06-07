@@ -22,6 +22,19 @@ export default {
       event: null,
     };
   },
+  computed: {
+    onCommittee() {
+      return (
+        this.$store.state.permissionTier >= AUTH_TIERS.OFFICER ||
+        (this.event != null &&
+          this.event.committee != null &&
+          this.$store.state.committees != null &&
+          this.$store.state.committees.find(
+            (x) => x.value == this.event.committee
+          ))
+      );
+    },
+  },
   created() {
     axios
       .get(API_URL + "read_event.php?id=" + this.$route.params.id, {
@@ -29,7 +42,11 @@ export default {
       })
       .then((response) => {
         this.event = response.data;
-        this.loaded = true;
+        if (this.onCommittee) {
+          this.loaded = true;
+        } else {
+          this.$router.push("/dashboard", () => {});
+        }
       })
       .catch((error) => {
         this.$root.$children[0].showError(error.response.statusText);

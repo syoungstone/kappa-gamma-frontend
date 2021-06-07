@@ -46,23 +46,17 @@
         :fields="fields"
         id="class-table"
       >
-        <template #cell(semestername)="data">
-          {{ data.item.semester == "F" ? "Fall " : "Spring " }}
+        <template #cell(class_name_field)="row">
+          <router-link
+            :to="'/pledgeclass/' + row.item.semester + row.item.accounting_year"
+          >
+            {{ row.item.class_name }}
+          </router-link>
+        </template>
+        <template #cell(semester_name)="row">
+          {{ row.item.semester == "F" ? "Fall " : "Spring " }}
         </template>
         <template #cell(actions)="row">
-          <b-button
-            class="select-button"
-            size="sm"
-            @click="
-              viewPledgeClass(
-                row.item.semester,
-                row.item.accounting_year,
-                row.item.num_students
-              )
-            "
-          >
-            View
-          </b-button>
           <b-button
             class="select-button"
             v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
@@ -96,24 +90,6 @@ export default {
     return {
       AUTH_TIERS: AUTH_TIERS,
       pledgeClasses: null,
-      fields: [
-        {
-          key: "class_name",
-        },
-        {
-          key: "semestername",
-          label: "Semester",
-        },
-        {
-          key: "accounting_year",
-          label: "Year",
-        },
-        {
-          key: "num_students",
-          label: "Size",
-        },
-        { key: "actions", label: "Actions" },
-      ],
       newPledgeClass: {
         class_name: null,
         accounting_year: null,
@@ -124,6 +100,32 @@ export default {
       },
       loaded: false,
     };
+  },
+  computed: {
+    fields() {
+      let fields = [
+        {
+          key: "class_name_field",
+          label: "Class Name",
+        },
+        {
+          key: "semester_name",
+          label: "Semester",
+        },
+        {
+          key: "accounting_year",
+          label: "Year",
+        },
+        {
+          key: "num_students",
+          label: "Size",
+        },
+      ];
+      if (this.$store.state.permissionTier >= AUTH_TIERS.OFFICER) {
+        fields.push({ key: "actions" });
+      }
+      return fields;
+    },
   },
   methods: {
     onSubmit() {
@@ -199,15 +201,6 @@ export default {
           );
       }
     },
-    viewPledgeClass(semester, year, num_students) {
-      if (num_students == 0) {
-        let modalTitle = "Nothing to Show";
-        let modalMessage = "This pledge class has no members.";
-        this.$root.$children[0].showMessage(modalTitle, modalMessage);
-      } else {
-        this.$router.push("/pledgeclass/" + semester + year, () => {});
-      }
-    },
     classNameExists(pledgeClass) {
       return pledgeClass.class_name == this.newPledgeClass.class_name;
     },
@@ -224,9 +217,6 @@ export default {
 <style scoped>
 h4 {
   margin-bottom: 20px;
-}
-.select-button {
-  margin: 5px;
 }
 #class-table {
   max-width: 500px;

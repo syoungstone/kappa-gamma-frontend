@@ -138,6 +138,18 @@ const routes = [
     meta: { minAuthRequired: AUTH_TIERS.BROTHER },
   },
   {
+    path: "/committees",
+    name: "Committees",
+    component: () => import("../views/Committees.vue"),
+    meta: { minAuthRequired: AUTH_TIERS.ACTIVE },
+  },
+  {
+    path: "/committee/:id",
+    name: "Committee",
+    component: () => import("../views/Committee.vue"),
+    meta: { minAuthRequired: AUTH_TIERS.ACTIVE },
+  },
+  {
     path: "/attendance",
     name: "Attendance",
     component: () => import("../views/Attendance.vue"),
@@ -162,6 +174,12 @@ const routes = [
     meta: { minAuthRequired: AUTH_TIERS.COMMITTEE },
   },
   {
+    path: "/editcommittees",
+    name: "Edit Committees",
+    component: () => import("../views/EditCommittees.vue"),
+    meta: { minAuthRequired: AUTH_TIERS.OFFICER },
+  },
+  {
     path: "/editstudent/:id",
     name: "Edit Student",
     component: () => import("../views/EditStudent.vue"),
@@ -180,9 +198,9 @@ const routes = [
     meta: { minAuthRequired: AUTH_TIERS.OFFICER },
   },
   {
-    path: "/updateofficers",
-    name: "Update Officers",
-    component: () => import("../views/UpdateOfficers.vue"),
+    path: "/editofficers",
+    name: "Edit Officers",
+    component: () => import("../views/EditOfficers.vue"),
     meta: { minAuthRequired: AUTH_TIERS.ALL },
   },
   {

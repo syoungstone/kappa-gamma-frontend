@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="content">
-      <b-navbar id="navbar" toggleable="lg" type="dark">
+      <b-navbar id="navbar" toggleable="md" type="dark">
         <b-navbar-brand to="/">
           <img
             id="nav-logo"
@@ -21,11 +21,16 @@
               text="Membership"
             >
               <b-dropdown-item to="/directory">Directory</b-dropdown-item>
+              <b-dropdown-item to="/officers">Officers</b-dropdown-item>
+              <b-dropdown-item
+                v-if="$store.state.permissionTier >= AUTH_TIERS.ACTIVE"
+                to="/committees"
+                >Committees</b-dropdown-item
+              >
               <b-dropdown-item to="/pledgeclasses"
                 >Pledge Classes</b-dropdown-item
               >
               <b-dropdown-item to="/lineages">Lineages</b-dropdown-item>
-              <b-dropdown-item to="/officers">Officers</b-dropdown-item>
               <b-dropdown-item
                 v-if="$store.state.permissionTier >= AUTH_TIERS.ACTIVE"
                 to="/attendance"
@@ -60,7 +65,7 @@
               >
               <b-dropdown-item
                 v-if="$store.state.permissionTier == AUTH_TIERS.ALL"
-                to="/updateofficers"
+                to="/editofficers"
                 >Update Officers</b-dropdown-item
               >
             </b-nav-item-dropdown>

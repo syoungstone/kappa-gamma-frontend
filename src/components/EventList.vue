@@ -1,7 +1,7 @@
 <template>
   <div v-if="loaded">
     <div v-if="events && events.length > 0">
-      <h3 v-if="date == null">Upcoming events today:</h3>
+      <h3 v-if="date == null && eventList == null">Upcoming events today:</h3>
       <div
         class="event"
         v-for="event in events"
@@ -9,16 +9,14 @@
         @click="eventSelected(event.id, event.title)"
       >
         <strong>{{ event.title }}</strong>
-        <br />{{
-          event.allDay == 1
-            ? "All day"
-            : getDisplayTime(event.start) + " to " + getDisplayTime(event.end)
-        }}
+        <br />{{ getTimeString(event) }}
       </div>
     </div>
     <h3 v-else>
       {{
-        date
+        eventList
+          ? "No events on calendar"
+          : date
           ? "No events scheduled for this date."
           : "No upcoming events today!"
       }}
@@ -34,6 +32,7 @@ export default {
   name: "EventList",
   props: {
     date: String,
+    eventList: Array,
   },
   data() {
     return {
@@ -55,23 +54,31 @@ export default {
   },
   methods: {
     getEvents() {
-      if (this.date) {
-        this.getFromAndToFromDate();
+      if (this.eventList) {
+        this.events = this.eventList;
+        this.loaded = true;
       } else {
-        this.getFromAndToUpcoming();
+        if (this.date) {
+          this.getFromAndToFromDate();
+        } else {
+          this.getFromAndToUpcoming();
+        }
+        axios
+          .get(
+            API_URL + "read_events.php?from=" + this.from + "&to=" + this.to,
+            {
+              headers: { Authorization: this.$store.state.jwt },
+            }
+          )
+          .then((response) => {
+            this.events = response.data.body;
+            this.loaded = true;
+          })
+          .catch((error) => {
+            this.error = error.response.statusText;
+            this.loaded = true;
+          });
       }
-      axios
-        .get(API_URL + "read_events.php?from=" + this.from + "&to=" + this.to, {
-          headers: { Authorization: this.$store.state.jwt },
-        })
-        .then((response) => {
-          this.events = response.data.body;
-          this.loaded = true;
-        })
-        .catch((error) => {
-          this.error = error.response.statusText;
-          this.loaded = true;
-        });
     },
     getFromAndToUpcoming() {
       let date = new Date();
@@ -109,6 +116,38 @@ export default {
     },
     eventSelected(id, title) {
       this.$emit("event-selected", id, title);
+    },
+    getTimeString(event) {
+      if (this.eventList) {
+        let startDate = this.getDisplayDate(event.start);
+        let endDate = this.getDisplayDate(event.end);
+        if (event.allDay == 1) {
+          return startDate == endDate
+            ? startDate + " all day"
+            : startDate + " to " + endDate;
+        } else {
+          let startTime = this.getDisplayTime(event.start);
+          let endTime = this.getDisplayTime(event.end);
+          return startDate == endDate
+            ? startDate + " " + startTime + " to " + endTime
+            : startDate + " " + startTime + " to " + endDate + " " + endTime;
+        }
+      } else {
+        return event.allDay == 1
+          ? "All day"
+          : this.getDisplayTime(event.start) +
+              " to " +
+              this.getDisplayTime(event.end);
+      }
+    },
+    getDisplayDate(datetime) {
+      return (
+        datetime.substring(5, 7) +
+        "/" +
+        datetime.substring(8, 10) +
+        "/" +
+        datetime.substring(2, 4)
+      );
     },
     getDisplayTime(datetime) {
       let time = datetime.split(" ");
