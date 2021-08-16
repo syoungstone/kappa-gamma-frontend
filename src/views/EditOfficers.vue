@@ -1,10 +1,12 @@
 <template>
-  <div class="wide-wrapper">
+  <div class="narrow-wrapper">
     <b-modal
       id="not-good-standing-modal"
       v-model="notGoodStanding"
       title="Brother Not In Good Standing"
       @ok="submitData"
+      @cancel="load"
+      @close="load"
     >
       The brother you selected for this position is not in good standing. Are
       you sure you wish to proceed?
@@ -21,29 +23,25 @@
             <p class="officer-label">
               <strong>{{ officer.office }}</strong>
             </p>
-            <vue-single-select
-              class="officer-select"
-              v-model="officer.brother"
-              :options="actives"
-              option-key="id"
-              optionValue="id"
-              required
-              :getOptionDescription="getCustomDescription"
-            ></vue-single-select>
             <b-form-checkbox
               v-model="officer.display_publicly"
               class="mb-2 mr-sm-2 mb-sm-0 officer-checkbox"
               :value="1"
               :unchecked-value="0"
+              @change="saveShowOnAboutPage(officer)"
               >Show on About page</b-form-checkbox
             >
-            <b-button
-              variant="primary"
-              @click="save(officer.office)"
-              class="officer-button"
-              >Save Changes</b-button
-            >
           </div>
+          <vue-single-select
+            class="officer-select"
+            v-model="officer.brother"
+            :options="actives"
+            option-key="id"
+            optionValue="id"
+            required
+            :getOptionDescription="getCustomDescription"
+            @input="saveOfficer(officer)"
+          ></vue-single-select>
         </b-form>
       </b-card>
     </div>
@@ -60,18 +58,7 @@ export default {
     LoadingSpinner,
   },
   created() {
-    axios
-      .get(API_URL + "read_officers_internal.php", {
-        headers: { Authorization: this.$store.state.jwt },
-      })
-      .then((response) => {
-        this.officers = response.data.body;
-        this.getActives();
-      })
-      .catch((error) => {
-        this.loaded = true;
-        this.$root.$children[0].showError(error.response.statusText);
-      });
+    this.getActives();
   },
   data() {
     return {
@@ -91,11 +78,25 @@ export default {
         })
         .then((response) => {
           this.actives = response.data.body;
-          this.officers.forEach((x) => {
+          this.load();
+        })
+        .catch((error) => {
+          this.loaded = true;
+          this.$root.$children[0].showError(error.response.statusText);
+        });
+    },
+    load() {
+      axios
+        .get(API_URL + "read_officers_internal.php", {
+          headers: { Authorization: this.$store.state.jwt },
+        })
+        .then((response) => {
+          response.data.body.forEach((x) => {
             if (x.id != null) {
               x.brother = this.actives.find((y) => y.id == x.id);
             }
           });
+          this.officers = response.data.body;
           this.loaded = true;
         })
         .catch((error) => {
@@ -106,38 +107,50 @@ export default {
     getCustomDescription(option) {
       return option.name_first + " " + option.name_last;
     },
-    save(office) {
-      this.newOfficer = this.officers.find((x) => x.office == office);
-      this.newOfficer.id = this.newOfficer.brother
-        ? this.newOfficer.brother.id
-        : null;
-      if (
-        this.newOfficer.id == null ||
-        !this.officers.find(
-          (x) =>
-            x.id == this.newOfficer.id && x.office != this.newOfficer.office
-        )
-      ) {
-        let activesIndex = this.actives.findIndex(
-          (x) => x.id == this.newOfficer.id
-        );
+    saveOfficer(officer) {
+      if (this.hasChanged(officer)) {
+        this.newOfficer = officer;
+        let id = this.newOfficer.brother ? this.newOfficer.brother.id : null;
         if (
-          this.actives[activesIndex].exceeds_unexcused == 1 ||
-          this.actives[activesIndex].exceeds_owed == 1
+          id == null ||
+          !this.officers.find(
+            (x) => x.id == id && x.office != this.newOfficer.office
+          )
         ) {
-          this.notGoodStanding = true;
+          let activesIndex = this.actives.findIndex((x) => x.id == id);
+          if (
+            activesIndex >= 0 &&
+            (this.actives[activesIndex].exceeds_unexcused == 1 ||
+              this.actives[activesIndex].exceeds_owed == 1)
+          ) {
+            this.notGoodStanding = true;
+          } else {
+            this.submitData();
+          }
         } else {
-          this.submitData();
+          this.load();
+          this.$root.$children[0].showError(
+            "One brother may not hold multiple positions."
+          );
         }
+      }
+    },
+    saveShowOnAboutPage(officer) {
+      this.newOfficer = officer;
+      this.submitData();
+    },
+    hasChanged(officer) {
+      if (officer.id != null && officer.brother != null) {
+        return officer.id != officer.brother.id;
       } else {
-        this.newOfficer = null;
-        this.$root.$children[0].showError(
-          "One brother may not hold multiple positions."
-        );
+        return officer.id != null || officer.brother != null;
       }
     },
     submitData() {
       this.notGoodStanding = false;
+      this.newOfficer.id = this.newOfficer.brother
+        ? this.newOfficer.brother.id
+        : null;
       axios
         .post(API_URL + "update_officer.php", this.newOfficer, {
           headers: { Authorization: this.$store.state.jwt },
@@ -145,43 +158,18 @@ export default {
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
         })
-        .catch((error) =>
-          this.$root.$children[0].showError(error.response.statusText)
-        );
+        .catch((error) => {
+          this.load();
+          this.$root.$children[0].showError(error.response.statusText);
+        });
     },
   },
 };
 </script>
 
 <style scoped>
-h4 {
-  text-align: left;
-}
-.student-card {
-  cursor: pointer;
-}
-.card-body {
-  margin-left: 10px;
-}
-.officer-label,
-.officer-select {
-  width: 250px;
-}
-.officer-label {
-  text-align: right;
-  margin-right: 20px;
-  margin-bottom: 0;
-  margin-top: 6px;
-  align-content: center;
-}
-.officer-checkbox {
-  margin-left: 50px;
-}
-.officer-checkbox {
-  display: flex;
-  align-items: center;
-}
-.officer-button {
-  margin-left: 50px;
+.row {
+  margin: 0px;
+  justify-content: space-between;
 }
 </style>

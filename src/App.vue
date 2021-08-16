@@ -64,6 +64,11 @@
                 >Initiate Pledges</b-dropdown-item
               >
               <b-dropdown-item
+                v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
+                to="/editcommittees"
+                >Edit Committees</b-dropdown-item
+              >
+              <b-dropdown-item
                 v-if="$store.state.permissionTier == AUTH_TIERS.ALL"
                 to="/editofficers"
                 >Update Officers</b-dropdown-item
