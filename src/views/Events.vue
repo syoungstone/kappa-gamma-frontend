@@ -7,10 +7,7 @@
         internal events.
       </h5>
     </div>
-    <div
-      id="header"
-      v-else-if="$store.state.permissionTier >= AUTH_TIERS.COMMITTEE"
-    >
+    <div id="header" v-else-if="$store.state.authTier >= AUTH_TIERS.COMMITTEE">
       <h1>Calendar</h1>
       <b-button id="nav-button" @click="createEvent()" variant="primary"
         >Create Event</b-button

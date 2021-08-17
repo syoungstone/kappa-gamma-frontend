@@ -1,5 +1,5 @@
 <template>
-  <StudentForm v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER" />
+  <StudentForm v-if="$store.state.authTier >= AUTH_TIERS.OFFICER" />
 </template>
 
 <script>

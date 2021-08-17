@@ -17,8 +17,7 @@
           id="edit-button"
           variant="primary"
           v-if="
-            $store.state.permissionTier >= AUTH_TIERS.OFFICER ||
-            id == $store.state.id
+            $store.state.authTier >= AUTH_TIERS.OFFICER || id == $store.state.id
           "
           @click="editStudent()"
           >Edit</b-button
@@ -168,7 +167,7 @@ export default {
   },
   methods: {
     editStudent() {
-      if (this.$store.state.permissionTier >= AUTH_TIERS.OFFICER) {
+      if (this.$store.state.authTier >= AUTH_TIERS.OFFICER) {
         this.$router.push("/editstudent/" + this.id, () => {});
       } else {
         this.$router.push("/editprofile", () => {});

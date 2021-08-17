@@ -5,7 +5,7 @@
       <b-button
         id="edit-button"
         variant="primary"
-        v-if="$store.state.permissionTier >= AUTH_TIERS.ALL"
+        v-if="$store.state.authTier >= AUTH_TIERS.ALL"
         @click="editOfficers()"
         >Edit</b-button
       >

@@ -4,9 +4,7 @@
     <div
       id="records-exist"
       v-if="
-        $store.state.permissionTier >= AUTH_TIERS.OFFICER &&
-        recordsExist &&
-        !editing
+        $store.state.authTier >= AUTH_TIERS.OFFICER && recordsExist && !editing
       "
     >
       <div id="records-message">
@@ -21,7 +19,7 @@
     </div>
     <b-table
       class="b-table"
-      v-if="recordsExist || $store.state.permissionTier >= AUTH_TIERS.OFFICER"
+      v-if="recordsExist || $store.state.authTier >= AUTH_TIERS.OFFICER"
       striped
       hover
       :items="data.attendance"
@@ -34,7 +32,7 @@
       <template #cell(present)="row">
         <div
           v-if="
-            $store.state.permissionTier < AUTH_TIERS.OFFICER ||
+            $store.state.authTier < AUTH_TIERS.OFFICER ||
             (recordsExist && !editing)
           "
         >
@@ -50,7 +48,7 @@
       <template #cell(excused)="row">
         <div
           v-if="
-            $store.state.permissionTier < AUTH_TIERS.OFFICER ||
+            $store.state.authTier < AUTH_TIERS.OFFICER ||
             (recordsExist && !editing)
           "
         >
@@ -74,7 +72,7 @@
     <h5 v-else>No attendance records exist for this event.</h5>
     <div
       v-if="
-        $store.state.permissionTier >= AUTH_TIERS.OFFICER &&
+        $store.state.authTier >= AUTH_TIERS.OFFICER &&
         (!recordsExist || editing)
       "
       id="bottom-buttons"

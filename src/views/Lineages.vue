@@ -2,10 +2,7 @@
   <div class="wide-wrapper">
     <h1>Lineages</h1>
     <div v-if="loaded">
-      <div
-        v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
-        id="create-new"
-      >
+      <div v-if="$store.state.authTier >= AUTH_TIERS.OFFICER" id="create-new">
         <b-modal
           id="delete-lineage-modal"
           ref="modal"
@@ -91,7 +88,7 @@ export default {
     LoadingSpinner,
   },
   created() {
-    if (this.$store.state.permissionTier >= AUTH_TIERS.OFFICER) {
+    if (this.$store.state.authTier >= AUTH_TIERS.OFFICER) {
       this.readBrothers();
     } else {
       this.load();
@@ -122,7 +119,7 @@ export default {
         { key: "name" },
         { key: "founder_field", label: "Founder" },
       ];
-      if (this.$store.state.permissionTier >= AUTH_TIERS.OFFICER) {
+      if (this.$store.state.authTier >= AUTH_TIERS.OFFICER) {
         fields.push({ key: "actions" });
       }
       return fields;

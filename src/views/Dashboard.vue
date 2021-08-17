@@ -1,7 +1,8 @@
 <template>
   <div class="narrow-wrapper">
     <h1>
-      Welcome {{ $store.state.isBrother ? "Brother" : "Pledge" }}
+      Welcome
+      {{ $store.state.authTier > AUTH_TIERS.PLEDGE ? "Brother" : "Pledge" }}
       {{ $store.state.lastName }}!
     </h1>
     <EventList @event-selected="eventSelected" />
@@ -10,7 +11,13 @@
 
 <script>
 import EventList from "@/components/EventList.vue";
+import { AUTH_TIERS } from "../constants/index.js";
 export default {
+  data() {
+    return {
+      AUTH_TIERS: AUTH_TIERS,
+    };
+  },
   components: {
     EventList,
   },

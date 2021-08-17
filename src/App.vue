@@ -17,13 +17,13 @@
             <b-nav-item to="/dashboard">Dashboard</b-nav-item>
             <b-nav-item to="/events">Events</b-nav-item>
             <b-nav-item-dropdown
-              v-if="$store.state.permissionTier >= AUTH_TIERS.BROTHER"
+              v-if="$store.state.authTier >= AUTH_TIERS.BROTHER"
               text="Membership"
             >
               <b-dropdown-item to="/directory">Directory</b-dropdown-item>
               <b-dropdown-item to="/officers">Officers</b-dropdown-item>
               <b-dropdown-item
-                v-if="$store.state.permissionTier >= AUTH_TIERS.ACTIVE"
+                v-if="$store.state.authTier >= AUTH_TIERS.ACTIVE"
                 to="/committees"
                 >Committees</b-dropdown-item
               >
@@ -32,44 +32,42 @@
               >
               <b-dropdown-item to="/lineages">Lineages</b-dropdown-item>
               <b-dropdown-item
-                v-if="$store.state.permissionTier >= AUTH_TIERS.ACTIVE"
+                v-if="$store.state.authTier >= AUTH_TIERS.ACTIVE"
                 to="/attendance"
                 >Attendance</b-dropdown-item
               >
               <b-dropdown-item
-                v-if="$store.state.permissionTier >= AUTH_TIERS.ACTIVE"
+                v-if="$store.state.authTier >= AUTH_TIERS.ACTIVE"
                 to="/standing"
                 >Standing</b-dropdown-item
               >
             </b-nav-item-dropdown>
             <b-nav-item v-else to="/pledgedirectory">Directory</b-nav-item>
             <b-nav-item-dropdown
-              v-if="$store.state.permissionTier >= AUTH_TIERS.ACTIVE"
+              v-if="$store.state.authTier >= AUTH_TIERS.COMMITTEE"
               text="Actions"
             >
-              <b-dropdown-item
-                v-if="$store.state.permissionTier >= AUTH_TIERS.COMMITTEE"
-                to="/attendance"
+              <b-dropdown-item to="/attendance"
                 >Take Attendance</b-dropdown-item
               >
               <b-dropdown-item to="/createevent">Create Event</b-dropdown-item>
               <b-dropdown-item
-                v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
+                v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
                 to="/create"
                 >Create New Student</b-dropdown-item
               >
               <b-dropdown-item
-                v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
+                v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
                 to="/initiate"
                 >Initiate Pledges</b-dropdown-item
               >
               <b-dropdown-item
-                v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
+                v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
                 to="/editcommittees"
                 >Edit Committees</b-dropdown-item
               >
               <b-dropdown-item
-                v-if="$store.state.permissionTier == AUTH_TIERS.ALL"
+                v-if="$store.state.authTier == AUTH_TIERS.ALL"
                 to="/editofficers"
                 >Update Officers</b-dropdown-item
               >

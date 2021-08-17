@@ -12,11 +12,9 @@ export default new Vuex.Store({
     id: null,
     jwt: null,
     jwtExpiration: null,
-    permissionTier: AUTH_TIERS.NONE,
+    authTier: AUTH_TIERS.NONE,
     firstName: null,
     lastName: null,
-    isBrother: null,
-    position: null,
     committees: null,
   },
   mutations: {
@@ -33,11 +31,9 @@ export default new Vuex.Store({
         state.id = parsed.data.id;
         state.jwt = jwt;
         state.jwtExpiration = parsed.exp;
-        state.permissionTier = parsed.data.permission_tier;
+        state.authTier = parsed.data.auth_tier;
         state.firstName = parsed.data.name_first;
         state.lastName = parsed.data.name_last;
-        state.isBrother = parsed.data.is_brother;
-        state.position = parsed.data.position;
         state.committees = parsed.data.committees;
       }
     },
@@ -47,11 +43,9 @@ export default new Vuex.Store({
       state.id = null;
       state.jwt = null;
       state.jwtExpiration = null;
-      state.permissionTier = AUTH_TIERS.NONE;
+      state.authTier = AUTH_TIERS.NONE;
       state.firstName = null;
       state.lastName = null;
-      state.isBrother = null;
-      state.position = null;
     },
   },
   actions: {},

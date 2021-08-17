@@ -233,7 +233,7 @@ router.beforeEach(async (to, from, next) => {
         store.commit("logout");
       });
   }
-  if (store.state.permissionTier < to.meta.minAuthRequired) {
+  if (store.state.authTier < to.meta.minAuthRequired) {
     if (store.state.loggedIn) {
       next({ name: "Dashboard" });
     } else {

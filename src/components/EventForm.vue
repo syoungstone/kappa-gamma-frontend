@@ -39,7 +39,7 @@
       </b-form-group>
 
       <div id="checkboxes">
-        <b-form-group v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER">
+        <b-form-group v-if="$store.state.authTier >= AUTH_TIERS.OFFICER">
           <b-form-checkbox
             id="checkbox-meeting"
             v-model="event.is_chapter_meeting"
@@ -155,9 +155,7 @@
         id="select-group-committee"
         :label="
           'Sponsoring committee' +
-          ($store.state.permissionTier >= AUTH_TIERS.OFFICER
-            ? ' (optional):'
-            : ':')
+          ($store.state.authTier >= AUTH_TIERS.OFFICER ? ' (optional):' : ':')
         "
         label-for="select-committee"
       >
@@ -165,7 +163,7 @@
           id="select-committee"
           v-model="event.committee"
           :options="committeeOptions"
-          :required="$store.state.permissionTier < AUTH_TIERS.OFFICER"
+          :required="$store.state.authTier < AUTH_TIERS.OFFICER"
         ></b-form-select>
       </b-form-group>
 
@@ -219,7 +217,7 @@
           required
         ></b-input>
       </b-form-group>
-      <div v-if="$store.state.permissionTier >= AUTH_TIERS.BROTHER">
+      <div v-if="$store.state.authTier >= AUTH_TIERS.BROTHER">
         <b-button class="submit-button" v-if="editing" @click="cancel()"
           >Cancel</b-button
         >
@@ -308,7 +306,7 @@ export default {
   },
   methods: {
     getCommitteeOptions() {
-      if (this.$store.state.permissionTier < AUTH_TIERS.OFFICER) {
+      if (this.$store.state.authTier < AUTH_TIERS.OFFICER) {
         this.committeeOptions = this.$store.state.committees;
       } else {
         axios

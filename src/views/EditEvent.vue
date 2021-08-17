@@ -25,7 +25,7 @@ export default {
   computed: {
     onCommittee() {
       return (
-        this.$store.state.permissionTier >= AUTH_TIERS.OFFICER ||
+        this.$store.state.authTier >= AUTH_TIERS.OFFICER ||
         (this.event != null &&
           this.event.committee != null &&
           this.$store.state.committees != null &&

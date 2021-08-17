@@ -39,9 +39,7 @@
       <div class="event-card">
         <h3>
           {{
-            $store.state.loggedIn &&
-            !$store.state.isBrother &&
-            event.alt_pledge_name
+            $store.state.authTier == AUTH_TIERS.PLEDGE && event.alt_pledge_name
               ? event.alt_pledge_name
               : event.title
           }}
@@ -106,7 +104,7 @@
       </div>
       <div
         id="attendance-link"
-        v-if="$store.state.permissionTier >= AUTH_TIERS.ACTIVE"
+        v-if="$store.state.authTier >= AUTH_TIERS.ACTIVE"
       >
         <b-link @click="showAttendance = !showAttendance">
           {{
@@ -161,7 +159,7 @@ export default {
   computed: {
     onCommittee() {
       return (
-        this.$store.state.permissionTier >= AUTH_TIERS.OFFICER ||
+        this.$store.state.authTier >= AUTH_TIERS.OFFICER ||
         (this.event.committee != null &&
           this.$store.state.committees != null &&
           this.$store.state.committees.find(

@@ -2,10 +2,7 @@
   <div class="wide-wrapper">
     <h1>Pledge Classes</h1>
     <div v-if="loaded">
-      <div
-        v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
-        id="create-new"
-      >
+      <div v-if="$store.state.authTier >= AUTH_TIERS.OFFICER" id="create-new">
         <h4>Create new pledge class</h4>
         <b-form inline @submit.prevent="onSubmit" id="create-form">
           <b-form-input
@@ -59,7 +56,7 @@
         <template #cell(actions)="row">
           <b-button
             class="select-button"
-            v-if="$store.state.permissionTier >= AUTH_TIERS.OFFICER"
+            v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
             size="sm"
             variant="danger"
             @click="
@@ -121,7 +118,7 @@ export default {
           label: "Size",
         },
       ];
-      if (this.$store.state.permissionTier >= AUTH_TIERS.OFFICER) {
+      if (this.$store.state.authTier >= AUTH_TIERS.OFFICER) {
         fields.push({ key: "actions" });
       }
       return fields;
