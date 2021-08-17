@@ -29,7 +29,7 @@
             v-model="newCommittee.line_item"
             :options="availableLineItems"
             placeholder="Select existing line item"
-            :getOptionDescription="getCustomDescription"
+            :getOptionDescription="getCustomDescriptionLineItem"
             required
           ></vue-single-select>
           <div
@@ -77,10 +77,21 @@
           </b-card-header>
           <b-collapse :id="'content-' + committee.committee_id" role="tabpanel">
             <b-card-body>
-              <b-card-text
-                >I start opened because <code>visible</code> is
-                <code>true</code></b-card-text
-              >
+              <b-form>
+                <div class="row">
+                  <p>
+                    <strong>Chair:</strong>
+                  </p>
+                  <vue-single-select
+                    v-model="committee.chair"
+                    :options="actives"
+                    option-key="id"
+                    optionValue="id"
+                    :getOptionDescription="getCustomDescriptionChair"
+                    @input="saveChair(committee)"
+                  ></vue-single-select>
+                </div>
+              </b-form>
             </b-card-body>
           </b-collapse>
         </b-card>
@@ -100,17 +111,19 @@ export default {
     LoadingSpinner,
   },
   created() {
-    this.loadData();
+    this.loadActives();
   },
   data() {
     return {
       AUTH_TIERS: AUTH_TIERS,
       availableLineItems: null,
       committees: [],
+      actives: null,
       newCommittee: {
         line_item_id: null,
         committee_name: null,
       },
+      editedCommittee: null,
       toDelete: {
         line_item_id: null,
         committee_name: null,
@@ -119,13 +132,13 @@ export default {
     };
   },
   methods: {
-    loadData() {
+    loadActives() {
       axios
-        .get(API_URL + "read_committee_members.php", {
+        .get(API_URL + "read_active.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
-          this.committees = response.data.body;
+          this.actives = response.data.body;
           this.loadLineItems();
         })
         .catch((error) => {
@@ -139,14 +152,35 @@ export default {
         })
         .then((response) => {
           this.availableLineItems = response.data.body;
+          this.loadData();
+        })
+        .catch((error) => {
+          this.$root.$children[0].showError(error.response.statusText);
+        });
+    },
+    loadData() {
+      axios
+        .get(API_URL + "read_committee_members.php", {
+          headers: { Authorization: this.$store.state.jwt },
+        })
+        .then((response) => {
+          response.data.body.forEach((x) => {
+            if (x.chair_id != null) {
+              x.chair = this.actives.find((y) => y.id == x.chair_id);
+            }
+          });
+          this.committees = response.data.body;
           this.loaded = true;
         })
         .catch((error) => {
           this.$root.$children[0].showError(error.response.statusText);
         });
     },
-    getCustomDescription(option) {
+    getCustomDescriptionLineItem(option) {
       return option.line_item_name;
+    },
+    getCustomDescriptionChair(option) {
+      return option.name_first + " " + option.name_last;
     },
     getCustomValue(option) {
       return option.line_item_id;
@@ -170,7 +204,7 @@ export default {
             this.$root.$children[0].showSuccess(response.data.message);
             this.newCommittee.committee_name = null;
             this.newCommittee.line_item = null;
-            this.loadData();
+            this.loadLineItems();
           })
           .catch((error) =>
             this.$root.$children[0].showError(error.response.statusText)
@@ -194,11 +228,35 @@ export default {
         )
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
-          this.loadData();
+          this.loadLineItems();
         })
         .catch((error) => {
           this.$root.$children[0].showError(error.response.statusText);
         });
+    },
+    saveChair(committee) {
+      if (this.hasChanged(committee)) {
+        console.log(committee);
+        committee.chair_id = committee.chair ? committee.chair.id : null;
+        axios
+          .post(API_URL + "update_committee.php", committee, {
+            headers: { Authorization: this.$store.state.jwt },
+          })
+          .then((response) => {
+            this.$root.$children[0].showSuccess(response.data.message);
+          })
+          .catch((error) => {
+            this.loadData();
+            this.$root.$children[0].showError(error.response.statusText);
+          });
+      }
+    },
+    hasChanged(committee) {
+      if (committee.chair_id != null && committee.chair != null) {
+        return committee.chair_id != committee.chair.id;
+      } else {
+        return committee.chair_id != null || committee.chair != null;
+      }
     },
   },
 };

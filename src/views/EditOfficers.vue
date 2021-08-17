@@ -20,12 +20,12 @@
       >
         <b-form>
           <div class="row">
-            <p class="officer-label">
+            <p>
               <strong>{{ officer.office }}</strong>
             </p>
             <b-form-checkbox
               v-model="officer.display_publicly"
-              class="mb-2 mr-sm-2 mb-sm-0 officer-checkbox"
+              class="mb-2 mr-sm-2 mb-sm-0"
               :value="1"
               :unchecked-value="0"
               @change="saveShowOnAboutPage(officer)"
@@ -33,12 +33,10 @@
             >
           </div>
           <vue-single-select
-            class="officer-select"
             v-model="officer.brother"
             :options="actives"
             option-key="id"
             optionValue="id"
-            required
             :getOptionDescription="getCustomDescription"
             @input="saveOfficer(officer)"
           ></vue-single-select>
