@@ -71,26 +71,34 @@
               <b-icon-caret-up-fill class="when-open"></b-icon-caret-up-fill>
               <strong>{{ " " + committee.committee_name }}</strong>
             </div>
-            <b-button variant="danger" @click="prepareDeletion(committee)"
+            <b-button
+              class="delete-button"
+              variant="danger"
+              @click="prepareDeletion(committee)"
               >Delete</b-button
             >
           </b-card-header>
           <b-collapse :id="'content-' + committee.committee_id" role="tabpanel">
             <b-card-body>
               <b-form>
-                <div class="row">
-                  <p>
-                    <strong>Chair:</strong>
-                  </p>
+                <b-form-group label="Chair:">
                   <vue-single-select
                     v-model="committee.chair"
                     :options="actives"
-                    option-key="id"
-                    optionValue="id"
-                    :getOptionDescription="getCustomDescriptionChair"
+                    optionLabel="name"
                     @input="saveChair(committee)"
                   ></vue-single-select>
-                </div>
+                </b-form-group>
+                <b-form-group label="Committee Members:">
+                  <VueTaggableSelect
+                    class="member-tags"
+                    placeholder="Add"
+                    v-model="committee.members_new"
+                    :options="actives"
+                    optionLabel="name"
+                    @input="saveMembers(committee)"
+                  ></VueTaggableSelect>
+                </b-form-group>
               </b-form>
             </b-card-body>
           </b-collapse>
@@ -106,9 +114,11 @@
 import axios from "axios";
 import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import VueTaggableSelect from "@/components/VueTaggableSelect.vue";
 export default {
   components: {
     LoadingSpinner,
+    VueTaggableSelect,
   },
   created() {
     this.loadActives();
@@ -134,7 +144,7 @@ export default {
   methods: {
     loadActives() {
       axios
-        .get(API_URL + "read_active.php", {
+        .get(API_URL + "read_active_id_name_only.php", {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {
@@ -159,6 +169,7 @@ export default {
         });
     },
     loadData() {
+      this.loaded = false;
       axios
         .get(API_URL + "read_committee_members.php", {
           headers: { Authorization: this.$store.state.jwt },
@@ -168,6 +179,7 @@ export default {
             if (x.chair_id != null) {
               x.chair = this.actives.find((y) => y.id == x.chair_id);
             }
+            x.members_new = JSON.parse(JSON.stringify(x.members));
           });
           this.committees = response.data.body;
           this.loaded = true;
@@ -178,9 +190,6 @@ export default {
     },
     getCustomDescriptionLineItem(option) {
       return option.line_item_name;
-    },
-    getCustomDescriptionChair(option) {
-      return option.name_first + " " + option.name_last;
     },
     getCustomValue(option) {
       return option.line_item_id;
@@ -235,8 +244,7 @@ export default {
         });
     },
     saveChair(committee) {
-      if (this.hasChanged(committee)) {
-        console.log(committee);
+      if (this.chairChanged(committee)) {
         committee.chair_id = committee.chair ? committee.chair.id : null;
         axios
           .post(API_URL + "update_committee.php", committee, {
@@ -251,12 +259,34 @@ export default {
           });
       }
     },
-    hasChanged(committee) {
+    saveMembers(committee) {
+      if (this.membersChanged(committee)) {
+        committee.members = JSON.parse(JSON.stringify(committee.members_new));
+        axios
+          .post(API_URL + "update_committee_members.php", committee, {
+            headers: { Authorization: this.$store.state.jwt },
+          })
+          .then((response) => {
+            this.$root.$children[0].showSuccess(response.data.message);
+          })
+          .catch((error) => {
+            this.loadData();
+            this.$root.$children[0].showError(error.response.statusText);
+          });
+      }
+    },
+    chairChanged(committee) {
       if (committee.chair_id != null && committee.chair != null) {
         return committee.chair_id != committee.chair.id;
       } else {
         return committee.chair_id != null || committee.chair != null;
       }
+    },
+    membersChanged(committee) {
+      return (
+        JSON.stringify(committee.members) !==
+        JSON.stringify(committee.members_new)
+      );
     },
   },
 };
@@ -268,7 +298,7 @@ export default {
 }
 .card-header-content {
   cursor: pointer;
-  padding: 10px;
+  padding: 5px;
   width: 100%;
 }
 .collapsed > .when-open,
@@ -302,5 +332,11 @@ h4 {
 #committees {
   max-width: 500px;
   margin: auto;
+}
+.member-tags {
+  background-color: white;
+}
+.delete-button {
+  padding: 0 6px 0 6px;
 }
 </style>
