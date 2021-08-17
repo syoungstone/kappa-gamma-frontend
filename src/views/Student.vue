@@ -14,7 +14,7 @@
           {{ data.name_last }}
         </h1>
         <b-button
-          id="edit-button"
+          class="edit-button"
           variant="primary"
           v-if="
             $store.state.authTier >= AUTH_TIERS.OFFICER || id == $store.state.id
@@ -196,7 +196,7 @@ export default {
 #name-row {
   justify-content: center;
 }
-#edit-button {
+.edit-button {
   margin-left: 20px;
   margin-top: 10px;
   margin-bottom: 10px;

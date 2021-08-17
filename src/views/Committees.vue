@@ -3,7 +3,7 @@
     <div class="row" id="name-row">
       <h1>Committees</h1>
       <b-button
-        id="edit-button"
+        class="edit-button"
         variant="primary"
         v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
         @click="editCommittees()"

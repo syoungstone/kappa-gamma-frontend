@@ -330,4 +330,7 @@ h1 {
 #bug-email-link {
   color: rgb(116, 223, 255);
 }
+.edit-button {
+  max-height: 24px;
+}
 </style>
