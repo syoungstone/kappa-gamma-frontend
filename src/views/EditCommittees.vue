@@ -236,6 +236,7 @@ export default {
     },
     saveChair(committee) {
       if (this.hasChanged(committee)) {
+        console.log(committee);
         committee.chair_id = committee.chair ? committee.chair.id : null;
         axios
           .post(API_URL + "update_committee.php", committee, {

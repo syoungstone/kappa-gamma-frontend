@@ -3,7 +3,7 @@
     <div class="row" id="name-row">
       <h1>Officers</h1>
       <b-button
-        class="edit-button"
+        id="edit-button"
         variant="primary"
         v-if="$store.state.authTier >= AUTH_TIERS.ALL"
         @click="editOfficers()"

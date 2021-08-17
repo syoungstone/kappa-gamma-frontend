@@ -11,7 +11,7 @@
         <strong>Attendance records already exist for this event.</strong>
       </div>
       <div>
-        <b-button class="edit-button" variant="primary" @click="edit()"
+        <b-button id="edit-button" variant="primary" @click="edit()"
           >Edit</b-button
         >
         <b-button id="back-button" @click="reset()">Back</b-button>
@@ -220,7 +220,7 @@ h5 {
   margin: 10px;
 }
 #cancel-button,
-.edit-button {
+#edit-button {
   margin-right: 10px;
 }
 </style>
