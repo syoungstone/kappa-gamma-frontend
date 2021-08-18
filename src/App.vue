@@ -58,6 +58,11 @@
               >
               <b-dropdown-item
                 v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
+                to="/assignbigs"
+                >Assign Bigs</b-dropdown-item
+              >
+              <b-dropdown-item
+                v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
                 to="/initiate"
                 >Initiate Pledges</b-dropdown-item
               >

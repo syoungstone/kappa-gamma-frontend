@@ -192,6 +192,12 @@ const routes = [
     meta: { minAuthRequired: AUTH_TIERS.OFFICER },
   },
   {
+    path: "/assignbigs",
+    name: "Assign Bigs",
+    component: () => import("../views/AssignBigs.vue"),
+    meta: { minAuthRequired: AUTH_TIERS.OFFICER },
+  },
+  {
     path: "/initiate",
     name: "Initiate Pledges",
     component: () => import("../views/Initiate.vue"),
