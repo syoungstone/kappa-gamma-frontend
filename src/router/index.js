@@ -204,6 +204,12 @@ const routes = [
     meta: { minAuthRequired: AUTH_TIERS.OFFICER },
   },
   {
+    path: "/assessdues",
+    name: "Assess Dues",
+    component: () => import("../views/AssessDues.vue"),
+    meta: { minAuthRequired: AUTH_TIERS.FINANCIAL },
+  },
+  {
     path: "/editofficers",
     name: "Edit Officers",
     component: () => import("../views/EditOfficers.vue"),

@@ -16,11 +16,16 @@
           <b-navbar-nav v-if="$store.state.loggedIn">
             <b-nav-item to="/dashboard">Dashboard</b-nav-item>
             <b-nav-item to="/events">Events</b-nav-item>
+            <b-nav-item
+              v-if="$store.state.authTier >= AUTH_TIERS.BROTHER"
+              to="/directory"
+              >Directory</b-nav-item
+            >
+            <b-nav-item v-else to="/pledgedirectory">Directory</b-nav-item>
             <b-nav-item-dropdown
               v-if="$store.state.authTier >= AUTH_TIERS.BROTHER"
               text="Membership"
             >
-              <b-dropdown-item to="/directory">Directory</b-dropdown-item>
               <b-dropdown-item to="/officers">Officers</b-dropdown-item>
               <b-dropdown-item
                 v-if="$store.state.authTier >= AUTH_TIERS.ACTIVE"
@@ -42,7 +47,6 @@
                 >Standing</b-dropdown-item
               >
             </b-nav-item-dropdown>
-            <b-nav-item v-else to="/pledgedirectory">Directory</b-nav-item>
             <b-nav-item-dropdown
               v-if="$store.state.authTier >= AUTH_TIERS.COMMITTEE"
               text="Actions"
@@ -76,6 +80,12 @@
                 to="/editofficers"
                 >Update Officers</b-dropdown-item
               >
+            </b-nav-item-dropdown>
+            <b-nav-item-dropdown
+              v-if="$store.state.authTier >= AUTH_TIERS.FINANCIAL"
+              text="Financial"
+            >
+              <b-dropdown-item to="/assessdues">Assess Dues</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
           <b-navbar-nav v-else>

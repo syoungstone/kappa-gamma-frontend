@@ -184,10 +184,10 @@ export default {
     this.getStudents();
   },
   computed: {
-    filteredData: function () {
+    filteredData() {
       return this.data.filter(this.filterData);
     },
-    totalRows: function () {
+    totalRows() {
       return this.filteredData.length;
     },
   },

@@ -114,7 +114,7 @@ export default {
         })
         .then((response) => {
           this.pledges = response.data.body;
-          this.noPledges = response.data.itemCount == 0;
+          this.noPledges = this.pledges ? this.pledges.length == 0 : true;
           this.loaded = true;
         })
         .catch((error) => {
