@@ -153,9 +153,6 @@ export default {
         .post(API_URL + "update_officer.php", this.newOfficer, {
           headers: { Authorization: this.$store.state.jwt },
         })
-        .then((response) => {
-          this.$root.$children[0].showSuccess(response.data.message);
-        })
         .catch((error) => {
           this.load();
           this.$root.$children[0].showError(error.response.statusText);

@@ -250,9 +250,6 @@ export default {
           .post(API_URL + "update_committee.php", committee, {
             headers: { Authorization: this.$store.state.jwt },
           })
-          .then((response) => {
-            this.$root.$children[0].showSuccess(response.data.message);
-          })
           .catch((error) => {
             this.loadData();
             this.$root.$children[0].showError(error.response.statusText);
@@ -265,9 +262,6 @@ export default {
         axios
           .post(API_URL + "update_committee_members.php", committee, {
             headers: { Authorization: this.$store.state.jwt },
-          })
-          .then((response) => {
-            this.$root.$children[0].showSuccess(response.data.message);
           })
           .catch((error) => {
             this.loadData();
