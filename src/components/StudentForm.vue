@@ -314,11 +314,13 @@
         ></b-form-input>
       </b-form-group>
 
-      <b-button type="submit" variant="primary" :disabled="submitDisabled">{{
-        newEntry
-          ? "Create " + (data.is_pledge ? "Pledge" : "Brother")
-          : "Save Changes"
-      }}</b-button>
+      <div class="position-sticky">
+        <b-button type="submit" variant="primary" :disabled="submitDisabled">{{
+          newEntry
+            ? "Create " + (data.is_pledge ? "Pledge" : "Brother")
+            : "Save Changes"
+        }}</b-button>
+      </div>
     </b-form>
     <LoadingSpinner v-else />
   </div>
@@ -675,5 +677,18 @@ h3 {
 #buttons,
 #created {
   text-align: center;
+}
+.position-sticky {
+  padding: 20px;
+  text-align: center;
+  background-color: var(--ot-off-white);
+  bottom: 20px;
+  z-index: 10;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px 10px white, 0 0 30px 5px white;
+}
+.position-sticky button {
+  width: 100%;
 }
 </style>

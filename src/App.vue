@@ -116,13 +116,18 @@
                 <em>Brother Portal</em>
               </template>
               <div v-if="$store.state.loggedIn">
-                <b-dropdown-item to="/editprofile"
-                  >Edit Profile</b-dropdown-item
-                >
                 <b-dropdown-item
                   v-if="$store.state.authTier >= AUTH_TIERS.BROTHER"
-                  to="/account"
-                  >View Account</b-dropdown-item
+                  to="/myaccount"
+                  >My Account</b-dropdown-item
+                >
+                <b-dropdown-item
+                  v-if="$store.state.authTier >= AUTH_TIERS.ACTIVE"
+                  to="/myattendance"
+                  >My Attendance</b-dropdown-item
+                >
+                <b-dropdown-item to="/editprofile"
+                  >Edit Profile</b-dropdown-item
                 >
                 <b-dropdown-item to="/settings">Settings</b-dropdown-item>
                 <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
@@ -320,10 +325,6 @@ h2,
 h3,
 h4 {
   text-align: center;
-}
-h1 {
-  margin-top: 30px;
-  margin-bottom: 30px;
 }
 .card {
   margin-top: 20px;

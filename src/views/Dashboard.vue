@@ -68,7 +68,7 @@ export default {
       this.$router.push("/event/" + id, () => {});
     },
     accountRedirect() {
-      this.$router.push("/account", () => {});
+      this.$router.push("/myaccount", () => {});
     },
   },
 };

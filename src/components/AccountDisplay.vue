@@ -1,7 +1,9 @@
 <template>
-  <div class="narrow-wrapper">
+  <div>
     <div v-if="loaded">
-      <h1>Your Account</h1>
+      <h1>
+        {{ ($store.state.id == id ? "My" : studentName) + " Account" }}
+      </h1>
       <div id="balance-box">
         <h4 v-if="$store.state.authTier > AUTH_TIERS.PLEDGE && loaded">
           Account Balance:
@@ -46,21 +48,21 @@ import axios from "axios";
 import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
+  name: "AccountDisplay",
+  props: {
+    id: {
+      required: true,
+    },
+  },
   components: {
     LoadingSpinner,
   },
   created() {
-    axios
-      .get(API_URL + "read_balance_owed.php?id=" + this.$store.state.id, {
-        headers: { Authorization: this.$store.state.jwt },
-      })
-      .then((response) => {
-        this.balance_owed = response.data;
-        this.loadEntries();
-      })
-      .catch((error) => {
-        this.$root.$children[0].showError(error.response.statusText);
-      });
+    if (this.$store.state.id == this.id) {
+      this.loadBalance();
+    } else {
+      this.loadName();
+    }
   },
   data() {
     return {
@@ -73,6 +75,7 @@ export default {
       balance_owed: 0,
       account_entries: null,
       loaded: false,
+      studentName: null,
     };
   },
   computed: {
@@ -85,9 +88,41 @@ export default {
     },
   },
   methods: {
+    loadName() {
+      axios
+        .get(API_URL + "read_student.php?id=" + this.id, {
+          headers: { Authorization: this.$store.state.jwt },
+        })
+        .then((response) => {
+          let student = response.data;
+          this.studentName = student.name_first + " " + student.name_last;
+          if (this.studentName.slice(-1) == "s") {
+            this.studentName = this.studentName + "'";
+          } else {
+            this.studentName = this.studentName + "'s";
+          }
+          this.loadBalance();
+        })
+        .catch((error) => {
+          this.$root.$children[0].showError(error.response.statusText);
+        });
+    },
+    loadBalance() {
+      axios
+        .get(API_URL + "read_balance_owed.php?id=" + this.id, {
+          headers: { Authorization: this.$store.state.jwt },
+        })
+        .then((response) => {
+          this.balance_owed = response.data;
+          this.loadEntries();
+        })
+        .catch((error) => {
+          this.$root.$children[0].showError(error.response.statusText);
+        });
+    },
     loadEntries() {
       axios
-        .get(API_URL + "read_account_entries.php?id=" + this.$store.state.id, {
+        .get(API_URL + "read_account_entries.php?id=" + this.id, {
           headers: { Authorization: this.$store.state.jwt },
         })
         .then((response) => {

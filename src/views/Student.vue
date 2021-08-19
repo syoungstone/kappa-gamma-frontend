@@ -23,6 +23,20 @@
           >Edit</b-button
         >
       </div>
+      <div class="row justify-content-center">
+        <b-button
+          class="button-link"
+          v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
+          @click="viewAccount()"
+          >View Account</b-button
+        >
+        <b-button
+          class="button-link"
+          v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
+          @click="viewAttendance()"
+          >View Attendance</b-button
+        >
+      </div>
       <div class="accordion" role="tablist">
         <b-card no-body class="mb-1">
           <b-card-header header-tag="header" class="p-1" role="tab">
@@ -183,6 +197,12 @@ export default {
         numberString.substring(6)
       );
     },
+    viewAccount() {
+      this.$router.push("/account/" + this.id, () => {});
+    },
+    viewAttendance() {
+      this.$router.push("/attendance/" + this.id, () => {});
+    },
   },
 };
 </script>
@@ -197,8 +217,13 @@ export default {
   justify-content: center;
 }
 #edit-button {
+  max-height: 38px;
   margin-left: 20px;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+.button-link {
+  margin: 5px;
+  min-width: 150px;
 }
 </style>
