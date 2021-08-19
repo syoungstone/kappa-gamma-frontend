@@ -8,6 +8,8 @@
             <b-input-group prepend="$">
               <b-form-input
                 type="number"
+                step="0.01"
+                min="0"
                 v-model="dues.early_alum_amount"
                 required
               ></b-form-input>
@@ -17,6 +19,8 @@
             <b-input-group prepend="$">
               <b-form-input
                 type="number"
+                step="0.01"
+                min="0"
                 v-model="dues.active_member_amount"
                 required
               ></b-form-input>
@@ -26,6 +30,8 @@
             <b-input-group prepend="$">
               <b-form-input
                 type="number"
+                step="0.01"
+                min="0"
                 v-model="dues.new_member_amount"
                 required
               ></b-form-input>

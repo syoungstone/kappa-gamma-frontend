@@ -82,10 +82,24 @@
               >
             </b-nav-item-dropdown>
             <b-nav-item-dropdown
-              v-if="$store.state.authTier >= AUTH_TIERS.FINANCIAL"
+              v-if="$store.state.authTier >= AUTH_TIERS.COMMITTEE"
               text="Financial"
             >
-              <b-dropdown-item to="/assessdues">Assess Dues</b-dropdown-item>
+              <b-dropdown-item
+                v-if="$store.state.authTier >= AUTH_TIERS.FINANCIAL"
+                to="/assessdues"
+                >Assess Dues</b-dropdown-item
+              >
+              <b-dropdown-item
+                v-if="$store.state.authTier >= AUTH_TIERS.FINANCIAL"
+                to="/reportpayment"
+                >Report Dues Payment</b-dropdown-item
+              >
+              <b-dropdown-item
+                v-if="$store.state.authTier >= AUTH_TIERS.FINANCIAL"
+                to="/reportfine"
+                >Report Fine</b-dropdown-item
+              >
             </b-nav-item-dropdown>
           </b-navbar-nav>
           <b-navbar-nav v-else>

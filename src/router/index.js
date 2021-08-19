@@ -216,6 +216,18 @@ const routes = [
     meta: { minAuthRequired: AUTH_TIERS.FINANCIAL },
   },
   {
+    path: "/reportpayment",
+    name: "Report Payment",
+    component: () => import("../views/ReportPayment.vue"),
+    meta: { minAuthRequired: AUTH_TIERS.FINANCIAL },
+  },
+  {
+    path: "/reportfine",
+    name: "Report Fine",
+    component: () => import("../views/ReportFine.vue"),
+    meta: { minAuthRequired: AUTH_TIERS.FINANCIAL },
+  },
+  {
     path: "/editofficers",
     name: "Edit Officers",
     component: () => import("../views/EditOfficers.vue"),
