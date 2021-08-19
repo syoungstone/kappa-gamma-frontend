@@ -1,12 +1,12 @@
 <template>
   <div v-if="loaded">
-    <h2 v-if="eventTitle">{{ eventTitle }}</h2>
-    <div
-      id="records-exist"
-      v-if="
-        $store.state.authTier >= AUTH_TIERS.OFFICER && recordsExist && !editing
-      "
-    >
+    <div v-if="eventTitle" class="row justify-content-center">
+      <h2>{{ eventTitle }}</h2>
+      <b-button id="inline-back-button" v-if="!onCommittee" @click="reset()"
+        >Back</b-button
+      >
+    </div>
+    <div id="records-exist" v-if="onCommittee && recordsExist && !editing">
       <div id="records-message">
         <strong>Attendance records already exist for this event.</strong>
       </div>
@@ -19,7 +19,7 @@
     </div>
     <b-table
       class="b-table"
-      v-if="recordsExist || $store.state.authTier >= AUTH_TIERS.OFFICER"
+      v-if="recordsExist || onCommittee"
       striped
       hover
       :items="data.attendance"
@@ -30,12 +30,7 @@
         {{ row.item.name_first + " " + row.item.name_last }}
       </template>
       <template #cell(present)="row">
-        <div
-          v-if="
-            $store.state.authTier < AUTH_TIERS.OFFICER ||
-            (recordsExist && !editing)
-          "
-        >
+        <div v-if="!onCommittee || (recordsExist && !editing)">
           {{ row.item.in_attendance == 1 ? "Yes" : "No" }}
         </div>
         <div v-else>
@@ -46,12 +41,7 @@
         </div>
       </template>
       <template #cell(excused)="row">
-        <div
-          v-if="
-            $store.state.authTier < AUTH_TIERS.OFFICER ||
-            (recordsExist && !editing)
-          "
-        >
+        <div v-if="!onCommittee || (recordsExist && !editing)">
           {{
             row.item.excused == null
               ? "N/A"
@@ -70,13 +60,7 @@
       </template>
     </b-table>
     <h5 v-else>No attendance records exist for this event.</h5>
-    <div
-      v-if="
-        $store.state.authTier >= AUTH_TIERS.OFFICER &&
-        (!recordsExist || editing)
-      "
-      id="bottom-buttons"
-    >
+    <div v-if="onCommittee && (!recordsExist || editing)" id="bottom-buttons">
       <b-button id="cancel-button" @click="cancel()">Cancel</b-button>
       <b-button id="submit-button" variant="primary" @click="onSubmit()">
         {{ recordsExist ? "Update Attendance" : "Submit Attendance" }}
@@ -95,6 +79,9 @@ export default {
       required: false,
     },
     eventId: {
+      required: true,
+    },
+    onCommittee: {
       required: true,
     },
   },
@@ -222,5 +209,9 @@ h5 {
 #cancel-button,
 #edit-button {
   margin-right: 10px;
+}
+#inline-back-button {
+  max-height: 38px;
+  margin-left: 10px;
 }
 </style>

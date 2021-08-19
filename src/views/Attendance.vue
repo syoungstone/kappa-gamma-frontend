@@ -16,6 +16,7 @@
     <AttendanceTable
       v-if="showEventAttendance"
       :eventTitle="eventTitle"
+      :onCommittee="onCommittee"
       :eventId="eventId"
       @reset="reset"
     />
@@ -24,6 +25,7 @@
 </template>
 
 <script>
+import { AUTH_TIERS } from "../constants/index.js";
 import AttendanceTable from "@/components/AttendanceTable.vue";
 import EventList from "@/components/EventList.vue";
 export default {
@@ -33,11 +35,23 @@ export default {
   },
   data() {
     return {
+      AUTH_TIERS: AUTH_TIERS,
       showEventAttendance: false,
       eventDate: null,
       eventTitle: null,
+      committee: null,
       eventId: null,
     };
+  },
+  computed: {
+    onCommittee() {
+      return (
+        this.$store.state.authTier >= AUTH_TIERS.OFFICER ||
+        (this.committee != null &&
+          this.$store.state.committees != null &&
+          this.$store.state.committees.find((x) => x.value == this.committee))
+      );
+    },
   },
   created() {
     let today = new Date();
@@ -56,7 +70,8 @@ export default {
       this.eventTitle = null;
       this.eventId = null;
     },
-    eventSelected(id, title) {
+    eventSelected(id, title, committee) {
+      this.committee = committee;
       this.showEventAttendance = true;
       this.eventId = id;
       this.eventTitle = title;

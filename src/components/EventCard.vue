@@ -107,17 +107,12 @@
         v-if="$store.state.authTier >= AUTH_TIERS.ACTIVE"
       >
         <b-link @click="showAttendance = !showAttendance">
-          {{
-            showAttendance
-              ? "Hide Attendance"
-              : onCommittee
-              ? "Take Attendance"
-              : "Show Attendance"
-          }}
+          {{ showAttendance ? "Hide Attendance" : "Attendance" }}
         </b-link>
       </div>
       <AttendanceTable
         v-if="showAttendance"
+        :onCommittee="onCommittee"
         :eventId="event.id"
         @reset="showAttendance = !showAttendance"
       />

@@ -6,7 +6,7 @@
         class="event"
         v-for="event in events"
         :key="event.id"
-        @click="eventSelected(event.id, event.title)"
+        @click="eventSelected(event.id, event.title, event.committee)"
       >
         <strong>{{ event.title }}</strong>
         <br />{{ getTimeString(event) }}
@@ -114,8 +114,8 @@ export default {
       this.from = this.date + "T00:00:00";
       this.to = this.date + "T23:59:59";
     },
-    eventSelected(id, title) {
-      this.$emit("event-selected", id, title);
+    eventSelected(id, title, committee) {
+      this.$emit("event-selected", id, title, committee);
     },
     getTimeString(event) {
       if (this.eventList) {
