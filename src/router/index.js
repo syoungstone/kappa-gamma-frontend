@@ -102,6 +102,12 @@ const routes = [
     meta: { minAuthRequired: AUTH_TIERS.PLEDGE },
   },
   {
+    path: "/account",
+    name: "Account",
+    component: () => import("../views/Account.vue"),
+    meta: { minAuthRequired: AUTH_TIERS.BROTHER },
+  },
+  {
     path: "/directory",
     name: "Directory",
     component: () => import("../views/Directory.vue"),

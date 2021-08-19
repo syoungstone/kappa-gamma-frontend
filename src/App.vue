@@ -105,6 +105,11 @@
                 <b-dropdown-item to="/editprofile"
                   >Edit Profile</b-dropdown-item
                 >
+                <b-dropdown-item
+                  v-if="$store.state.authTier >= AUTH_TIERS.BROTHER"
+                  to="/account"
+                  >View Account</b-dropdown-item
+                >
                 <b-dropdown-item to="/settings">Settings</b-dropdown-item>
                 <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
               </div>
