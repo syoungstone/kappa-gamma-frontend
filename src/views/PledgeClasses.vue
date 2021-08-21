@@ -212,6 +212,7 @@ export default {
 </script>
 
 <style scoped>
+h1,
 h4 {
   margin-bottom: 20px;
 }
@@ -221,7 +222,7 @@ h4 {
 }
 #create-new {
   margin: auto;
-  padding: 20px;
+  margin-bottom: 20px;
 }
 #create-form {
   justify-content: center;

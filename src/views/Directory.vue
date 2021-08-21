@@ -111,6 +111,11 @@
         :per-page="perPage"
         sort-icon-left
       >
+        <template #cell(roll_number)="row">
+          <b-link :to="'/student/' + row.item.id">
+            {{ row.item.roll_number }}
+          </b-link>
+        </template>
         <template #cell(phone)="row">
           <a :href="'tel:' + row.item.phone_number">
             {{ formatPhone(row.item.phone_number) }}
@@ -125,14 +130,6 @@
         <template #cell(actions)="row">
           <b-button
             class="select-button"
-            size="sm"
-            @click="viewStudent(row.item.id)"
-          >
-            View
-          </b-button>
-          <b-button
-            class="select-button"
-            v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
             variant="primary"
             size="sm"
             @click="editStudent(row.item.id)"
@@ -141,7 +138,6 @@
           </b-button>
           <b-button
             class="select-button"
-            v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
             variant="danger"
             size="sm"
             @click="
@@ -190,12 +186,8 @@ export default {
     totalRows() {
       return this.filteredData.length;
     },
-  },
-  data() {
-    return {
-      AUTH_TIERS: AUTH_TIERS,
-      showFilters: false,
-      fields: [
+    fields() {
+      let fields = [
         {
           key: "roll_number",
           label: "Roll",
@@ -209,8 +201,17 @@ export default {
         { key: "name_first", label: "First Name" },
         { key: "phone" },
         { key: "email_link", label: "Email" },
-        { key: "actions", label: "Actions" },
-      ],
+      ];
+      if (this.$store.state.authTier >= AUTH_TIERS.OFFICER) {
+        fields.push({ key: "actions", label: "Actions" });
+      }
+      return fields;
+    },
+  },
+  data() {
+    return {
+      AUTH_TIERS: AUTH_TIERS,
+      showFilters: false,
       data: [],
       isPledgeOptions: [
         { value: null, text: "All" },

@@ -20,6 +20,11 @@
         show-empty
         sort-icon-left
       >
+        <template #cell(roll_number)="row">
+          <b-link :to="'/student/' + row.item.id">
+            {{ row.item.roll_number }}
+          </b-link>
+        </template>
         <template #cell(good_standing)="row">
           {{
             row.item.exceeds_owed == 1 || row.item.exceeds_unexcused == 1

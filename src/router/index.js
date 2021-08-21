@@ -192,6 +192,12 @@ const routes = [
     meta: { minAuthRequired: AUTH_TIERS.OFFICER },
   },
   {
+    path: "/accounts",
+    name: "Student Accounts",
+    component: () => import("../views/StudentAccounts.vue"),
+    meta: { minAuthRequired: AUTH_TIERS.OFFICER },
+  },
+  {
     path: "/account/:id",
     name: "Student Account",
     component: () => import("../views/StudentAccount.vue"),

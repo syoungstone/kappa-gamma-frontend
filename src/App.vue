@@ -86,6 +86,11 @@
               text="Financial"
             >
               <b-dropdown-item
+                v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
+                to="/accounts"
+                >Brother Accounts</b-dropdown-item
+              >
+              <b-dropdown-item
                 v-if="$store.state.authTier >= AUTH_TIERS.FINANCIAL"
                 to="/assessdues"
                 >Assess Dues</b-dropdown-item

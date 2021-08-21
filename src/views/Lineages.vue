@@ -221,6 +221,9 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+  margin-bottom: 20px;
+}
 .founder-select {
   margin-top: 8px;
   margin-right: 10px;
@@ -231,7 +234,7 @@ export default {
 }
 #create-new {
   margin: auto;
-  padding: 20px;
+  margin-bottom: 20px;
 }
 #create-form {
   justify-content: center;
