@@ -69,28 +69,13 @@
               >
             </b-nav-item-dropdown>
             <b-nav-item-dropdown
-              v-if="$store.state.authTier >= AUTH_TIERS.COMMITTEE"
+              v-if="$store.state.authTier >= AUTH_TIERS.FINANCIAL"
               text="Financial"
             >
               <b-dropdown-item
-                v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
-                to="/accounts"
-                >Brother Accounts</b-dropdown-item
-              >
-              <b-dropdown-item
                 v-if="$store.state.authTier >= AUTH_TIERS.FINANCIAL"
-                to="/assessdues"
-                >Assess Dues</b-dropdown-item
-              >
-              <b-dropdown-item
-                v-if="$store.state.authTier >= AUTH_TIERS.FINANCIAL"
-                to="/reportpayment"
-                >Report Dues Payment</b-dropdown-item
-              >
-              <b-dropdown-item
-                v-if="$store.state.authTier >= AUTH_TIERS.FINANCIAL"
-                to="/reportfine"
-                >Report Fine</b-dropdown-item
+                to="/duesandfines"
+                >Dues &amp; Fines</b-dropdown-item
               >
             </b-nav-item-dropdown>
           </b-navbar-nav>
@@ -304,11 +289,16 @@ body,
 }
 .narrow-wrapper {
   max-width: 500px;
-  padding: 20px;
-  margin: 50px auto;
+}
+.medium-wrapper {
+  max-width: 650px;
 }
 .wide-wrapper {
   max-width: 1000px;
+}
+.narrow-wrapper,
+.medium-wrapper,
+.wide-wrapper {
   padding: 20px;
   margin: 50px auto;
 }

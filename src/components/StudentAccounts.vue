@@ -1,6 +1,6 @@
 <template>
-  <div class="narrow-wrapper">
-    <h1>Brother Account Balances</h1>
+  <div>
+    <h2>Brother Account Balances</h2>
     <b-table
       v-if="loaded"
       class="b-table"
@@ -33,6 +33,7 @@
 import axios from "axios";
 import { API_URL } from "../constants/index.js";
 export default {
+  name: "StudentAccounts",
   data() {
     return {
       loaded: false,
@@ -71,7 +72,7 @@ export default {
 </script>
 
 <style scoped>
-h1 {
+h2 {
   margin-bottom: 20px;
 }
 .negative {

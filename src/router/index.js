@@ -192,12 +192,6 @@ const routes = [
     meta: { minAuthRequired: AUTH_TIERS.OFFICER },
   },
   {
-    path: "/accounts",
-    name: "Student Accounts",
-    component: () => import("../views/StudentAccounts.vue"),
-    meta: { minAuthRequired: AUTH_TIERS.OFFICER },
-  },
-  {
     path: "/account/:id",
     name: "Student Account",
     component: () => import("../views/StudentAccount.vue"),
@@ -234,21 +228,9 @@ const routes = [
     meta: { minAuthRequired: AUTH_TIERS.OFFICER },
   },
   {
-    path: "/assessdues",
-    name: "Assess Dues",
-    component: () => import("../views/AssessDues.vue"),
-    meta: { minAuthRequired: AUTH_TIERS.FINANCIAL },
-  },
-  {
-    path: "/reportpayment",
-    name: "Report Payment",
-    component: () => import("../views/ReportPayment.vue"),
-    meta: { minAuthRequired: AUTH_TIERS.FINANCIAL },
-  },
-  {
-    path: "/reportfine",
-    name: "Report Fine",
-    component: () => import("../views/ReportFine.vue"),
+    path: "/duesandfines",
+    name: "Dues & Fines",
+    component: () => import("../views/DuesFines.vue"),
     meta: { minAuthRequired: AUTH_TIERS.FINANCIAL },
   },
   {

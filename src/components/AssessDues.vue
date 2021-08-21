@@ -1,6 +1,6 @@
 <template>
-  <div class="narrow-wrapper">
-    <h1>Assess Dues</h1>
+  <div>
+    <h2>Assess Dues</h2>
     <div v-if="loaded">
       <b-form @submit.prevent="onSubmit">
         <div class="row justify-content-center">
@@ -110,6 +110,7 @@ import axios from "axios";
 import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
+  name: "AssessDues",
   components: {
     LoadingSpinner,
   },
@@ -234,7 +235,7 @@ h4 {
   margin-top: 20px;
   margin-bottom: 40px;
 }
-h1,
+h2,
 h5 {
   margin-bottom: 30px;
 }

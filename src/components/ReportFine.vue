@@ -1,6 +1,6 @@
 <template>
-  <div class="narrow-wrapper">
-    <h1>Report Fine</h1>
+  <div class="narrow">
+    <h2>Report Fine</h2>
     <b-form v-if="loaded" @submit.prevent="onSubmit">
       <b-form-group label="Brother:">
         <vue-single-select
@@ -63,8 +63,7 @@
 import axios from "axios";
 import { AUTH_TIERS, API_URL } from "../constants/index.js";
 export default {
-  name: "StudentForm",
-  props: ["eventData"],
+  name: "ReportFine",
   data() {
     return {
       AUTH_TIERS: AUTH_TIERS,
@@ -119,7 +118,7 @@ export default {
 </script>
 
 <style scoped>
-h1 {
+h2 {
   margin-bottom: 20px;
 }
 .row {
