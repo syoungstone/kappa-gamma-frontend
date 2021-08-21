@@ -59,7 +59,7 @@
         </div>
       </template>
     </b-table>
-    <h5 v-else>No attendance records exist for this event.</h5>
+    <h5 v-else id="no-records">No attendance records exist for this event.</h5>
     <div v-if="onCommittee && (!recordsExist || editing)" id="bottom-buttons">
       <b-button id="cancel-button" @click="cancel()">Cancel</b-button>
       <b-button id="submit-button" variant="primary" @click="onSubmit()">
@@ -192,12 +192,16 @@ export default {
 </script>
 
 <style scoped>
+.b-table {
+  background-color: white;
+}
 h2 {
   margin-bottom: 20px;
 }
 h5 {
   text-align: center;
 }
+#no-records,
 #records-exist,
 #bottom-buttons {
   margin-bottom: 20px;

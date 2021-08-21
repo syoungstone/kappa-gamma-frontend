@@ -103,19 +103,24 @@
         </div>
       </div>
       <div
+        class="card"
         id="attendance-link"
         v-if="$store.state.authTier >= AUTH_TIERS.ACTIVE"
       >
-        <b-link @click="showAttendance = !showAttendance">
+        <b-button
+          id="attendance-button"
+          @click="showAttendance = !showAttendance"
+        >
           {{ showAttendance ? "Hide Attendance" : "Attendance" }}
-        </b-link>
+        </b-button>
+        <AttendanceTable
+          id="attendance-table"
+          v-if="showAttendance"
+          :onCommittee="onCommittee"
+          :eventId="event.id"
+          @reset="showAttendance = !showAttendance"
+        />
       </div>
-      <AttendanceTable
-        v-if="showAttendance"
-        :onCommittee="onCommittee"
-        :eventId="event.id"
-        @reset="showAttendance = !showAttendance"
-      />
     </div>
   </div>
 </template>
@@ -277,7 +282,16 @@ h4 {
   text-align: center;
 }
 #attendance-link {
-  text-align: center;
-  margin: 20px;
+  padding: 20px;
+  padding-bottom: 0;
+}
+#attendance-button {
+  width: 100%;
+  background-color: var(--ot-dark-red);
+  margin-bottom: 20px;
+}
+#attendance-table /deep/ .b-table {
+  box-shadow: none;
+  border-radius: 5px;
 }
 </style>
