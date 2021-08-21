@@ -28,6 +28,16 @@
             row.item.entry_date.substring(2, 4)
           }}
         </template>
+        <template #cell(entry_type)="row">
+          <div>
+            {{ row.item.entry_type }}
+            <b-icon-question-circle
+              class="icon"
+              v-if="row.item.entry_type == 'Fine'"
+              v-b-popover.hover.top="row.item.reason"
+            ></b-icon-question-circle>
+          </div>
+        </template>
         <template #cell(amount_formatted)="row">
           <div :class="row.item.amount < 0 ? 'negative' : ''">
             {{
@@ -139,6 +149,9 @@ export default {
 </script>
 
 <style scoped>
+.icon {
+  color: darkgray;
+}
 #balance-box {
   background-color: var(--ot-off-white);
   border-radius: 10px;
