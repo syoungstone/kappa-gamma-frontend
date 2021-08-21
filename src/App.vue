@@ -51,14 +51,11 @@
               v-if="$store.state.authTier >= AUTH_TIERS.COMMITTEE"
               text="Actions"
             >
-              <b-dropdown-item to="/attendance"
-                >Take Attendance</b-dropdown-item
-              >
               <b-dropdown-item to="/createevent">Create Event</b-dropdown-item>
               <b-dropdown-item
                 v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
                 to="/create"
-                >Create New Student</b-dropdown-item
+                >Add Pledge/Brother</b-dropdown-item
               >
               <b-dropdown-item
                 v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
@@ -69,16 +66,6 @@
                 v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
                 to="/initiate"
                 >Initiate Pledges</b-dropdown-item
-              >
-              <b-dropdown-item
-                v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
-                to="/editcommittees"
-                >Edit Committees</b-dropdown-item
-              >
-              <b-dropdown-item
-                v-if="$store.state.authTier == AUTH_TIERS.ALL"
-                to="/editofficers"
-                >Update Officers</b-dropdown-item
               >
             </b-nav-item-dropdown>
             <b-nav-item-dropdown

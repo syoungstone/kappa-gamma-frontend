@@ -128,28 +128,30 @@
           }}</a>
         </template>
         <template #cell(actions)="row">
-          <b-button
-            class="select-button"
-            variant="primary"
-            size="sm"
-            @click="editStudent(row.item.id)"
-          >
-            Edit
-          </b-button>
-          <b-button
-            class="select-button"
-            variant="danger"
-            size="sm"
-            @click="
-              prepareDeletion(
-                row.item.id,
-                row.item.name_first,
-                row.item.name_last
-              )
-            "
-          >
-            Delete
-          </b-button>
+          <div class="text-right">
+            <b-button
+              class="select-button"
+              variant="primary"
+              size="sm"
+              @click="editStudent(row.item.id)"
+            >
+              Edit
+            </b-button>
+            <b-button
+              class="select-button"
+              variant="danger"
+              size="sm"
+              @click="
+                prepareDeletion(
+                  row.item.id,
+                  row.item.name_first,
+                  row.item.name_last
+                )
+              "
+            >
+              Delete
+            </b-button>
+          </div>
         </template>
       </b-table>
       <div id="separator"></div>
@@ -203,7 +205,7 @@ export default {
         { key: "email_link", label: "Email" },
       ];
       if (this.$store.state.authTier >= AUTH_TIERS.OFFICER) {
-        fields.push({ key: "actions", label: "Actions" });
+        fields.push({ key: "actions", label: "" });
       }
       return fields;
     },

@@ -64,14 +64,16 @@
           }}</router-link>
         </template>
         <template #cell(actions)="row">
-          <b-button
-            class="select-button"
-            size="sm"
-            variant="danger"
-            @click="prepareDeletion(row.item)"
-          >
-            Delete
-          </b-button>
+          <div class="text-right">
+            <b-button
+              class="select-button"
+              size="sm"
+              variant="danger"
+              @click="prepareDeletion(row.item)"
+            >
+              Delete
+            </b-button>
+          </div>
         </template>
       </b-table>
     </div>
@@ -120,7 +122,7 @@ export default {
         { key: "founder_field", label: "Founder" },
       ];
       if (this.$store.state.authTier >= AUTH_TIERS.OFFICER) {
-        fields.push({ key: "actions" });
+        fields.push({ key: "actions", label: "" });
       }
       return fields;
     },

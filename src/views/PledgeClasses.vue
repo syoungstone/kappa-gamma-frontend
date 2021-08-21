@@ -54,17 +54,19 @@
           {{ row.item.semester == "F" ? "Fall " : "Spring " }}
         </template>
         <template #cell(actions)="row">
-          <b-button
-            class="select-button"
-            v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
-            size="sm"
-            variant="danger"
-            @click="
-              deletePledgeClass(row.item.class_name, row.item.num_students)
-            "
-          >
-            Delete
-          </b-button>
+          <div class="text-right">
+            <b-button
+              class="select-button"
+              v-if="$store.state.authTier >= AUTH_TIERS.OFFICER"
+              size="sm"
+              variant="danger"
+              @click="
+                deletePledgeClass(row.item.class_name, row.item.num_students)
+              "
+            >
+              Delete
+            </b-button>
+          </div>
         </template>
       </b-table>
     </div>
@@ -119,7 +121,7 @@ export default {
         },
       ];
       if (this.$store.state.authTier >= AUTH_TIERS.OFFICER) {
-        fields.push({ key: "actions" });
+        fields.push({ key: "actions", label: "" });
       }
       return fields;
     },
