@@ -104,7 +104,7 @@ export default {
         })
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
-          this.$router.push("/dashboard", () => {});
+          this.reset();
         })
         .catch((error) => {
           this.$root.$children[0].showError(error.response.statusText);
@@ -112,6 +112,13 @@ export default {
     },
     getCustomDescription(option) {
       return option.roll_number + " " + option.full_name;
+    },
+    reset() {
+      this.$emit("doReset");
+      this.brother = null;
+      this.fine.brother = null;
+      this.fine.amount = null;
+      this.fine.reason = null;
     },
   },
 };

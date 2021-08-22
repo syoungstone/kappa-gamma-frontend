@@ -218,6 +218,7 @@ export default {
         })
         .then((response) => {
           this.$root.$children[0].showSuccess(response.data.message);
+          this.$emit("doReset");
         })
         .catch((error) => {
           this.$root.$children[0].showError(error.response.statusText);

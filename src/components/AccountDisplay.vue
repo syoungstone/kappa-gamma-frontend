@@ -1,6 +1,27 @@
 <template>
   <div>
     <div v-if="loaded">
+      <b-modal
+        id="delete-entry-modal"
+        ref="modal"
+        :title="
+          toDelete != null
+            ? 'Warning: Deleting ' + toDelete.entry_type
+            : 'Warning'
+        "
+        @ok="deleteEntry()"
+      >
+        <p>
+          Are you sure you want to delete this account entry? After an account
+          entry is deleted, it cannot be retrieved.
+        </p>
+        <template #modal-footer="{ cancel, ok }">
+          <b-button size="sm" @click="cancel()"> Cancel </b-button>
+          <b-button size="sm" variant="danger" @click="ok()">
+            Delete Anyway
+          </b-button>
+        </template>
+      </b-modal>
       <h1>
         {{ ($store.state.id == id ? "My" : studentName) + " Account" }}
       </h1>
@@ -47,6 +68,18 @@
             }}
           </div>
         </template>
+        <template #cell(actions)="row">
+          <div class="text-right">
+            <b-button
+              class="select-button"
+              size="sm"
+              variant="danger"
+              @click="prepareDeletion(row.item)"
+            >
+              Delete
+            </b-button>
+          </div>
+        </template>
       </b-table>
     </div>
     <LoadingSpinner v-else />
@@ -76,19 +109,26 @@ export default {
   },
   data() {
     return {
-      fields: [
-        { key: "us_date", label: "Date" },
-        { key: "entry_type", label: "Type" },
-        { key: "amount_formatted", label: "Amount" },
-      ],
       AUTH_TIERS: AUTH_TIERS,
       balance_owed: 0,
       account_entries: null,
       loaded: false,
       studentName: null,
+      toDelete: null,
     };
   },
   computed: {
+    fields() {
+      let fields = [
+        { key: "us_date", label: "Date" },
+        { key: "entry_type", label: "Type" },
+        { key: "amount_formatted", label: "Amount" },
+      ];
+      if (this.$store.state.authTier >= AUTH_TIERS.FINANCIAL) {
+        fields.push({ key: "actions", label: "" });
+      }
+      return fields;
+    },
     balanceString() {
       let amountString = "$" + Math.abs(this.balance_owed).toFixed(2);
       if (this.balance_owed > 0) {
@@ -141,6 +181,30 @@ export default {
         })
         .catch((error) => {
           this.loaded = true;
+          this.$root.$children[0].showError(error.response.statusText);
+        });
+    },
+    prepareDeletion(entry) {
+      this.toDelete = entry;
+      this.$bvModal.show("delete-entry-modal");
+    },
+    deleteEntry() {
+      axios
+        .delete(
+          API_URL +
+            "delete_account_entry.php?type=" +
+            this.toDelete.entry_type.toLowerCase() +
+            "&id=" +
+            this.toDelete.id,
+          {
+            headers: { Authorization: this.$store.state.jwt },
+          }
+        )
+        .then((response) => {
+          this.$root.$children[0].showSuccess(response.data.message);
+          this.loadBalance();
+        })
+        .catch((error) => {
           this.$root.$children[0].showError(error.response.statusText);
         });
     },

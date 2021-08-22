@@ -30,14 +30,20 @@
 </template>
 
 <script>
-import axios from "axios";
-import { API_URL } from "../constants/index.js";
 export default {
   name: "StudentAccounts",
+  props: {
+    brothers: {
+      type: Array,
+      required: true,
+    },
+    loaded: {
+      type: Boolean,
+      required: true,
+    },
+  },
   data() {
     return {
-      loaded: false,
-      brothers: null,
       fields: [
         {
           key: "roll_number",
@@ -53,20 +59,6 @@ export default {
         { key: "balance", sortable: true },
       ],
     };
-  },
-  created() {
-    axios
-      .get(API_URL + "read_balance_owed.php", {
-        headers: { Authorization: this.$store.state.jwt },
-      })
-      .then((response) => {
-        console.log(response);
-        this.brothers = response.data.body;
-        this.loaded = true;
-      })
-      .catch((error) =>
-        this.$root.$children[0].showError(error.response.statusText)
-      );
   },
 };
 </script>
