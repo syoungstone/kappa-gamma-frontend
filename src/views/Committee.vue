@@ -16,7 +16,10 @@
           >{{ "$" + committee.amount_collected.toFixed(2) }}</b-list-group-item
         >
         <b-list-group-item
-          ><strong>Balance: </strong>{{ balanceString }}</b-list-group-item
+          ><strong>Balance: </strong>
+          <span :class="isNegative ? 'negative' : ''">
+            {{ balanceString }}
+          </span></b-list-group-item
         >
       </b-list-group>
       <h4>
