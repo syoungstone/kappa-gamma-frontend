@@ -1,7 +1,16 @@
 <template>
   <div>
     <h2>Assess Dues</h2>
-    <div v-if="loaded">
+    <b-form-group id="charge-all" v-slot="{ ariaDescribedby }">
+      <b-form-radio-group
+        v-model="chargeAll"
+        :options="options"
+        :aria-describedby="ariaDescribedby"
+        size="sm"
+        buttons
+      ></b-form-radio-group>
+    </b-form-group>
+    <div v-if="loaded && chargeAll">
       <b-form @submit.prevent="onSubmit">
         <div class="row justify-content-center">
           <b-form-group label="Early alum dues:">
@@ -101,6 +110,12 @@
       >
       </b-table>
     </div>
+    <ReportDues
+      :semester="dues.semester"
+      :accounting_year="dues.accounting_year"
+      v-else-if="loaded"
+      @doReset="$emit('doReset')"
+    />
     <LoadingSpinner v-else />
   </div>
 </template>
@@ -109,14 +124,21 @@
 import axios from "axios";
 import { AUTH_TIERS, API_URL } from "../constants/index.js";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import ReportDues from "@/components/ReportDues.vue";
 export default {
   name: "AssessDues",
   components: {
     LoadingSpinner,
+    ReportDues,
   },
   data() {
     return {
       AUTH_TIERS: AUTH_TIERS,
+      options: [
+        { text: "Charge all", value: true },
+        { text: "Charge individually", value: false },
+      ],
+      chargeAll: true,
       loaded: false,
       students: null,
       pledgeClasses: null,
@@ -229,6 +251,11 @@ export default {
 </script>
 
 <style scoped>
+#charge-all {
+  margin: auto;
+  margin-bottom: 20px;
+  max-width: 215px;
+}
 h4 {
   margin-top: 20px;
 }
@@ -236,7 +263,9 @@ h4 {
   margin-top: 20px;
   margin-bottom: 40px;
 }
-h2,
+h2 {
+  margin-bottom: 20px;
+}
 h5 {
   margin-bottom: 30px;
 }
