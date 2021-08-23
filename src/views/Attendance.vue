@@ -49,7 +49,9 @@ export default {
         this.$store.state.authTier >= AUTH_TIERS.OFFICER ||
         (this.committee != null &&
           this.$store.state.committees != null &&
-          this.$store.state.committees.find((x) => x.value == this.committee))
+          this.$store.state.committees.find(
+            (x) => x.line_item_id == this.committee
+          ))
       );
     },
   },

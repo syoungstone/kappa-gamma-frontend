@@ -174,6 +174,12 @@ const routes = [
     meta: { minAuthRequired: AUTH_TIERS.ACTIVE },
   },
   {
+    path: "/expensesandincome",
+    name: "Expenses & Income",
+    component: () => import("../views/ExpensesIncome.vue"),
+    meta: { minAuthRequired: AUTH_TIERS.COMMITTEE },
+  },
+  {
     path: "/createevent",
     name: "Create Event",
     component: () => import("../views/CreateEvent.vue"),

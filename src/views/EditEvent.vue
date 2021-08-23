@@ -30,7 +30,7 @@ export default {
           this.event.committee != null &&
           this.$store.state.committees != null &&
           this.$store.state.committees.find(
-            (x) => x.value == this.event.committee
+            (x) => x.line_item_id == this.event.committee
           ))
       );
     },

@@ -164,6 +164,8 @@
           v-model="event.committee"
           :options="committeeOptions"
           :required="$store.state.authTier < AUTH_TIERS.OFFICER"
+          value-field="line_item_id"
+          text-field="line_item_name"
         ></b-form-select>
       </b-form-group>
 
