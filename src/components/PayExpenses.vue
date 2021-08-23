@@ -61,7 +61,9 @@ export default {
   methods: {
     load() {
       axios
-        .get(API_URL + "read_unpaid_expenses.php")
+        .get(API_URL + "read_unpaid_expenses.php", {
+          headers: { Authorization: this.$store.state.jwt },
+        })
         .then((response) => {
           this.expenses = response.data.body;
           this.loaded = true;
